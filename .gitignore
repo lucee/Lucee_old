@@ -1,0 +1,15 @@
+
+db.log
+db.properties
+db.script
+
+**/.DS_Store
+**/.svn/
+/*.project
+va specific
+*.class
+target
+target/*
+*~
+*.lock
+*.DS_Store
