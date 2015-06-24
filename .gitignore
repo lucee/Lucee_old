@@ -1,4 +1,3 @@
-
 db.log
 db.properties
 db.script
@@ -10,6 +9,5 @@ va specific
 *.class
 target
 target/*
-*~
 *.lock
 *.DS_Store
