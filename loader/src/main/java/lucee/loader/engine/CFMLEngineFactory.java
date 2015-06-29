@@ -602,11 +602,7 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 
 		URL updateProvider = getUpdateLocation();
 		if(id==null && singelton!=null)id=singelton.getIdentification();
-		try{
-			throw new IOException("");
-		}catch(IOException ioe){
-			ioe.printStackTrace();
-		}
+		
 		System.out.println("download:"+symbolicName+":"+symbolicVersion); // MUST remove
 		URL updateUrl = new URL(updateProvider,
 				"/rest/update/provider/download/" + symbolicName + "/"

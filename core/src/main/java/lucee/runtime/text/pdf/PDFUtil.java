@@ -40,10 +40,10 @@ import lucee.runtime.op.Caster;
 import lucee.runtime.op.Constants;
 import lucee.runtime.op.Decision;
 
-import org.pdfbox.exceptions.CryptographyException;
-import org.pdfbox.exceptions.InvalidPasswordException;
-import org.pdfbox.pdmodel.PDDocument;
-import org.pdfbox.util.PDFText2HTML;
+import org.apache.pdfbox.exceptions.CryptographyException;
+import org.apache.pdfbox.exceptions.InvalidPasswordException;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFText2HTML;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -348,7 +348,7 @@ public class PDFUtil {
 		
 		//PDFTextStripperByArea  stripper = new PDFTextStripperByArea();
 		//PDFHighlighter  stripper = new PDFHighlighter();
-		PDFText2HTML  stripper = new PDFText2HTML();
+		PDFText2HTML  stripper = new PDFText2HTML("UDF-8");// TODO pass in encoding
 		//PDFTextStripper stripper = new PDFTextStripper();
 	    StringWriter writer = new StringWriter();
 	    stripper.writeText(pdDoc, writer);

@@ -53,8 +53,8 @@ import lucee.runtime.type.util.KeyConstants;
 import lucee.runtime.type.util.ListUtil;
 
 import org.apache.oro.text.regex.MalformedPatternException;
-import org.pdfbox.exceptions.CryptographyException;
-import org.pdfbox.exceptions.InvalidPasswordException;
+import org.apache.pdfbox.exceptions.CryptographyException;
+import org.apache.pdfbox.exceptions.InvalidPasswordException;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
