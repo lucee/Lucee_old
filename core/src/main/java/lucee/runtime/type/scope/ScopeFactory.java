@@ -28,7 +28,7 @@ import lucee.runtime.PageContext;
 public final class ScopeFactory {
     
     int argumentCounter=0;
-    Argument[] arguments=new Argument[]{
+    final Argument[] arguments=new Argument[]{
             new ArgumentImpl(),
             new ArgumentImpl(),
             new ArgumentImpl(),
