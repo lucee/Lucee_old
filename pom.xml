@@ -2,14 +2,29 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-   <licenses>
-      <license>
-         <name>The GNU Lesser General Public License, Version 2.1</name>
-         <url>http://www.gnu.org/licenses/lgpl-2.1.txt</url>
-         <distribution>repo</distribution>
-      </license>
-   </licenses>
+  <modelVersion>4.0.0</modelVersion>
+  <licenses>
+    <license>
+     <name>The GNU Lesser General Public License, Version 2.1</name>
+     <url>http://www.gnu.org/licenses/lgpl-2.1.txt</url>
+     <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>micstriit</id>
+      <name>Michael Offner</name>
+      <email>michael@lucee.org</email>
+      <organization>Lucee Association Switzerland</organization>
+      <organizationUrl>http://lucee.org</organizationUrl>
+      <roles>
+        <role>Project-Administrator</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
 
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
@@ -34,8 +49,51 @@
     <version>5.0.0.20</version>
     <name>Lucee</name>
 
-    <build>
-    	<plugins>
+  <build>
+  	<plugins>
+
+    <!-- publish to central maven -->
+    <plugin>
+      <groupId>org.sonatype.plugins</groupId>
+      <artifactId>nexus-staging-maven-plugin</artifactId>
+      <version>1.6.3</version>
+      <extensions>true</extensions>
+      <configuration>
+        <serverId>ossrh</serverId>
+        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+      </configuration>
+    </plugin>
+
+    <!-- GPG sign -->
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-gpg-plugin</artifactId>
+      <version>1.5</version>
+      <executions>
+        <execution>
+          <id>sign-artifacts</id>
+          <phase>verify</phase>
+          <goals>
+            <goal>sign</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-release-plugin</artifactId>
+      <version>2.5</version>
+      <configuration>
+        <autoVersionSubmodules>true</autoVersionSubmodules>
+        <useReleaseProfile>false</useReleaseProfile>
+        <releaseProfiles>release</releaseProfiles>
+        <goals>deploy</goals>
+      </configuration>
+    </plugin>
+
+
     		<plugin>
         		<artifactId>maven-antrun-plugin</artifactId>
         		<version>1.8</version>
@@ -96,10 +154,27 @@
     	</plugins>
     </build>
 
+  <scm>
+    <url>https://github.com/lucee/Lucee</url>
+    <connection>scm:git:git://github.com/lucee/Lucee.git</connection>
+    <developerConnection>scm:git:git@github.com:lucee/Lucee.git</developerConnection>
+    <tag>Apache Commons HTTPClient OSGi library</tag>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+    <id>ossrh</id>
+    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
 
 
     <dependencies>
-
       <dependency>
          <scope>compile</scope>
          <groupId>org.apache.felix</groupId>
@@ -122,16 +197,10 @@
          <version>3.0.0</version>
       </dependency>
       <dependency>
-		<groupId>org.apache.ant</groupId>
-		<artifactId>ant</artifactId>
-		<version>1.9.5</version>
-	</dependency>
-
-
-
-
-
-
+		    <groupId>org.apache.ant</groupId>
+		    <artifactId>ant</artifactId>
+		    <version>1.9.5</version>
+	    </dependency>
 
 
 <!-- org.apache.sanselan - 0.97.incubator 
