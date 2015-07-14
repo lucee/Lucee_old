@@ -9,10 +9,10 @@
 
   <property name="agent" value="lucee.runtime.instrumentation.ExternalAgent"/>
 
-  <property name="srcLoader" location="loader/src/main/java"/>
-  <property name="srcCore" location="core/src/main/java"/>
-  <property name="srcCFML" location="core/src/main/cfml"/>
-  <property name="srcInst" location="instrumentation/src/main/java"/> 
+  <property name="srcLoader" location="../loader/src/main/java"/>
+  <property name="srcCore" location="src/main/java"/>
+  <property name="srcCFML" location="src/main/cfml"/>
+  <property name="srcInst" location="../instrumentation/src/main/java"/> 
   <property name="build" location="ant/build"/> 
   
   <!-- <property name="srcDebug" location="../debug/src/main/java"/> -->
@@ -21,6 +21,7 @@
   
 
   <property name="loader" location="${temp}/loader"/>
+  <property name="core" location="${temp}/core"/>
   
   <property name="bundleName" value="Lucee Core"/>
   <property name="bundleSymbolicName" value="lucee.core"/>
@@ -89,26 +90,10 @@
     <!-- Create the  directory structure needed -->
     <mkdir dir="${loader}"/>
     <mkdir dir="${outputDir}"/>
-    <mkdir dir="${temp}/core"/>
     <mkdir dir="${temp}/agent"/>
 
   </target>
 
-<!--
-  <target name="copy" depends="init" description="copy source file to temp" >
-    <copy todir="${temp}">
-      <fileset dir="${srcBasic}">
-        <include name="**/*.java"/>
-      </fileset>
-    </copy>
-    <copy todir="${temp}">
-      <fileset dir="${srcExt}">
-        <include name="**/*.java"/>
-      </fileset>
-    </copy>
-
-  </target>
--->
   
   <target name="copyDeployFiles" depends="init" description="copy files from source/cfml to source/java/core/src/resource">
     <copy todir="${srcCore}/resource/context/">
@@ -155,9 +140,6 @@
         <include name="**/*.xml"/>
       </fileset>
     </copy>
-
-
-
   </target>
 
   <target name="agent" depends="copyDeployFiles" description="create external-agent  jar used as backup when dynamic agent fails" >
@@ -173,7 +155,7 @@
     <!-- create the manifest file -->
     <jar 
         basedir="${temp}/agent" 
-        jarfile="${temp}/core/resource/lib/lucee-external-agent.jar" 
+        jarfile="${outputDir}/resource/lib/lucee-external-agent.jar" 
         manifest="${srcInst}/META-INF/MANIFEST.MF"/> 
     
 
@@ -184,12 +166,12 @@
     <javac 
       srcdir="${srcLoader}" 
       target="1.7" 
-      destdir="${outputDir}"
+      destdir="${temp}/loader"
       debug="true" debuglevel="lines,vars,source" classpath="${dependencies}">
     </javac>
     
     <!-- copy all non java files -->
-    <copy todir="${outputDir}">
+    <copy todir="${temp}/loader">
       <fileset dir="${srcLoader}">
         <exclude name="**/*.java"/>
         <exclude name=".*"/>
@@ -199,7 +181,7 @@
 
     <!-- set lucee/version file -->
     <currentTime property="ct" />
-    <echo file="${outputDir}/lucee/version" message="${version}:${ct}" encoding="UTF-8"/>
+    <echo file="${temp}/loader/output/lucee/version" message="${version}:${ct}" encoding="UTF-8"/>
 
 
   </target>
@@ -209,7 +191,7 @@
     
     <!-- set the loader as classpath -->
     <path id="classpath">
-      <pathelement location="${outputDir}" />
+      <pathelement location="${temp}/loader" />
       <pathelement path="${dependencies}"/>
     </path>
 
@@ -219,29 +201,27 @@
     <javac 
       srcdir="${srcCore}" 
       target="1.7" 
-      destdir="${temp}/core"
+      destdir="${outputDir}"
       debug="true" debuglevel="lines,vars,source">
        <classpath refid="classpath" />
     </javac>
 
     <!-- copy all non java files -->
-    <copy todir="${temp}/core">
+    <copy todir="${outputDir}">
       <fileset dir="${srcCore}">
         <exclude name="**/*.java"/>
         <exclude name=".*"/>
       </fileset>
     </copy>
 
-
-
     <!-- set date in default properties -->
     <loadfile property="defprop"
-      srcFile="${temp}/core/default.properties"/>
+      srcFile="${outputDir}/default.properties"/>
     <updatedate text="${defprop}" date="${NOW}" property="moddefprop" />
-    <echo file="${temp}/core/default.properties" message="${moddefprop}"/>
+    <echo file="${outputDir}/default.properties" message="${moddefprop}"/>
 
     <!-- create the manifest file -->
-    <manifest file="${temp}/core/META-INF/MANIFEST.MF" mode="update">
+    <manifest file="${outputDir}/META-INF/MANIFEST.MF" mode="update">
       <attribute name="Bundle-Version" value="${version}"/>
       <attribute name="Bundle-Name" value="${bundleName}"/>
       <attribute name="Bundle-SymbolicName" value="${bundleSymbolicName}"/>
@@ -254,18 +234,20 @@
   </target>
 
 
-  <target name="buildJars" depends="_core" description="generate the loader jar" >
+  <target name="buildJars" depends="_core" description="generate temporary jars used to generate the archive" >
     
-    <!-- generates a jar from the core -->
+    <!-- generates a jar from the core 
+          this jars are only 
+    -->
     <jar 
-        basedir="${temp}/core" 
-        jarfile="${outputDir}/core/core.lco" 
-        manifest="${temp}/core/META-INF/MANIFEST.MF"/> 
+        basedir="${outputDir}" 
+        jarfile="${temp}/loader/core/core.lco" 
+        manifest="${outputDir}/META-INF/MANIFEST.MF"/> 
 
 
     <!-- genrates the jar from the loader -->
     <jar 
-      basedir="${outputDir}" 
+      basedir="${temp}/loader" 
       jarfile="${temp}/lucee.jar" 
       manifest="${srcLoader}/META-INF/MANIFEST.MF"/>
 
@@ -287,10 +269,6 @@
       <classpath path="${java.class.path}">
           <pathelement location="${temp}/lucee.jar"/>
           <pathelement path="${runtime_classpath}"/>
-          <!-- <fileset dir="source/java/libs">
-            <include name="**/javax.servlet.jar" />
-            <include name="**/org-apache-felix-main-*.jar" />
-          </fileset> -->
       </classpath>
 
       <arg value="-f"/>
@@ -306,29 +284,28 @@
 
 <!-- now we have to build the lucee.jar again, this time with the lar files -->
     <!-- copy the lucee lar -->
-    <copy file="${temp}/archive/lucee-context.lar" tofile="${temp}/core/resource/context/lucee-context.lar"/>
-    <copy file="${temp}/archive/lucee-admin.lar" tofile="${temp}/core/resource/context/lucee-admin.lar"/> 
-    <copy file="${temp}/archive/lucee-doc.lar" tofile="${temp}/core/resource/context/lucee-doc.lar"/> 
+    <copy file="${temp}/archive/lucee-context.lar" tofile="${outputDir}/resource/context/lucee-context.lar"/>
+    <copy file="${temp}/archive/lucee-admin.lar" tofile="${outputDir}/resource/context/lucee-admin.lar"/> 
+    <copy file="${temp}/archive/lucee-doc.lar" tofile="${outputDir}/resource/context/lucee-doc.lar"/> 
 
-    <!-- generates a jar from the core -->
+    <!-- generates a jar from the core
     <jar 
         basedir="${temp}/core" 
         jarfile="${outputDir}/core/core.lco" 
-        manifest="${temp}/core/META-INF/MANIFEST.MF"/> 
+        manifest="${temp}/core/META-INF/MANIFEST.MF"/>  -->
     
-    <!-- copy the core to the loader -->
-    <copy file="${outputDir}/core/core.lco" tofile="${dist}/${version}.lco"/> 
+    <!-- copy the core to the loader
+    <copy file="${outputDir}/core/core.lco" tofile="${dist}/${version}.lco"/>  -->
 
 
   </target>
 
-  <target name="buildLoader" depends="buildArchive" description="generate the loader jar" >  
+  <target name="build" depends="buildArchive" description="generate the loader jar" >  
 
-    <!-- genrates the jar from the loader -->
     <jar 
-      basedir="${outputDir}" 
-      jarfile="${dist}/lucee-${version}.jar" 
-      manifest="${srcLoader}/META-INF/MANIFEST.MF"/>
+        basedir="${outputDir}" 
+        jarfile="${dist}/lucee-${version}.lco" 
+        manifest="${outputDir}/META-INF/MANIFEST.MF"/>
 
   </target>
 

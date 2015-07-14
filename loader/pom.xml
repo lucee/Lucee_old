@@ -2,10 +2,20 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 
+  <parent>
     <groupId>org.lucee</groupId>
-	<artifactId>loader</artifactId>
-	<version>5.0</version>
-   	<packaging>jar</packaging>
+    <artifactId>parent</artifactId>
+    <version>5.0.0.22</version>
+  </parent>
+
+  <artifactId>lucee</artifactId>
+	<version>5.0.0.22</version>
+  <packaging>jar</packaging>
+
+  <name>Lucee Loader Build</name>
+  <description>Building the Lucee Loader File</description>
+  <url>http://maven.lucee.org/loader/</url>
+   
     
 	<properties>
    		<timestamp>${maven.build.timestamp}</timestamp>
@@ -17,29 +27,115 @@
 	</properties>
 
 
+
+   <repositories>
+      <repository>
+         <id>repo</id>
+         <url>https://raw.githubusercontent.com/lucee/mvn/master/releases</url>
+      </repository>
+      <!-- <repository>
+         <id>repo-snap</id>
+         <url>https://raw.githubusercontent.com/lucee/mvn/master/releases</url>
+      </repository> -->
+   </repositories>
+
+
 	<build>
 
-		<!-- add version file -->
-		<resources>
-  			<resource>
-    			<directory>src/main/resources</directory>
-    			<filtering>true</filtering>
-    			<includes>
-      				<include>**/version</include>
-    			</includes>
-  			</resource>
-  			<resource>
-    			<directory>src/main/resources</directory>
-    			<filtering>false</filtering>
-    			<excludes>
-      				<exclude>**/version</exclude>
-    			</excludes>
-  			</resource>
-		</resources>
 
-            <plugins>
-            	<!-- compiler options -->
-            	<plugin>
+    
+    <plugins>
+        <!-- publish to central maven -->
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.6.3</version>
+          <extensions>true</extensions>
+          <configuration>
+            <serverId>ossrh</serverId>
+            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          </configuration>
+        </plugin>
+
+        <!-- GPG sign -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.5</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <useReleaseProfile>false</useReleaseProfile>
+            <releaseProfiles>release</releaseProfiles>
+            <goals>deploy</goals>
+          </configuration>
+        </plugin> 
+
+      <!-- copy the core into the loader -->
+       <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+                  <execution>
+                     <id>ant-magic</id>
+                     <phase>validate</phase>
+                     <goals>
+                        <goal>run</goal>
+                     </goals>
+                     <configuration>
+                        <tasks>
+                          <property name="trg" location="target/classes"/>
+                          <property name="src" location="../core/target"/>
+
+                          <!-- 
+                          TODO get it from dependecies
+                          <dependencyfilesets prefix="mydeps."/>
+                          <path id="maven-ant-tasks.classpath" >
+                            <fileset refid="mydeps.org.apache.maven:maven-ant-tasks:jar"/>
+                          </path>
+                          <pathconvert property="dependencies" refid="mydeps.maven.project.dependencies"/>
+                          <echo message="deps:${dependencies}" encoding="UTF-8"/> -->
+                          
+
+                          <!-- version -->
+                          <echo message="${trg}/lucee/version --> ${version}:${timestamp}" encoding="UTF-8"/>
+                          <echo file="${trg}/lucee/version" message="${version}:${timestamp}" encoding="UTF-8"/>
+                          
+                          <!-- JSR223 config TODO this should come from source, but the source is somehow supressed
+                          <echo file="${trg}/META-INF/services/javax.script.ScriptEngineFactory" message="lucee.runtime.script.LuceeScriptEngineFactory
+lucee.runtime.script.CFMLScriptEngineFactory"/> -->
+                          
+                          <!-- copy core -->
+                          <copy 
+                            file="${src}/core-${project.version}.jar" 
+                            tofile="${trg}/core/core.lco"/>
+                          
+                        </tasks>
+                     </configuration>
+                  </execution>
+            </executions>
+            </plugin>
+
+
+
+    <!-- compiler options -->
+      <plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
@@ -58,6 +154,8 @@
 			    	<groupId>org.apache.maven.plugins</groupId>
 			    	<artifactId>maven-jar-plugin</artifactId>
 			    	<version>2.6</version>
+            <extensions>true</extensions>
+          
 			    	<configuration>
 			        	<excludes>
 	        				<exclude>.*</exclude>
@@ -67,15 +165,22 @@
 	    					<manifest>
 	    						<mainClass>${main.class}</mainClass>
 	    					</manifest>
-			          	</archive>
-			        	<finalName>lucee</finalName>  
+			          	</archive> 
 			        </configuration>
+
 			    </plugin>
 
+
+         
             </plugins>
     </build>
     
     <dependencies>
+      <!-- <dependency>
+         <groupId>org.lucee</groupId>
+         <artifactId>core</artifactId>
+         <version>5.0.0.22-SNAPSHOT</version>
+      </dependency>
       <dependency>
          <scope>compile</scope>
          <groupId>org.apache.felix</groupId>
@@ -96,7 +201,7 @@
          <groupId>javax.el</groupId>
          <artifactId>javax.el-api</artifactId>
          <version>3.0.0</version>
-      </dependency>
+      </dependency> -->
 
 	</dependencies>
 

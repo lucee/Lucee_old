@@ -1,30 +1,153 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-   <groupId>org.lucee</groupId>
-   <artifactId>core</artifactId>
-   <version>5.0.0.20</version>
-   <packaging>jar</packaging>
+  <parent>
+    <groupId>org.lucee</groupId>
+    <artifactId>parent</artifactId>
+    <version>5.0.0.22</version>
+  </parent>
 
-    
-   <licenses>
-      <license>
-         <name>The GNU Lesser General Public License, Version 2.1</name>
-         <url>http://www.gnu.org/licenses/lgpl-2.1.txt</url>
-         <distribution>repo</distribution>
-      </license>
-   </licenses>
+  <artifactId>core</artifactId>
+  <version>5.0.0.22</version>
+  <packaging>jar</packaging>
+
+  <name>Lucee Core Build</name>
+  <description>Building the Lucee Core File</description>
+  <url>http://maven.lucee.org/core/</url>
    
 
+   
 
-   <repositories>
-      <repository>
-         <id>repo</id>
-         <url>https://raw.githubusercontent.com/lucee/mvn/master/releases</url>
-      </repository>
-   </repositories>
+  <build>
+      <plugins>
+        <!-- publish to central maven -->
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.6.3</version>
+          <extensions>true</extensions>
+          <configuration>
+            <serverId>ossrh</serverId>
+            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          </configuration>
+        </plugin>
 
+        <!-- GPG sign -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.5</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <useReleaseProfile>false</useReleaseProfile>
+            <releaseProfiles>release</releaseProfiles>
+            <goals>deploy</goals>
+          </configuration>
+        </plugin> 
+
+
+
+
+      <!-- plugin to build Lucee Core Files (.lco) -->
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+              <execution>
+                <id>ant-magic</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <!-- get dependencies -->
+                    <dependencyfilesets prefix="mydeps."/>
+                    <path id="maven-ant-tasks.classpath" >
+                      <fileset refid="mydeps.org.apache.maven:maven-ant-tasks:jar"/>
+                    </path>
+                    <pathconvert property="dependencies" refid="mydeps.maven.project.dependencies"/>
+                    
+                    <property name="version" value="${project.version}"/>
+                        
+                    <!-- <property name="compile_classpath" refid="maven.compile.classpath"/> -->
+                    <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                            
+                    <property name="outputDir" value="${project.build.outputDirectory}"/>
+                    <!-- <property name="sourceDir" value="${project.build.sourceDirectory}"/> -->
+                    <property name="baseDir" value="${basedir}"/>
+
+                    <ant antfile="${basedir}/ant/build-core.xml" target="buildArchive"/>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+
+
+         <!-- creates the .lco file, this plugin extends the jar plugin from maven-->
+        <plugin>
+          <!--
+          <groupId>org.lucee</groupId>
+          <artifactId>lco-plugin</artifactId>
+          <version>1.01-SNAPSHOT</version>
+          -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.6</version>
+
+          <!--declare that this plugin contributes the component extensions-->
+          <extensions>true</extensions>
+          <configuration>
+            <excludes>
+              <exclude>.*</exclude>
+            </excludes>
+            <archive>
+              <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+            </archive>        
+          </configuration>
+        </plugin>
          
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <version>3.3</version>
+           <configuration>
+             <source>1.7</source>
+             <target>1.7</target>
+              <excludes>
+                  <exclude>**/*.java</exclude>
+                </excludes>
+           </configuration>
+
+      </plugin>
+
+
+
+      </plugins>
+  </build>
+
+
 
 
 	<dependencies>
@@ -51,6 +174,12 @@
          <version>3.0.0</version>
       </dependency>
 
+      <dependency>
+          <groupId>org.apache.ant</groupId>
+          <artifactId>ant</artifactId>
+          <version>1.9.5</version>
+       </dependency>
+
 <!-- org.apache.sanselan - 0.97.incubator 
 	Bundle-SymbolicName: org.apache.sanselan.sanselan
 	Bundle-Version: 0.97.0.incubator
@@ -65,12 +194,20 @@
 <!-- org.apache.commons.codec - 1.10 
 	Bundle-SymbolicName: org.apache.commons.codec
 	Bundle-Version: 1.10.0
--->
+
 	<dependency>
   		<groupId>commons-codec</groupId>
   		<artifactId>commons-codec</artifactId>
   		<version>1.10</version>
-	</dependency>
+	</dependency>-->
+   <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>codec</artifactId>
+      <version>1.6.0</version>
+   </dependency>
+
+
+
 
 <!-- org.apache.commons.collections - 3.2.1 
 	Bundle-SymbolicName: org.apache.commons.collections
@@ -162,9 +299,9 @@
 	Bundle-Version: 1.2.0
 -->
 	<dependency>
-		<groupId>commons-logging</groupId>
-		<artifactId>commons-logging</artifactId>
-		<version>1.2</version>
+		<groupId>org.apache.commons.logging</groupId>
+		<artifactId>adapters</artifactId>
+		<version>1.1.1</version>
 	</dependency>
 
 <!-- org.apache.commons.logging.api - 1.1.1 -->
@@ -174,6 +311,7 @@
          <type>jar</type>
          <version>1.1.1</version>
       </dependency>
+
 <!-- org.apache.commons.logging - 1.1.1 -->
       <dependency>
          <groupId>org.apache.commons</groupId>
@@ -245,12 +383,12 @@
          <type>jar</type>
          <version>1.4.0</version>
       </dependency>
-<!-- apache.ws.axis - 1.4.0.L003 -->
+<!-- apache.ws.axis - 1.4.0.L004 -->
       <dependency>
          <groupId>apache.ws</groupId>
          <artifactId>axis</artifactId>
          <type>jar</type>
-         <version>1.4.0.L003</version>
+         <version>1.4.0.L004</version>
       </dependency>
 <!-- apache.xml.xalan - 2.7.1 -->
       <dependency>
@@ -534,6 +672,7 @@
 		<version>1.8.9</version>
 	</dependency>
 
+
 <!-- FontBox
 	Bundle-SymbolicName: org.apache.pdfbox.fontbox
 	Bundle-Version: 1.8.9
@@ -554,18 +693,6 @@
 		<version>1.8.9</version>
 	</dependency>
 	
-	
-	
-<!-- PDFBox - 1.8.9 
-	Bundle-SymbolicName: org.apache.pdfbox
-	Bundle-Version: 1.8.9
--->
-	<dependency>
-		<groupId>org.apache.pdfbox</groupId>
-		<artifactId>pdfbox</artifactId>
-		<version>1.8.9</version>
-	</dependency>
-
 <!-- PDFRenderer - 1.0.5 -->
       <dependency>
          <groupId>PDFRenderer</groupId>
@@ -749,4 +876,5 @@
          <version>1.2.2</version>
       </dependency>
    </dependencies>
+
 </project>
