@@ -3,19 +3,44 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
+  <!--<parent>
     <groupId>org.lucee</groupId>
     <artifactId>parent</artifactId>
     <version>5.0.0.22</version>
-  </parent>
+  </parent> -->
 
+
+  <groupId>org.lucee</groupId>
   <artifactId>core</artifactId>
   <version>5.0.0.22</version>
-  <packaging>jar</packaging>
+  <packaging>lco</packaging>
 
   <name>Lucee Core Build</name>
   <description>Building the Lucee Core File</description>
   <url>http://maven.lucee.org/core/</url>
+
+  <licenses>
+    <license>
+     <name>The GNU Lesser General Public License, Version 2.1</name>
+     <url>http://www.gnu.org/licenses/lgpl-2.1.txt</url>
+     <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>micstriit</id>
+      <name>Michael Offner</name>
+      <email>michael@lucee.org</email>
+      <organization>Lucee Association Switzerland</organization>
+      <organizationUrl>http://lucee.org</organizationUrl>
+      <roles>
+        <role>Project-Administrator</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
    
 
    
@@ -65,6 +90,44 @@
         </plugin> 
 
 
+        <!--  -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+<!--
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            <configuration>  
+                <additionalparam>-Xdoclint:none</additionalparam>
+                <additionnalDependencies>
+                  <additionnalDependency>
+                   <groupId>org.lucee</groupId>
+                   <artifactId>lucee</artifactId>
+                   <version>5.0.0.22</version>
+                  </additionnalDependency>
+                </additionnalDependencies>
+            </configuration>
+            </execution>
+          </executions>
+        </plugin> -->
+
+
 
 
       <!-- plugin to build Lucee Core Files (.lco) -->
@@ -95,8 +158,9 @@
                     <property name="outputDir" value="${project.build.outputDirectory}"/>
                     <!-- <property name="sourceDir" value="${project.build.sourceDirectory}"/> -->
                     <property name="baseDir" value="${basedir}"/>
+                    <dirname file="${baseDir}" property="rootDir" />
 
-                    <ant antfile="${basedir}/ant/build-core.xml" target="buildArchive"/>
+                    <ant antfile="../ant/build-core.xml" target="buildCore"/>
                   </tasks>
                 </configuration>
               </execution>
@@ -107,25 +171,28 @@
 
          <!-- creates the .lco file, this plugin extends the jar plugin from maven-->
         <plugin>
-          <!--
+          
           <groupId>org.lucee</groupId>
           <artifactId>lco-plugin</artifactId>
-          <version>1.01-SNAPSHOT</version>
-          -->
+          <version>1.02-SNAPSHOT</version>
+<!--
+           TODO problem s that implementation ignores the manifest definition
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.6</version>
+          <version>2.6</version> -->
 
           <!--declare that this plugin contributes the component extensions-->
-          <extensions>true</extensions>
           <configuration>
             <excludes>
               <exclude>.*</exclude>
             </excludes>
             <archive>
               <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-            </archive>        
+            </archive>       
           </configuration>
+
+
+          <extensions>true</extensions>
         </plugin>
          
          <plugin>
@@ -145,14 +212,50 @@
 
 
       </plugins>
+      <pluginManagement>
+      	<plugins>
+      		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+      		<plugin>
+      			<groupId>org.eclipse.m2e</groupId>
+      			<artifactId>lifecycle-mapping</artifactId>
+      			<version>1.0.0</version>
+      			<configuration>
+      				<lifecycleMappingMetadata>
+      					<pluginExecutions>
+      						<pluginExecution>
+      							<pluginExecutionFilter>
+      								<groupId>
+      									org.apache.maven.plugins
+      								</groupId>
+      								<artifactId>
+      									maven-antrun-plugin
+      								</artifactId>
+      								<versionRange>
+      									[1.8,)
+      								</versionRange>
+      								<goals>
+      									<goal>run</goal>
+      								</goals>
+      							</pluginExecutionFilter>
+      							<action>
+      								<ignore></ignore>
+      							</action>
+      						</pluginExecution>
+      					</pluginExecutions>
+      				</lifecycleMappingMetadata>
+      			</configuration>
+      		</plugin>
+      	</plugins>
+      </pluginManagement>
   </build>
 
 
 
 
 	<dependencies>
-	
-	<dependency>
+	   
+    
+	     <dependency>
          <scope>compile</scope>
          <groupId>org.apache.felix</groupId>
          <artifactId>org.apache.felix.framework</artifactId>
@@ -876,5 +979,36 @@
          <version>1.2.2</version>
       </dependency>
    </dependencies>
+
+
+
+   <repositories>
+      <repository>
+         <id>repo</id>
+         <url>https://raw.githubusercontent.com/lucee/mvn/master/releases</url>
+      </repository>
+      <repository>
+        <id>snapi</id>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      </repository>
+   </repositories>
+
+  <scm>
+    <url>https://github.com/lucee/Lucee</url>
+    <connection>scm:git:git://github.com/lucee/Lucee.git</connection>
+    <developerConnection>scm:git:git@github.com:lucee/Lucee.git</developerConnection>
+    <tag>Plugin to create Lucee Core files.</tag>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+    <id>ossrh</id>
+    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 
 </project>
