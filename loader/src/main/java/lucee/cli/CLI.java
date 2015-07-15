@@ -45,17 +45,17 @@ public class CLI {
 	 * @param args
 	 * @throws JspException
 	 */
-	public static void main(String[] args) throws ServletException,
+	public static void main(final String[] args) throws ServletException,
 			IOException, JspException {
 
-		Map<String, String> config = toMap(args);
+		final Map<String, String> config = toMap(args);
 
 		System.setProperty("lucee.cli.call", "true");
 
-		boolean useRMI = "true".equalsIgnoreCase(config.get("rmi"));
+		final boolean useRMI = "true".equalsIgnoreCase(config.get("rmi"));
 
 		File root;
-		String param = config.get("webroot");
+		final String param = config.get("webroot");
 		if (Util.isEmpty(param, true)) {
 
 			root = new File("."); // working directory that the java command was called from
@@ -75,28 +75,27 @@ public class CLI {
 
 		if (useRMI) {
 
-			CLIFactory factory = new CLIFactory(root, servletName, config);
+			final CLIFactory factory = new CLIFactory(root, servletName, config);
 			factory.setDaemon(false);
 			factory.start();
 		} else {
 
-			CLIInvokerImpl invoker = new CLIInvokerImpl(root, servletName);
+			final CLIInvokerImpl invoker = new CLIInvokerImpl(root, servletName);
 			invoker.invoke(config);
 		}
 	}
 
-	private static Map<String, String> toMap(String[] args) {
+	private static Map<String, String> toMap(final String[] args) {
 
 		int index;
 		String raw, key, value;
 
-		Map<String, String> config = new HashMap<String, String>();
+		final Map<String, String> config = new HashMap<String, String>();
 
-		if (args != null && args.length > 0) {
+		if (args != null && args.length > 0)
+			for (final String arg : args) {
 
-			for (int i = 0; i < args.length; i++) {
-
-				raw = args[i].trim();
+				raw = arg.trim();
 				if (raw.startsWith("-"))
 					raw = raw.substring(1);
 
@@ -114,7 +113,6 @@ public class CLI {
 					config.put(key.toLowerCase(), value);
 				}
 			}
-		}
 
 		return config;
 	}

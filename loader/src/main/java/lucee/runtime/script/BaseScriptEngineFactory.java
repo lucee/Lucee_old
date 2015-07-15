@@ -31,39 +31,40 @@ import lucee.cli.servlet.ServletContextImpl;
 import lucee.loader.engine.CFMLEngine;
 import lucee.loader.engine.CFMLEngineFactory;
 
-
 public abstract class BaseScriptEngineFactory implements ScriptEngineFactory {
 
 	private final ScriptEngineFactory factory;
 
-	public BaseScriptEngineFactory(boolean tag, int dialect) throws ServletException {
+	public BaseScriptEngineFactory(final boolean tag, final int dialect)
+			throws ServletException {
 		System.setProperty("lucee.cli.call", "true");
 
 		// returns null when not used within Lucee
-		CFMLEngine engine=null;
+		CFMLEngine engine = null;
 		try {
-		engine = CFMLEngineFactory.getInstance();
+			engine = CFMLEngineFactory.getInstance();
+		} catch (final RuntimeException re) {
 		}
-		catch(RuntimeException re){}
-		
+
 		// create Engine
-		if(engine==null) {
-			String servletName="";
-			Map<String, Object> attributes = new HashMap<String, Object>();
-			Map<String, String> initParams = new HashMap<String, String>();
-			File root = new File("."); // working directory that the java command was called from
-			
-			
-			ServletContextImpl servletContext = new ServletContextImpl(root,attributes, initParams, 1, 0);
-			ServletConfigImpl servletConfig = new ServletConfigImpl(servletContext, servletName);
+		if (engine == null) {
+			final String servletName = "";
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			final Map<String, String> initParams = new HashMap<String, String>();
+			final File root = new File("."); // working directory that the java command was called from
+
+			final ServletContextImpl servletContext = new ServletContextImpl(
+					root, attributes, initParams, 1, 0);
+			final ServletConfigImpl servletConfig = new ServletConfigImpl(
+					servletContext, servletName);
 			engine = CFMLEngineFactory.getInstance(servletConfig);
 		}
 
-		factory=tag?
-				CFMLEngineFactory.getInstance().getTagEngineFactory(dialect)
-				:CFMLEngineFactory.getInstance().getScriptEngineFactory(dialect);
+		factory = tag ? CFMLEngineFactory.getInstance().getTagEngineFactory(
+				dialect) : CFMLEngineFactory.getInstance()
+				.getScriptEngineFactory(dialect);
 	}
-	
+
 	@Override
 	public String getEngineName() {
 		return factory.getEngineName();
@@ -100,22 +101,23 @@ public abstract class BaseScriptEngineFactory implements ScriptEngineFactory {
 	}
 
 	@Override
-	public Object getParameter(String key) {
+	public Object getParameter(final String key) {
 		return factory.getParameter(key);
 	}
 
 	@Override
-	public String getMethodCallSyntax(String obj, String m, String... args) {
+	public String getMethodCallSyntax(final String obj, final String m,
+			final String... args) {
 		return factory.getMethodCallSyntax(obj, m, args);
 	}
 
 	@Override
-	public String getOutputStatement(String toDisplay) {
+	public String getOutputStatement(final String toDisplay) {
 		return factory.getOutputStatement(toDisplay);
 	}
 
 	@Override
-	public String getProgram(String... statements) {
+	public String getProgram(final String... statements) {
 		return factory.getProgram(statements);
 	}
 

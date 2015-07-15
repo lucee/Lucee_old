@@ -67,12 +67,14 @@ public interface Strings {
 	public long create64BitHash(CharSequence cs);
 
 	public boolean isEmpty(String str);
+
 	public boolean isEmpty(String str, boolean trim);
 
 	public String emptyIfNull(String str);
 
 	public boolean startsWithIgnoreCase(String haystack, String needle);
+
 	public boolean endsWithIgnoreCase(String haystack, String needle);
 
-	public String ucFirst(String str); 
+	public String ucFirst(String str);
 }

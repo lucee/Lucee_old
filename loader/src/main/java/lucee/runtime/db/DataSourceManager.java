@@ -34,6 +34,7 @@ public interface DataSourceManager {
 	 * @deprecated use instead
 	 *             <code>getConnection(PageContext pc,DataSource ds, String user, String pass)</code>
 	 */
+	@Deprecated
 	public DatasourceConnection getConnection(PageContext pc,
 			String datasource, String user, String pass) throws PageException;
 
@@ -74,7 +75,7 @@ public interface DataSourceManager {
 	/**
 	 * rollback hanging transaction
 	 * 
-	 * @throws DatabaseException
+	 * @throws PageException
 	 */
 	public abstract void rollback() throws PageException;
 
@@ -83,7 +84,7 @@ public interface DataSourceManager {
 	/**
 	 * commit hanging transaction
 	 * 
-	 * @throws DatabaseException
+	 * @throws PageException
 	 */
 	public abstract void commit() throws PageException;
 
@@ -101,6 +102,7 @@ public interface DataSourceManager {
 	 * @deprecated use instead <code>remove(DataSource datasource)</code>
 	 * @param datasource
 	 */
+	@Deprecated
 	public abstract void remove(String datasource);
 
 	public abstract void remove(DataSource datasource);

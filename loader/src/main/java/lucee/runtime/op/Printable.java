@@ -23,6 +23,7 @@ import lucee.runtime.dump.Dumpable;
 /**
  * @deprecated this interface is replaced with interface Dumpable
  */
+@Deprecated
 public interface Printable extends Dumpable {
 
 }

@@ -52,18 +52,16 @@ public interface SpoolerEngine {
 	public void remove(String id);
 
 	/**
-	 * execute task by id and return error throwed by task
+	 * execute task by id and return error thrown by task
 	 * 
 	 * @param id
-	 * @throws SpoolerException
 	 */
 	public PageException execute(String id);
 
 	/**
-	 * execute task and return error throwed by task
+	 * execute task and return error thrown by task
 	 * 
 	 * @param task
-	 * @throws SpoolerException
 	 */
 	public PageException execute(SpoolerTask task);
 

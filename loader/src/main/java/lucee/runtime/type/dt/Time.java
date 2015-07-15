@@ -30,7 +30,7 @@ public abstract class Time extends DateTime {
 	 * 
 	 * @param time
 	 */
-	public Time(long time) {
+	public Time(final long time) {
 		super(time);
 	}
 

@@ -37,7 +37,7 @@ public interface GatewayEngine {
 	 * @param data arguments
 	 * @return returns if invocation was successfull
 	 */
-	public boolean invokeListener(Gateway gateway, String method, Map<?,?> data);
+	public boolean invokeListener(Gateway gateway, String method, Map<?, ?> data);
 
 	/**
 	 * logs message with defined logger for gateways

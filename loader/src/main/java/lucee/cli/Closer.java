@@ -23,38 +23,39 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Closer extends Thread {
 
-	private String name;
-	private Registry reg;
-	private long idleTime;
-	private CLIInvokerImpl invoker;
+	private final String name;
+	private final Registry reg;
+	private final long idleTime;
+	private final CLIInvokerImpl invoker;
 
-	public Closer(Registry reg, CLIInvokerImpl invoker, String name,
-			long idleTime) {
+	public Closer(final Registry reg, final CLIInvokerImpl invoker,
+			final String name, final long idleTime) {
 		this.reg = reg;
 		this.name = name;
 		this.idleTime = idleTime;
 		this.invoker = invoker;
 	}
 
+	@Override
 	public void run() {
 		// idle
-		do {
+		do
 			sleepEL(idleTime);
-		} while (invoker.lastAccess() + idleTime > System.currentTimeMillis());
+		while (invoker.lastAccess() + idleTime > System.currentTimeMillis());
 
 		try {
 			reg.unbind(name);
 			UnicastRemoteObject.unexportObject(invoker, true);
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			t.printStackTrace();
 		}
 
 	}
 
-	private void sleepEL(long millis) {
+	private void sleepEL(final long millis) {
 		try {
 			sleep(millis);
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			t.printStackTrace();
 		}
 	}

@@ -33,6 +33,7 @@ public interface DynamicAttributes {
 	 * @deprecated use instead
 	 *             <code>setDynamicAttribute(String uri, Collection.Key localName, Object value)</code>
 	 */
+	@Deprecated
 	public void setDynamicAttribute(String uri, String localName, Object value);
 
 	/**

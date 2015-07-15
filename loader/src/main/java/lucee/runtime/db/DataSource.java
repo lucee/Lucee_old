@@ -89,11 +89,13 @@ public interface DataSource extends Cloneable {
 	/**
 	 * @deprecated use instead <code>getConnectionString()</code>
 	 */
+	@Deprecated
 	public abstract String getDsnOriginal();
 
 	/**
 	 * @deprecated use instead <code>getConnectionStringTranslated()</code>
 	 */
+	@Deprecated
 	public abstract String getDsnTranslated();
 
 	/**
@@ -110,8 +112,9 @@ public interface DataSource extends Cloneable {
 	 * @return Returns the connection string with replaced placeholders.
 	 */
 	public abstract String getConnectionStringTranslated();
-	
-	public abstract Connection getConnection(Config config,String user, String pass) throws ClassException, BundleException, SQLException;
+
+	public abstract Connection getConnection(Config config, String user,
+			String pass) throws ClassException, BundleException, SQLException;
 
 	/**
 	 * @return Returns the password.
@@ -184,9 +187,10 @@ public interface DataSource extends Cloneable {
 	 * @return Returns the connectionTimeout.
 	 */
 	public abstract int getConnectionTimeout();
-	
+
 	/**
 	 * network timeout in seconds
+	 * 
 	 * @return
 	 */
 	public abstract int getNetworkTimeout();
@@ -224,9 +228,8 @@ public interface DataSource extends Cloneable {
 	public abstract boolean isStorage();
 
 	public abstract boolean validate();
-	
-	public abstract Log getLog();
 
+	public abstract Log getLog();
 
 	//  public abstract int getMaxConnection();
 

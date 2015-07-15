@@ -29,17 +29,18 @@ import lucee.runtime.cfx.QueryWrap;
  */
 public final class DebugResponse implements Response {
 
-	private StringBuffer write = new StringBuffer();
-	private StringBuffer writeDebug = new StringBuffer();
-	private Hashtable variables = new Hashtable();
-	private Hashtable queries = new Hashtable();
+	private final StringBuffer write = new StringBuffer();
+	private final StringBuffer writeDebug = new StringBuffer();
+	private final Hashtable variables = new Hashtable();
+	private final Hashtable queries = new Hashtable();
 
 	/**
 	 * @see com.allaire.cfx.Response#addQuery(java.lang.String,
 	 *      java.lang.String[])
 	 */
-	public Query addQuery(String name, String[] columns) {
-		QueryWrap query = new QueryWrap(CFMLEngineFactory.getInstance()
+	@Override
+	public Query addQuery(final String name, final String[] columns) {
+		final QueryWrap query = new QueryWrap(CFMLEngineFactory.getInstance()
 				.getCreationUtil().createQuery(columns, 0, name),
 				name.toLowerCase());
 		queries.put(name.toLowerCase(), query);
@@ -50,21 +51,24 @@ public final class DebugResponse implements Response {
 	 * @see com.allaire.cfx.Response#setVariable(java.lang.String,
 	 *      java.lang.String)
 	 */
-	public void setVariable(String key, String value) {
+	@Override
+	public void setVariable(final String key, final String value) {
 		variables.put(key.toLowerCase(), value);
 	}
 
 	/**
 	 * @see com.allaire.cfx.Response#write(java.lang.String)
 	 */
-	public void write(String str) {
+	@Override
+	public void write(final String str) {
 		write.append(str);
 	}
 
 	/**
 	 * @see com.allaire.cfx.Response#writeDebug(java.lang.String)
 	 */
-	public void writeDebug(String str) {
+	@Override
+	public void writeDebug(final String str) {
 		writeDebug.append(str);
 	}
 
@@ -93,7 +97,7 @@ public final class DebugResponse implements Response {
 
 		Enumeration e = variables.keys();
 		while (e.hasMoreElements()) {
-			Object key = e.nextElement();
+			final Object key = e.nextElement();
 			System.out.println("[Variable:" + key + "]");
 			System.out.println(escapeString(variables.get(key).toString()));
 		}
@@ -101,7 +105,7 @@ public final class DebugResponse implements Response {
 
 		e = queries.keys();
 		while (e.hasMoreElements()) {
-			Query query = (Query) queries.get(e.nextElement());
+			final Query query = (Query) queries.get(e.nextElement());
 			printQuery(query);
 			System.out.println();
 		}
@@ -113,10 +117,10 @@ public final class DebugResponse implements Response {
 	 * 
 	 * @param query
 	 */
-	public void printQuery(Query query) {
+	public void printQuery(final Query query) {
 		if (query != null) {
-			String[] cols = query.getColumns();
-			int rows = query.getRowCount();
+			final String[] cols = query.getColumns();
+			final int rows = query.getRowCount();
 			System.out.println("[Query:" + query.getName() + "]");
 			for (int i = 0; i < cols.length; i++) {
 				if (i > 0)
@@ -136,11 +140,11 @@ public final class DebugResponse implements Response {
 		}
 	}
 
-	private String escapeString(String string) {
-		int len = string.length();
-		StringBuffer sb = new StringBuffer(len);
+	private String escapeString(final String string) {
+		final int len = string.length();
+		final StringBuffer sb = new StringBuffer(len);
 		for (int i = 0; i < len; i++) {
-			char c = string.charAt(i);
+			final char c = string.charAt(i);
 			if (c == '\n')
 				sb.append("\\n");
 			else if (c == '\t')

@@ -30,9 +30,12 @@ public class FDControllerFactory {
 	// make sure FD see this class
 	static {
 		try {
-			CFMLEngineFactory.getInstance().getClassUtil().loadClass("com.intergral.fusiondebug.server.FDSignalException");
-		}
-		catch (Throwable t) {
+			CFMLEngineFactory
+					.getInstance()
+					.getClassUtil()
+					.loadClass(
+							"com.intergral.fusiondebug.server.FDSignalException");
+		} catch (final Throwable t) {
 			t.printStackTrace();
 		}
 	}

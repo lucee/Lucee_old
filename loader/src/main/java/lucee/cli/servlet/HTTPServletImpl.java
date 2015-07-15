@@ -25,12 +25,12 @@ import javax.servlet.http.HttpServlet;
 public class HTTPServletImpl extends HttpServlet {
 	private static final long serialVersionUID = 3270816399105433603L;
 
-	private ServletConfig config;
-	private ServletContext context;
-	private String servletName;
+	private final ServletConfig config;
+	private final ServletContext context;
+	private final String servletName;
 
-	public HTTPServletImpl(ServletConfig config, ServletContext context,
-			String servletName) {
+	public HTTPServletImpl(final ServletConfig config,
+			final ServletContext context, final String servletName) {
 		this.config = config;
 		this.context = context;
 		this.servletName = servletName;
@@ -39,6 +39,7 @@ public class HTTPServletImpl extends HttpServlet {
 	/**
 	 * @see javax.servlet.GenericServlet#getServletConfig()
 	 */
+	@Override
 	public ServletConfig getServletConfig() {
 		return config;
 	}
@@ -46,6 +47,7 @@ public class HTTPServletImpl extends HttpServlet {
 	/**
 	 * @see javax.servlet.GenericServlet#getServletContext()
 	 */
+	@Override
 	public ServletContext getServletContext() {
 		return context;
 	}

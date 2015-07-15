@@ -30,19 +30,19 @@ import lucee.runtime.config.Config;
  */
 public interface Mapping extends Serializable {
 
-	public Class<?> getArchiveClass(String className) throws ClassNotFoundException;
+	public Class<?> getArchiveClass(String className)
+			throws ClassNotFoundException;
 
 	public Class<?> getArchiveClass(String className, Class<?> defaultValue);
 
 	public InputStream getArchiveResourceAsStream(String string);
 
-	public Class<?> getPhysicalClass(String className) throws ClassNotFoundException,IOException;
-	public Class<?> getPhysicalClass(String className, byte[] code) throws IOException;
-	
-	
-	
-	
-	
+	public Class<?> getPhysicalClass(String className)
+			throws ClassNotFoundException, IOException;
+
+	public Class<?> getPhysicalClass(String className, byte[] code)
+			throws IOException;
+
 	/**
 	 * @return Returns the physical.
 	 */
@@ -127,6 +127,7 @@ public interface Mapping extends Serializable {
 	 * @return Returns the trusted.
 	 * @deprecated use instead <code>public short getInspectTemplate();</code>
 	 */
+	@Deprecated
 	public abstract boolean isTrusted();
 
 	public short getInspectTemplate();
@@ -144,17 +145,16 @@ public interface Mapping extends Serializable {
 	 * @return config
 	 */
 	public Config getConfig();
-	
-	
+
 	/**
-	 * mapping can have a specific listener mode to overwrite the listener mode coming from the Application Context
-	 * @return
+	 * mapping can have a specific listener mode to overwrite the listener mode
+	 * coming from the Application Context
 	 */
 	public int getListenerMode();
-	
+
 	/**
-	 * mapping can have a specific listener type to overwrite the listener mode coming from the Application Context
-	 * @return
+	 * mapping can have a specific listener type to overwrite the listener mode
+	 * coming from the Application Context
 	 */
 	public int getListenerType();
 }

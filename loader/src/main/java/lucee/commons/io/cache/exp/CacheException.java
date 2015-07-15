@@ -32,7 +32,7 @@ public class CacheException extends IOException {
 	 * 
 	 * @param message
 	 */
-	public CacheException(String message) {
+	public CacheException(final String message) {
 		super(message);
 	}
 }

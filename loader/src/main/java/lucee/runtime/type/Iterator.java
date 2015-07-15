@@ -33,6 +33,7 @@ public interface Iterator {
 	 * @throws PageException
 	 * @deprecated use instead <code>{@link #next(int)}</code>
 	 */
+	@Deprecated
 	public boolean next() throws PageException;
 
 	/**
@@ -52,6 +53,7 @@ public interface Iterator {
 	 * @throws PageException
 	 * @deprecated use instead <code>{@link #reset(int)}</code>
 	 */
+	@Deprecated
 	public void reset() throws PageException;
 
 	/**

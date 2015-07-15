@@ -132,7 +132,9 @@ public interface HTTPUtil {
 			throws UnsupportedEncodingException;
 
 	/**
-	 * remove port information if the port is the default port for this protocol (http=80,https=443)
+	 * remove port information if the port is the default port for this protocol
+	 * (http=80,https=443)
+	 * 
 	 * @param url
 	 * @return
 	 */

@@ -126,7 +126,9 @@ public interface Excepton {
 	 * @return CasterException
 	 */
 	public PageException createCasterException(String message);
+
 	public PageException createCasterException(Object obj, String className);
+
 	public PageException createCasterException(Object obj, Class clazz);
 
 	/**
@@ -140,6 +142,7 @@ public interface Excepton {
 	 * @deprecated use instead
 	 *             <code>createCustomTypeException(String message, String detail, String errorcode, String customType, String extendedInfo);</code>
 	 */
+	@Deprecated
 	public PageException createCustomTypeException(String message,
 			String detail, String errorcode, String customType);
 
@@ -202,6 +205,7 @@ public interface Excepton {
 	 * @deprecated use instead
 	 *             <code>createFunctionException(PageContext pc,String functionName, int badArgumentPosition, String badArgumentName, String message, String detail))</code>
 	 */
+	@Deprecated
 	public PageException createFunctionException(PageContext pc,
 			String functionName, String badArgumentPosition,
 			String badArgumentName, String message);
@@ -307,10 +311,12 @@ public interface Excepton {
 	 */
 	public boolean isOfType(int type, Throwable t);
 
-	public String similarKeyMessage(Collection.Key[] keys,String keySearched, String keyLabel, String keyLabels,String in, boolean listAll);
+	public String similarKeyMessage(Collection.Key[] keys, String keySearched,
+			String keyLabel, String keyLabels, String in, boolean listAll);
 
 	public RuntimeException createPageRuntimeException(PageException pe);
 
-	public PageException createFunctionException(PageContext pc, String functionName, int min, int max, int actual);
-	
+	public PageException createFunctionException(PageContext pc,
+			String functionName, int min, int max, int actual);
+
 }

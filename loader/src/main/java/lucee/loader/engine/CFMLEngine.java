@@ -71,10 +71,10 @@ import org.osgi.framework.BundleContext;
  * The CFML Engine
  */
 public interface CFMLEngine {
-	
-	public static final int DIALECT_LUCEE=0;
-	public static final int DIALECT_CFML=1;
-	public static final int DIALECT_BOTH=3;
+
+	public static final int DIALECT_LUCEE = 0;
+	public static final int DIALECT_CFML = 1;
+	public static final int DIALECT_BOTH = 3;
 
 	/**
 	 * Field <code>CAN_UPDATE</code>
@@ -88,8 +88,8 @@ public interface CFMLEngine {
 	public static int CAN_RESTART_ALL = CAN_RESTART;
 	public static int CAN_RESTART_CONTEXT = 2;
 
-	public abstract CFMLFactory getCFMLFactory(ServletConfig srvConfig, HttpServletRequest req)
-			throws ServletException;
+	public abstract CFMLFactory getCFMLFactory(ServletConfig srvConfig,
+			HttpServletRequest req) throws ServletException;
 
 	/**
 	 * adds a servlet config
@@ -99,7 +99,6 @@ public interface CFMLEngine {
 	 */
 	public abstract void addServletConfig(ServletConfig config)
 			throws ServletException;
-	
 
 	/**
 	 * method to invoke the engine for a regular Lucee call
@@ -189,7 +188,7 @@ public interface CFMLEngine {
 	 * @return return location URL to get updates for the engines
 	 */
 	public URL getUpdateLocation();
-	
+
 	public Identification getIdentification();
 
 	/**
@@ -293,47 +292,49 @@ public interface CFMLEngine {
 	 * @return the HTTP Util
 	 */
 	public HTTPUtil getHTTPUtil();
-	
+
 	public XMLUtil getXMLUtil();
 
 	public ListUtil getListUtil();
-	
+
 	public HTMLUtil getHTMLUtil();
 
 	public DBUtil getDBUtil();
-	
+
 	public Instrumentation getInstrumentation();
 
 	public abstract ORMUtil getORMUtil();
-
 
 	/**
 	 * @return return existing PageContext for the current PageContext
 	 */
 	public PageContext getThreadPageContext();
-	
 
 	public Config getThreadConfig();
-	public TimeZone getThreadTimeZone();  
 
-	
+	public TimeZone getThreadTimeZone();
+
 	/**
 	 * create and register a PageContext, use releasePageContext when done
-	 * @return
-	 * @throws ServletException 
+	 * 
+	 * @return PageContext Object created
+	 * @throws ServletException
 	 */
-	public PageContext createPageContext(File contextRoot, String host, String scriptName, String queryString
-			, Cookie[] cookies,Map<String, Object> headers,Map<String, String> parameters, 
-			Map<String, Object> attributes, OutputStream os,long timeout,boolean register) throws ServletException;
-	
+	public PageContext createPageContext(File contextRoot, String host,
+			String scriptName, String queryString, Cookie[] cookies,
+			Map<String, Object> headers, Map<String, String> parameters,
+			Map<String, Object> attributes, OutputStream os, long timeout,
+			boolean register) throws ServletException;
+
 	/**
-	 * releases a PageContext
+	 * 
 	 * @param pc
-	 * @return
+	 * @param unregister
 	 */
 	public void releasePageContext(PageContext pc, boolean unregister);
-	
-	public ConfigWeb createConfig(File contextRoot, String host, String scriptName) throws ServletException;
+
+	public ConfigWeb createConfig(File contextRoot, String host,
+			String scriptName) throws ServletException;
 
 	public VideoUtil getVideoUtil();
 
@@ -351,9 +352,9 @@ public interface CFMLEngine {
 			throws PageException;
 
 	public long uptime();
-	
+
 	public ServletConfig[] getServletConfigs();
-		
+
 	/*
 	 * get the OSGi Bundle of the core
 	 * @return 
@@ -361,15 +362,15 @@ public interface CFMLEngine {
 	public abstract Bundle getCoreBundle();*/
 
 	public BundleCollection getBundleCollection();
+
 	public BundleContext getBundleContext();
 
 	public ScriptEngineFactory getScriptEngineFactory(int dialect);
+
 	public ScriptEngineFactory getTagEngineFactory(int dialect);
 
 	public abstract TemplateUtil getTemplateUtil();
 
 	public abstract SystemUtil getSystemUtil();
-
-
 
 }

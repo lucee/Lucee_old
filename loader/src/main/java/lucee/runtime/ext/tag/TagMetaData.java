@@ -55,8 +55,9 @@ public interface TagMetaData {
 	/**
 	 * type of the body content
 	 * 
-	 * @return 
-	 *         TagMetaData.BODY_CONTENT_EMPTY,TagMetaData.BODY_CONTENT_FREE,TagMetaData
+	 * @return
+	 *         TagMetaData.BODY_CONTENT_EMPTY,TagMetaData.BODY_CONTENT_FREE,
+	 *         TagMetaData
 	 *         .BODY_CONTENT_MUST
 	 */
 	public int getBodyContent();
@@ -64,8 +65,9 @@ public interface TagMetaData {
 	/**
 	 * attribute type
 	 * 
-	 * @return 
-	 *         TagMetaData.ATTRIBUTE_TYPE_FIX,TagMetaData.ATTRIBUTE_TYPE_DYNAMIC,
+	 * @return
+	 *         TagMetaData.ATTRIBUTE_TYPE_FIX,TagMetaData.ATTRIBUTE_TYPE_DYNAMIC
+	 *         ,
 	 *         TagMetaData.ATTRIBUTE_TYPE_MIXED
 	 */
 	public int getAttributeType();

@@ -24,6 +24,6 @@ import lucee.loader.engine.CFMLEngine;
 public class LuceeScriptEngineFactory extends BaseScriptEngineFactory {
 
 	public LuceeScriptEngineFactory() throws ServletException {
-		super(false,CFMLEngine.DIALECT_LUCEE);
+		super(false, CFMLEngine.DIALECT_LUCEE);
 	}
 }

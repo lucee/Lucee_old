@@ -27,7 +27,7 @@ import lucee.runtime.exp.PageException;
  */
 public interface AMFCaster {
 
-	public void init(Map<String,String> arguments);
+	public void init(Map<String, String> arguments);
 
 	/**
 	 * cast cfml Object to AMF Object

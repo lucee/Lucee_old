@@ -29,7 +29,7 @@ public interface Decision {
 
 	// FUTURE add function isJson and others we support in the core
 	// FUTURE add function is(String type, Object value)
-	
+
 	public boolean isAnyType(String type);
 
 	/**
@@ -59,11 +59,13 @@ public interface Decision {
 	/**
 	 * @deprecated use insteas isNumber
 	 */
+	@Deprecated
 	public boolean isNumeric(Object value);
 
 	/**
 	 * @deprecated use insteas isNumber
 	 */
+	@Deprecated
 	public boolean isNumeric(String str);
 
 	/**
@@ -256,25 +258,27 @@ public interface Decision {
 
 	/**
 	 * Checks if number is valid (not infinity or NaN)
+	 * 
 	 * @param dbl
 	 * @return
 	 */
-	public boolean isValid(double from);
-	
-	public boolean isCastableTo(String type, Object o, boolean alsoAlias, boolean alsoPattern, int maxlength);
-	
+	public boolean isValid(double dbl);
+
+	public boolean isCastableTo(String type, Object o, boolean alsoAlias,
+			boolean alsoPattern, int maxlength);
+
 	public boolean isCastableToArray(Object o);
-	
-	public boolean isCastableToBinary(Object object,boolean checkBase64String);
-	
-	public boolean isCastableToBoolean(Object obj); 
+
+	public boolean isCastableToBinary(Object object, boolean checkBase64String);
+
+	public boolean isCastableToBoolean(Object obj);
 
 	public boolean isCastableToDate(Object o);
-	
+
 	public boolean isCastableToNumeric(Object o);
-	
+
 	public boolean isCastableToString(Object o);
-	
+
 	public boolean isCastableToStruct(Object o);
 
 }

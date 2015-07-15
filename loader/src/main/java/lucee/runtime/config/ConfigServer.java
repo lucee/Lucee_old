@@ -100,17 +100,19 @@ public interface ConfigServer extends Config {
 	 */
 	public void setConfigListener(ConfigListener configListener);
 
+	@Override
 	public RemoteClient[] getRemoteClients();
 
 	/**
 	 * @deprecated use instead getEngine
 	 * @return
 	 */
+	@Deprecated
 	public abstract CFMLEngine getCFMLEngine();
 
 	public abstract CFMLEngine getEngine();
-	
 
+	@Override
 	public IdentificationServer getIdentification();
 
 }

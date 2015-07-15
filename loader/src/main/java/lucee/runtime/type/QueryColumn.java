@@ -61,6 +61,7 @@ public interface QueryColumn extends Collection, Reference, Castable {
 	 * @throws PageException
 	 * @deprecated use instead <code>get(int row, Object defaultValue)</code>
 	 */
+	@Deprecated
 	public Object get(int row) throws PageException;
 
 	/**

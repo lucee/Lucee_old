@@ -23,14 +23,14 @@ import org.osgi.framework.BundleContext;
 public class BundleActivatorImpl implements BundleActivator {
 
 	@Override
-	public void start(BundleContext bc) throws Exception {
+	public void start(final BundleContext bc) throws Exception {
 		System.out.println("++++++++++ start +++++++++");
 		System.out.println(bc);
 		System.out.println(bc.getBundle().getSymbolicName());
 	}
 
 	@Override
-	public void stop(BundleContext bc) throws Exception {
+	public void stop(final BundleContext bc) throws Exception {
 		System.out.println("++++++++++ stop +++++++++");
 		System.out.println(bc);
 		System.out.println(bc.getBundle().getSymbolicName());

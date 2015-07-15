@@ -30,7 +30,7 @@ public final class ConverterException extends Exception {
 	 * 
 	 * @param message
 	 */
-	public ConverterException(String message) {
+	public ConverterException(final String message) {
 		super(message);
 	}
 }

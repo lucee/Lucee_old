@@ -33,14 +33,12 @@ public interface IO {
 	 * close stream silently (no Exception)
 	 * 
 	 * @param is
-	 * @param os
 	 */
 	public void closeSilent(InputStream is);
 
 	/**
 	 * close stream silently (no Exception)
 	 * 
-	 * @param is
 	 * @param os
 	 */
 	public void closeSilent(OutputStream os);
@@ -63,14 +61,14 @@ public interface IO {
 	/**
 	 * close streams silently (no Exception)
 	 * 
-	 * @param r
+	 * @param w
 	 */
 	public void closeSilent(Writer w);
 
 	/**
 	 * close any object with a close method silently
 	 * 
-	 * @param r
+	 * @param o
 	 */
 	public void closeSilent(Object o);
 
@@ -150,14 +148,19 @@ public interface IO {
 
 	public BufferedOutputStream toBufferedOutputStream(OutputStream os);
 
-	public void write(Resource res, String content,boolean append, Charset charset) throws IOException; 
-	public void write(Resource res, byte[] content,boolean append) throws IOException;
+	public void write(Resource res, String content, boolean append,
+			Charset charset) throws IOException;
 
-	public Reader getReader(InputStream is, Charset charset) throws IOException; 
+	public void write(Resource res, byte[] content, boolean append)
+			throws IOException;
+
+	public Reader getReader(InputStream is, Charset charset) throws IOException;
+
 	public Reader getReader(Resource res, Charset charset) throws IOException;
 
 	public Reader toBufferedReader(Reader reader);
 
-	public void copy(InputStream is, Resource out, boolean closeIS) throws IOException; 
+	public void copy(InputStream is, Resource out, boolean closeIS)
+			throws IOException;
 
 }

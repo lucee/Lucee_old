@@ -42,7 +42,6 @@ public interface Info {
 	 */
 	public org.osgi.framework.Version getVersion();
 
-
 	/**
 	 * @return returns the state
 	 */
@@ -62,17 +61,19 @@ public interface Info {
 	//public int getMinorVersion();
 
 	public String getVersionNameExplanation();
-	
+
 	public String[] getCFMLTemplateExtensions();
+
 	public String[] getLuceeTemplateExtensions();
 
 	@Deprecated
 	public String[] getCFMLComponentExtensions();
+
 	@Deprecated
 	public String[] getLuceeComponentExtensions();
-	
+
 	public String getCFMLComponentExtension();
+
 	public String getLuceeComponentExtension();
-	
 
 }

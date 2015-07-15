@@ -99,7 +99,7 @@ public interface Log {
 	 * @param message message to log
 	 */
 	public void error(String application, String message);
-	
+
 	public void error(String application, Throwable t);
 
 	public void error(String application, String message, Throwable t);

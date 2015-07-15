@@ -31,7 +31,8 @@ public final class HelloWorld implements CustomTag {
 	 * @see com.allaire.cfx.CustomTag#processRequest(com.allaire.cfx.Request,
 	 *      com.allaire.cfx.Response)
 	 */
-	public void processRequest(Request request, Response response)
+	@Override
+	public void processRequest(final Request request, final Response response)
 			throws Exception {
 
 		if (request.attributeExists("name"))

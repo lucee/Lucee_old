@@ -55,15 +55,15 @@ import com.allaire.cfx.Query;
  */
 public class QueryWrap implements Query {
 
-	private lucee.runtime.type.Query rst;
-	private String name;
+	private final lucee.runtime.type.Query rst;
+	private final String name;
 
 	/**
 	 * constructor of the class
 	 * 
 	 * @param rst runtime Query
 	 */
-	public QueryWrap(lucee.runtime.type.Query rst) {
+	public QueryWrap(final lucee.runtime.type.Query rst) {
 		this.rst = rst;
 		this.name = rst.getName();
 	}
@@ -74,7 +74,7 @@ public class QueryWrap implements Query {
 	 * @param rst runtime Query
 	 * @param name name of the query (otherwise rst.getName())
 	 */
-	public QueryWrap(lucee.runtime.type.Query rst, String name) {
+	public QueryWrap(final lucee.runtime.type.Query rst, final String name) {
 		this.rst = rst;
 		this.name = name;
 	}
@@ -82,6 +82,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see com.allaire.cfx.Query#addRow()
 	 */
+	@Override
 	public int addRow() {
 		return rst.addRow();
 	}
@@ -89,22 +90,26 @@ public class QueryWrap implements Query {
 	/**
 	 * @see com.allaire.cfx.Query#getColumnIndex(java.lang.String)
 	 */
-	public int getColumnIndex(String coulmnName) {
+	@Override
+	public int getColumnIndex(final String coulmnName) {
 		return rst.getColumnIndex(coulmnName);
 	}
 
 	/**
 	 * @see com.allaire.cfx.Query#getColumns()
 	 */
+	@Override
 	@SuppressWarnings("deprecation")
 	public String[] getColumns() {
 		return rst.getColumns();
 	}
 
+	@Override
 	public Collection.Key[] getColumnNames() {
 		return rst.getColumnNames();
 	}
 
+	@Override
 	public String[] getColumnNamesAsString() {
 		return rst.getColumnNamesAsString();
 	}
@@ -112,13 +117,16 @@ public class QueryWrap implements Query {
 	/**
 	 * @see com.allaire.cfx.Query#getData(int, int)
 	 */
-	public String getData(int row, int col) throws IndexOutOfBoundsException {
+	@Override
+	public String getData(final int row, final int col)
+			throws IndexOutOfBoundsException {
 		return rst.getData(row, col);
 	}
 
 	/**
 	 * @see com.allaire.cfx.Query#getName()
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -126,6 +134,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see com.allaire.cfx.Query#getRowCount()
 	 */
+	@Override
 	public int getRowCount() {
 		return rst.getRowCount();
 	}
@@ -133,7 +142,8 @@ public class QueryWrap implements Query {
 	/**
 	 * @see com.allaire.cfx.Query#setData(int, int, java.lang.String)
 	 */
-	public void setData(int row, int col, String value)
+	@Override
+	public void setData(final int row, final int col, final String value)
 			throws IndexOutOfBoundsException {
 		rst.setData(row, col, value);
 	}
@@ -141,13 +151,15 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#absolute(int)
 	 */
-	public boolean absolute(int row) throws SQLException {
+	@Override
+	public boolean absolute(final int row) throws SQLException {
 		return rst.absolute(row);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#afterLast()
 	 */
+	@Override
 	public void afterLast() throws SQLException {
 		rst.afterLast();
 	}
@@ -155,6 +167,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#beforeFirst()
 	 */
+	@Override
 	public void beforeFirst() throws SQLException {
 		rst.beforeFirst();
 	}
@@ -162,6 +175,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#cancelRowUpdates()
 	 */
+	@Override
 	public void cancelRowUpdates() throws SQLException {
 		rst.cancelRowUpdates();
 	}
@@ -169,6 +183,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#clearWarnings()
 	 */
+	@Override
 	public void clearWarnings() throws SQLException {
 		rst.clearWarnings();
 	}
@@ -176,6 +191,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public Object clone() {
 		return rst.clone();
 	}
@@ -183,6 +199,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#close()
 	 */
+	@Override
 	public void close() throws SQLException {
 		rst.close();
 	}
@@ -190,6 +207,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#deleteRow()
 	 */
+	@Override
 	public void deleteRow() throws SQLException {
 		rst.deleteRow();
 	}
@@ -197,13 +215,15 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#findColumn(java.lang.String)
 	 */
-	public int findColumn(String columnName) throws SQLException {
+	@Override
+	public int findColumn(final String columnName) throws SQLException {
 		return rst.findColumn(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#first()
 	 */
+	@Override
 	public boolean first() throws SQLException {
 		return rst.first();
 	}
@@ -211,36 +231,43 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getArray(int)
 	 */
-	public Array getArray(int i) throws SQLException {
+	@Override
+	public Array getArray(final int i) throws SQLException {
 		return rst.getArray(i);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getArray(java.lang.String)
 	 */
-	public Array getArray(String colName) throws SQLException {
+	@Override
+	public Array getArray(final String colName) throws SQLException {
 		return rst.getArray(colName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getAsciiStream(int)
 	 */
-	public InputStream getAsciiStream(int columnIndex) throws SQLException {
+	@Override
+	public InputStream getAsciiStream(final int columnIndex)
+			throws SQLException {
 		return rst.getAsciiStream(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getAsciiStream(java.lang.String)
 	 */
-	public InputStream getAsciiStream(String columnName) throws SQLException {
+	@Override
+	public InputStream getAsciiStream(final String columnName)
+			throws SQLException {
 		return rst.getAsciiStream(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBigDecimal(int, int)
 	 */
+	@Override
 	@SuppressWarnings("deprecation")
-	public BigDecimal getBigDecimal(int columnIndex, int scale)
+	public BigDecimal getBigDecimal(final int columnIndex, final int scale)
 			throws SQLException {
 		return rst.getBigDecimal(columnIndex, scale);
 	}
@@ -248,15 +275,17 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getBigDecimal(int)
 	 */
-	public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
+	@Override
+	public BigDecimal getBigDecimal(final int columnIndex) throws SQLException {
 		return rst.getBigDecimal(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBigDecimal(java.lang.String, int)
 	 */
+	@Override
 	@SuppressWarnings("deprecation")
-	public BigDecimal getBigDecimal(String columnName, int scale)
+	public BigDecimal getBigDecimal(final String columnName, final int scale)
 			throws SQLException {
 		return rst.getBigDecimal(columnName, scale);
 	}
@@ -264,111 +293,131 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getBigDecimal(java.lang.String)
 	 */
-	public BigDecimal getBigDecimal(String columnName) throws SQLException {
+	@Override
+	public BigDecimal getBigDecimal(final String columnName)
+			throws SQLException {
 		return rst.getBigDecimal(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBinaryStream(int)
 	 */
-	public InputStream getBinaryStream(int columnIndex) throws SQLException {
+	@Override
+	public InputStream getBinaryStream(final int columnIndex)
+			throws SQLException {
 		return rst.getBinaryStream(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBinaryStream(java.lang.String)
 	 */
-	public InputStream getBinaryStream(String columnName) throws SQLException {
+	@Override
+	public InputStream getBinaryStream(final String columnName)
+			throws SQLException {
 		return rst.getBinaryStream(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBlob(int)
 	 */
-	public Blob getBlob(int i) throws SQLException {
+	@Override
+	public Blob getBlob(final int i) throws SQLException {
 		return rst.getBlob(i);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBlob(java.lang.String)
 	 */
-	public Blob getBlob(String colName) throws SQLException {
+	@Override
+	public Blob getBlob(final String colName) throws SQLException {
 		return rst.getBlob(colName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBoolean(int)
 	 */
-	public boolean getBoolean(int columnIndex) throws SQLException {
+	@Override
+	public boolean getBoolean(final int columnIndex) throws SQLException {
 		return rst.getBoolean(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBoolean(java.lang.String)
 	 */
-	public boolean getBoolean(String columnName) throws SQLException {
+	@Override
+	public boolean getBoolean(final String columnName) throws SQLException {
 		return rst.getBoolean(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getByte(int)
 	 */
-	public byte getByte(int columnIndex) throws SQLException {
+	@Override
+	public byte getByte(final int columnIndex) throws SQLException {
 		return rst.getByte(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getByte(java.lang.String)
 	 */
-	public byte getByte(String columnName) throws SQLException {
+	@Override
+	public byte getByte(final String columnName) throws SQLException {
 		return rst.getByte(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBytes(int)
 	 */
-	public byte[] getBytes(int columnIndex) throws SQLException {
+	@Override
+	public byte[] getBytes(final int columnIndex) throws SQLException {
 		return rst.getBytes(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getBytes(java.lang.String)
 	 */
-	public byte[] getBytes(String columnName) throws SQLException {
+	@Override
+	public byte[] getBytes(final String columnName) throws SQLException {
 		return rst.getBytes(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getCharacterStream(int)
 	 */
-	public Reader getCharacterStream(int columnIndex) throws SQLException {
+	@Override
+	public Reader getCharacterStream(final int columnIndex) throws SQLException {
 		return rst.getCharacterStream(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getCharacterStream(java.lang.String)
 	 */
-	public Reader getCharacterStream(String columnName) throws SQLException {
+	@Override
+	public Reader getCharacterStream(final String columnName)
+			throws SQLException {
 		return rst.getCharacterStream(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getClob(int)
 	 */
-	public Clob getClob(int i) throws SQLException {
+	@Override
+	public Clob getClob(final int i) throws SQLException {
 		return rst.getClob(i);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getClob(java.lang.String)
 	 */
-	public Clob getClob(String colName) throws SQLException {
+	@Override
+	public Clob getClob(final String colName) throws SQLException {
 		return rst.getClob(colName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getConcurrency()
 	 */
+	@Override
 	public int getConcurrency() throws SQLException {
 		return rst.getConcurrency();
 	}
@@ -376,6 +425,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getCursorName()
 	 */
+	@Override
 	public String getCursorName() throws SQLException {
 		return rst.getCursorName();
 	}
@@ -383,48 +433,57 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getDate(int, java.util.Calendar)
 	 */
-	public Date getDate(int columnIndex, Calendar cal) throws SQLException {
+	@Override
+	public Date getDate(final int columnIndex, final Calendar cal)
+			throws SQLException {
 		return rst.getDate(columnIndex, cal);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getDate(int)
 	 */
-	public Date getDate(int columnIndex) throws SQLException {
+	@Override
+	public Date getDate(final int columnIndex) throws SQLException {
 		return rst.getDate(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getDate(java.lang.String, java.util.Calendar)
 	 */
-	public Date getDate(String columnName, Calendar cal) throws SQLException {
+	@Override
+	public Date getDate(final String columnName, final Calendar cal)
+			throws SQLException {
 		return rst.getDate(columnName, cal);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getDate(java.lang.String)
 	 */
-	public Date getDate(String columnName) throws SQLException {
+	@Override
+	public Date getDate(final String columnName) throws SQLException {
 		return rst.getDate(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getDouble(int)
 	 */
-	public double getDouble(int columnIndex) throws SQLException {
+	@Override
+	public double getDouble(final int columnIndex) throws SQLException {
 		return rst.getDouble(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getDouble(java.lang.String)
 	 */
-	public double getDouble(String columnName) throws SQLException {
+	@Override
+	public double getDouble(final String columnName) throws SQLException {
 		return rst.getDouble(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getFetchDirection()
 	 */
+	@Override
 	public int getFetchDirection() throws SQLException {
 		return rst.getFetchDirection();
 	}
@@ -432,6 +491,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getFetchSize()
 	 */
+	@Override
 	public int getFetchSize() throws SQLException {
 		return rst.getFetchSize();
 	}
@@ -439,48 +499,55 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getFloat(int)
 	 */
-	public float getFloat(int columnIndex) throws SQLException {
+	@Override
+	public float getFloat(final int columnIndex) throws SQLException {
 		return rst.getFloat(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getFloat(java.lang.String)
 	 */
-	public float getFloat(String columnName) throws SQLException {
+	@Override
+	public float getFloat(final String columnName) throws SQLException {
 		return rst.getFloat(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getInt(int)
 	 */
-	public int getInt(int columnIndex) throws SQLException {
+	@Override
+	public int getInt(final int columnIndex) throws SQLException {
 		return rst.getInt(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getInt(java.lang.String)
 	 */
-	public int getInt(String columnName) throws SQLException {
+	@Override
+	public int getInt(final String columnName) throws SQLException {
 		return rst.getInt(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getLong(int)
 	 */
-	public long getLong(int columnIndex) throws SQLException {
+	@Override
+	public long getLong(final int columnIndex) throws SQLException {
 		return rst.getLong(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getLong(java.lang.String)
 	 */
-	public long getLong(String columnName) throws SQLException {
+	@Override
+	public long getLong(final String columnName) throws SQLException {
 		return rst.getLong(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getMetaData()
 	 */
+	@Override
 	public ResultSetMetaData getMetaData() throws SQLException {
 		return rst.getMetaData();
 	}
@@ -488,28 +555,34 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getObject(int, java.util.Map)
 	 */
-	public Object getObject(int i, Map<String,Class<?>> map) throws SQLException {
+	@Override
+	public Object getObject(final int i, final Map<String, Class<?>> map)
+			throws SQLException {
 		return rst.getObject(i, map);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getObject(int)
 	 */
-	public Object getObject(int columnIndex) throws SQLException {
+	@Override
+	public Object getObject(final int columnIndex) throws SQLException {
 		return rst.getObject(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getObject(java.lang.String, java.util.Map)
 	 */
-	public Object getObject(String colName, Map<String,Class<?>> map) throws SQLException {
+	@Override
+	public Object getObject(final String colName,
+			final Map<String, Class<?>> map) throws SQLException {
 		return rst.getObject(colName, map);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getObject(java.lang.String)
 	 */
-	public Object getObject(String columnName) throws SQLException {
+	@Override
+	public Object getObject(final String columnName) throws SQLException {
 		return rst.getObject(columnName);
 	}
 
@@ -523,20 +596,23 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getRef(int)
 	 */
-	public Ref getRef(int i) throws SQLException {
+	@Override
+	public Ref getRef(final int i) throws SQLException {
 		return rst.getRef(i);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getRef(java.lang.String)
 	 */
-	public Ref getRef(String colName) throws SQLException {
+	@Override
+	public Ref getRef(final String colName) throws SQLException {
 		return rst.getRef(colName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getRow()
 	 */
+	@Override
 	public int getRow() throws SQLException {
 		return rst.getRow();
 	}
@@ -544,20 +620,23 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getShort(int)
 	 */
-	public short getShort(int columnIndex) throws SQLException {
+	@Override
+	public short getShort(final int columnIndex) throws SQLException {
 		return rst.getShort(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getShort(java.lang.String)
 	 */
-	public short getShort(String columnName) throws SQLException {
+	@Override
+	public short getShort(final String columnName) throws SQLException {
 		return rst.getShort(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getStatement()
 	 */
+	@Override
 	public Statement getStatement() throws SQLException {
 		return rst.getStatement();
 	}
@@ -565,49 +644,58 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getString(int)
 	 */
-	public String getString(int columnIndex) throws SQLException {
+	@Override
+	public String getString(final int columnIndex) throws SQLException {
 		return rst.getString(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getString(java.lang.String)
 	 */
-	public String getString(String columnName) throws SQLException {
+	@Override
+	public String getString(final String columnName) throws SQLException {
 		return rst.getString(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getTime(int, java.util.Calendar)
 	 */
-	public Time getTime(int columnIndex, Calendar cal) throws SQLException {
+	@Override
+	public Time getTime(final int columnIndex, final Calendar cal)
+			throws SQLException {
 		return rst.getTime(columnIndex, cal);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getTime(int)
 	 */
-	public Time getTime(int columnIndex) throws SQLException {
+	@Override
+	public Time getTime(final int columnIndex) throws SQLException {
 		return rst.getTime(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getTime(java.lang.String, java.util.Calendar)
 	 */
-	public Time getTime(String columnName, Calendar cal) throws SQLException {
+	@Override
+	public Time getTime(final String columnName, final Calendar cal)
+			throws SQLException {
 		return rst.getTime(columnName, cal);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getTime(java.lang.String)
 	 */
-	public Time getTime(String columnName) throws SQLException {
+	@Override
+	public Time getTime(final String columnName) throws SQLException {
 		return rst.getTime(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getTimestamp(int, java.util.Calendar)
 	 */
-	public Timestamp getTimestamp(int columnIndex, Calendar cal)
+	@Override
+	public Timestamp getTimestamp(final int columnIndex, final Calendar cal)
 			throws SQLException {
 		return rst.getTimestamp(columnIndex, cal);
 	}
@@ -615,7 +703,8 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getTimestamp(int)
 	 */
-	public Timestamp getTimestamp(int columnIndex) throws SQLException {
+	@Override
+	public Timestamp getTimestamp(final int columnIndex) throws SQLException {
 		return rst.getTimestamp(columnIndex);
 	}
 
@@ -623,7 +712,8 @@ public class QueryWrap implements Query {
 	 * @see java.sql.ResultSet#getTimestamp(java.lang.String,
 	 *      java.util.Calendar)
 	 */
-	public Timestamp getTimestamp(String columnName, Calendar cal)
+	@Override
+	public Timestamp getTimestamp(final String columnName, final Calendar cal)
 			throws SQLException {
 		return rst.getTimestamp(columnName, cal);
 	}
@@ -631,13 +721,15 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getTimestamp(java.lang.String)
 	 */
-	public Timestamp getTimestamp(String columnName) throws SQLException {
+	@Override
+	public Timestamp getTimestamp(final String columnName) throws SQLException {
 		return rst.getTimestamp(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getType()
 	 */
+	@Override
 	public int getType() throws SQLException {
 		return rst.getType();
 	}
@@ -645,36 +737,43 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#getUnicodeStream(int)
 	 */
+	@Override
 	@SuppressWarnings("deprecation")
-	public InputStream getUnicodeStream(int columnIndex) throws SQLException {
+	public InputStream getUnicodeStream(final int columnIndex)
+			throws SQLException {
 		return rst.getUnicodeStream(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getUnicodeStream(java.lang.String)
 	 */
+	@Override
 	@SuppressWarnings("deprecation")
-	public InputStream getUnicodeStream(String columnName) throws SQLException {
+	public InputStream getUnicodeStream(final String columnName)
+			throws SQLException {
 		return rst.getUnicodeStream(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getURL(int)
 	 */
-	public URL getURL(int columnIndex) throws SQLException {
+	@Override
+	public URL getURL(final int columnIndex) throws SQLException {
 		return rst.getURL(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getURL(java.lang.String)
 	 */
-	public URL getURL(String columnName) throws SQLException {
+	@Override
+	public URL getURL(final String columnName) throws SQLException {
 		return rst.getURL(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#getWarnings()
 	 */
+	@Override
 	public SQLWarning getWarnings() throws SQLException {
 		return rst.getWarnings();
 	}
@@ -682,6 +781,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#insertRow()
 	 */
+	@Override
 	public void insertRow() throws SQLException {
 		rst.insertRow();
 	}
@@ -689,6 +789,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#isAfterLast()
 	 */
+	@Override
 	public boolean isAfterLast() throws SQLException {
 
 		return rst.isAfterLast();
@@ -697,6 +798,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#isBeforeFirst()
 	 */
+	@Override
 	public boolean isBeforeFirst() throws SQLException {
 		return rst.isBeforeFirst();
 	}
@@ -718,6 +820,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#isFirst()
 	 */
+	@Override
 	public boolean isFirst() throws SQLException {
 		return rst.isFirst();
 	}
@@ -725,6 +828,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#isLast()
 	 */
+	@Override
 	public boolean isLast() throws SQLException {
 		return rst.isLast();
 	}
@@ -747,6 +851,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#last()
 	 */
+	@Override
 	public boolean last() throws SQLException {
 
 		return rst.last();
@@ -755,6 +860,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#moveToCurrentRow()
 	 */
+	@Override
 	public void moveToCurrentRow() throws SQLException {
 		rst.moveToCurrentRow();
 	}
@@ -762,6 +868,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#moveToInsertRow()
 	 */
+	@Override
 	public void moveToInsertRow() throws SQLException {
 		rst.moveToInsertRow();
 	}
@@ -769,6 +876,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#next()
 	 */
+	@Override
 	@SuppressWarnings("deprecation")
 	public boolean next() {
 		return rst.next();
@@ -777,6 +885,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#previous()
 	 */
+	@Override
 	public boolean previous() throws SQLException {
 		return rst.previous();
 	}
@@ -784,6 +893,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#refreshRow()
 	 */
+	@Override
 	public void refreshRow() throws SQLException {
 		rst.refreshRow();
 	}
@@ -791,13 +901,15 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#relative(int)
 	 */
-	public boolean relative(int rows) throws SQLException {
+	@Override
+	public boolean relative(final int rows) throws SQLException {
 		return rst.relative(rows);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#rowDeleted()
 	 */
+	@Override
 	public boolean rowDeleted() throws SQLException {
 		return rst.rowDeleted();
 	}
@@ -805,6 +917,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#rowInserted()
 	 */
+	@Override
 	public boolean rowInserted() throws SQLException {
 		return rst.rowInserted();
 	}
@@ -812,6 +925,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#rowUpdated()
 	 */
+	@Override
 	public boolean rowUpdated() throws SQLException {
 		return rst.rowUpdated();
 	}
@@ -819,14 +933,16 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#setFetchDirection(int)
 	 */
-	public void setFetchDirection(int direction) throws SQLException {
+	@Override
+	public void setFetchDirection(final int direction) throws SQLException {
 		rst.setFetchDirection(direction);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#setFetchSize(int)
 	 */
-	public void setFetchSize(int rows) throws SQLException {
+	@Override
+	public void setFetchSize(final int rows) throws SQLException {
 		rst.setFetchSize(rows);
 	}
 
@@ -842,7 +958,7 @@ public class QueryWrap implements Query {
 	 * @param order
 	 * @throws PageException
 	 */
-	public synchronized void sort(Key keyColumn, int order)
+	public synchronized void sort(final Key keyColumn, final int order)
 			throws PageException {
 
 		rst.sort(keyColumn, order);
@@ -852,7 +968,7 @@ public class QueryWrap implements Query {
 	 * @param column
 	 * @throws PageException
 	 */
-	public void sort(Key column) throws PageException {
+	public void sort(final Key column) throws PageException {
 
 		rst.sort(column);
 	}
@@ -863,7 +979,7 @@ public class QueryWrap implements Query {
 	 * @throws PageException
 	 */
 	@SuppressWarnings("deprecation")
-	public synchronized void sort(String strColumn, int order)
+	public synchronized void sort(final String strColumn, final int order)
 			throws PageException {
 
 		rst.sort(strColumn, order);
@@ -874,7 +990,7 @@ public class QueryWrap implements Query {
 	 * @throws PageException
 	 */
 	@SuppressWarnings("deprecation")
-	public void sort(String column) throws PageException {
+	public void sort(final String column) throws PageException {
 
 		rst.sort(column);
 	}
@@ -885,14 +1001,15 @@ public class QueryWrap implements Query {
 	 * @param dp
 	 * @return generated DumpData
 	 */
-	public DumpData toDumpData(PageContext pageContext, int maxlevel,
-			DumpProperties dp) {
+	public DumpData toDumpData(final PageContext pageContext,
+			final int maxlevel, final DumpProperties dp) {
 		return rst.toDumpData(pageContext, maxlevel, dp);
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return rst.toString();
 	}
@@ -900,22 +1017,27 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateArray(int, java.sql.Array)
 	 */
-	public void updateArray(int columnIndex, Array x) throws SQLException {
+	@Override
+	public void updateArray(final int columnIndex, final Array x)
+			throws SQLException {
 		rst.updateArray(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateArray(java.lang.String, java.sql.Array)
 	 */
-	public void updateArray(String columnName, Array x) throws SQLException {
+	@Override
+	public void updateArray(final String columnName, final Array x)
+			throws SQLException {
 		rst.updateArray(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateAsciiStream(int, java.io.InputStream, int)
 	 */
-	public void updateAsciiStream(int columnIndex, InputStream x, int length)
-			throws SQLException {
+	@Override
+	public void updateAsciiStream(final int columnIndex, final InputStream x,
+			final int length) throws SQLException {
 		rst.updateAsciiStream(columnIndex, x, length);
 	}
 
@@ -923,8 +1045,9 @@ public class QueryWrap implements Query {
 	 * @see java.sql.ResultSet#updateAsciiStream(java.lang.String,
 	 *      java.io.InputStream, int)
 	 */
-	public void updateAsciiStream(String columnName, InputStream x, int length)
-			throws SQLException {
+	@Override
+	public void updateAsciiStream(final String columnName, final InputStream x,
+			final int length) throws SQLException {
 
 		rst.updateAsciiStream(columnName, x, length);
 	}
@@ -932,7 +1055,8 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateBigDecimal(int, java.math.BigDecimal)
 	 */
-	public void updateBigDecimal(int columnIndex, BigDecimal x)
+	@Override
+	public void updateBigDecimal(final int columnIndex, final BigDecimal x)
 			throws SQLException {
 
 		rst.updateBigDecimal(columnIndex, x);
@@ -942,7 +1066,8 @@ public class QueryWrap implements Query {
 	 * @see java.sql.ResultSet#updateBigDecimal(java.lang.String,
 	 *      java.math.BigDecimal)
 	 */
-	public void updateBigDecimal(String columnName, BigDecimal x)
+	@Override
+	public void updateBigDecimal(final String columnName, final BigDecimal x)
 			throws SQLException {
 
 		rst.updateBigDecimal(columnName, x);
@@ -951,8 +1076,9 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateBinaryStream(int, java.io.InputStream, int)
 	 */
-	public void updateBinaryStream(int columnIndex, InputStream x, int length)
-			throws SQLException {
+	@Override
+	public void updateBinaryStream(final int columnIndex, final InputStream x,
+			final int length) throws SQLException {
 
 		rst.updateBinaryStream(columnIndex, x, length);
 	}
@@ -961,8 +1087,9 @@ public class QueryWrap implements Query {
 	 * @see java.sql.ResultSet#updateBinaryStream(java.lang.String,
 	 *      java.io.InputStream, int)
 	 */
-	public void updateBinaryStream(String columnName, InputStream x, int length)
-			throws SQLException {
+	@Override
+	public void updateBinaryStream(final String columnName,
+			final InputStream x, final int length) throws SQLException {
 
 		rst.updateBinaryStream(columnName, x, length);
 	}
@@ -970,7 +1097,9 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateBlob(int, java.sql.Blob)
 	 */
-	public void updateBlob(int columnIndex, Blob x) throws SQLException {
+	@Override
+	public void updateBlob(final int columnIndex, final Blob x)
+			throws SQLException {
 
 		rst.updateBlob(columnIndex, x);
 	}
@@ -978,7 +1107,9 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateBlob(java.lang.String, java.sql.Blob)
 	 */
-	public void updateBlob(String columnName, Blob x) throws SQLException {
+	@Override
+	public void updateBlob(final String columnName, final Blob x)
+			throws SQLException {
 
 		rst.updateBlob(columnName, x);
 	}
@@ -986,7 +1117,9 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateBoolean(int, boolean)
 	 */
-	public void updateBoolean(int columnIndex, boolean x) throws SQLException {
+	@Override
+	public void updateBoolean(final int columnIndex, final boolean x)
+			throws SQLException {
 
 		rst.updateBoolean(columnIndex, x);
 	}
@@ -994,7 +1127,9 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateBoolean(java.lang.String, boolean)
 	 */
-	public void updateBoolean(String columnName, boolean x) throws SQLException {
+	@Override
+	public void updateBoolean(final String columnName, final boolean x)
+			throws SQLException {
 
 		rst.updateBoolean(columnName, x);
 	}
@@ -1002,7 +1137,9 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateByte(int, byte)
 	 */
-	public void updateByte(int columnIndex, byte x) throws SQLException {
+	@Override
+	public void updateByte(final int columnIndex, final byte x)
+			throws SQLException {
 
 		rst.updateByte(columnIndex, x);
 	}
@@ -1010,7 +1147,9 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateByte(java.lang.String, byte)
 	 */
-	public void updateByte(String columnName, byte x) throws SQLException {
+	@Override
+	public void updateByte(final String columnName, final byte x)
+			throws SQLException {
 
 		rst.updateByte(columnName, x);
 	}
@@ -1018,7 +1157,9 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateBytes(int, byte[])
 	 */
-	public void updateBytes(int columnIndex, byte[] x) throws SQLException {
+	@Override
+	public void updateBytes(final int columnIndex, final byte[] x)
+			throws SQLException {
 
 		rst.updateBytes(columnIndex, x);
 	}
@@ -1026,15 +1167,18 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateBytes(java.lang.String, byte[])
 	 */
-	public void updateBytes(String columnName, byte[] x) throws SQLException {
+	@Override
+	public void updateBytes(final String columnName, final byte[] x)
+			throws SQLException {
 		rst.updateBytes(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateCharacterStream(int, java.io.Reader, int)
 	 */
-	public void updateCharacterStream(int columnIndex, Reader reader, int length)
-			throws SQLException {
+	@Override
+	public void updateCharacterStream(final int columnIndex,
+			final Reader reader, final int length) throws SQLException {
 
 		rst.updateCharacterStream(columnIndex, reader, length);
 	}
@@ -1043,121 +1187,151 @@ public class QueryWrap implements Query {
 	 * @see java.sql.ResultSet#updateCharacterStream(java.lang.String,
 	 *      java.io.Reader, int)
 	 */
-	public void updateCharacterStream(String columnName, Reader reader,
-			int length) throws SQLException {
+	@Override
+	public void updateCharacterStream(final String columnName,
+			final Reader reader, final int length) throws SQLException {
 		rst.updateCharacterStream(columnName, reader, length);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateClob(int, java.sql.Clob)
 	 */
-	public void updateClob(int columnIndex, Clob x) throws SQLException {
+	@Override
+	public void updateClob(final int columnIndex, final Clob x)
+			throws SQLException {
 		rst.updateClob(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateClob(java.lang.String, java.sql.Clob)
 	 */
-	public void updateClob(String columnName, Clob x) throws SQLException {
+	@Override
+	public void updateClob(final String columnName, final Clob x)
+			throws SQLException {
 		rst.updateClob(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateDate(int, java.sql.Date)
 	 */
-	public void updateDate(int columnIndex, Date x) throws SQLException {
+	@Override
+	public void updateDate(final int columnIndex, final Date x)
+			throws SQLException {
 		rst.updateDate(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateDate(java.lang.String, java.sql.Date)
 	 */
-	public void updateDate(String columnName, Date x) throws SQLException {
+	@Override
+	public void updateDate(final String columnName, final Date x)
+			throws SQLException {
 		rst.updateDate(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateDouble(int, double)
 	 */
-	public void updateDouble(int columnIndex, double x) throws SQLException {
+	@Override
+	public void updateDouble(final int columnIndex, final double x)
+			throws SQLException {
 		rst.updateDouble(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateDouble(java.lang.String, double)
 	 */
-	public void updateDouble(String columnName, double x) throws SQLException {
+	@Override
+	public void updateDouble(final String columnName, final double x)
+			throws SQLException {
 		rst.updateDouble(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateFloat(int, float)
 	 */
-	public void updateFloat(int columnIndex, float x) throws SQLException {
+	@Override
+	public void updateFloat(final int columnIndex, final float x)
+			throws SQLException {
 		rst.updateFloat(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateFloat(java.lang.String, float)
 	 */
-	public void updateFloat(String columnName, float x) throws SQLException {
+	@Override
+	public void updateFloat(final String columnName, final float x)
+			throws SQLException {
 		rst.updateFloat(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateInt(int, int)
 	 */
-	public void updateInt(int columnIndex, int x) throws SQLException {
+	@Override
+	public void updateInt(final int columnIndex, final int x)
+			throws SQLException {
 		rst.updateInt(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateInt(java.lang.String, int)
 	 */
-	public void updateInt(String columnName, int x) throws SQLException {
+	@Override
+	public void updateInt(final String columnName, final int x)
+			throws SQLException {
 		rst.updateInt(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateLong(int, long)
 	 */
-	public void updateLong(int columnIndex, long x) throws SQLException {
+	@Override
+	public void updateLong(final int columnIndex, final long x)
+			throws SQLException {
 		rst.updateLong(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateLong(java.lang.String, long)
 	 */
-	public void updateLong(String columnName, long x) throws SQLException {
+	@Override
+	public void updateLong(final String columnName, final long x)
+			throws SQLException {
 		rst.updateLong(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateNull(int)
 	 */
-	public void updateNull(int columnIndex) throws SQLException {
+	@Override
+	public void updateNull(final int columnIndex) throws SQLException {
 		rst.updateNull(columnIndex);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateNull(java.lang.String)
 	 */
-	public void updateNull(String columnName) throws SQLException {
+	@Override
+	public void updateNull(final String columnName) throws SQLException {
 		rst.updateNull(columnName);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateObject(int, java.lang.Object, int)
 	 */
-	public void updateObject(int columnIndex, Object x, int scale)
-			throws SQLException {
+	@Override
+	public void updateObject(final int columnIndex, final Object x,
+			final int scale) throws SQLException {
 		rst.updateObject(columnIndex, x, scale);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateObject(int, java.lang.Object)
 	 */
-	public void updateObject(int columnIndex, Object x) throws SQLException {
+	@Override
+	public void updateObject(final int columnIndex, final Object x)
+			throws SQLException {
 		rst.updateObject(columnIndex, x);
 	}
 
@@ -1165,35 +1339,43 @@ public class QueryWrap implements Query {
 	 * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object,
 	 *      int)
 	 */
-	public void updateObject(String columnName, Object x, int scale)
-			throws SQLException {
+	@Override
+	public void updateObject(final String columnName, final Object x,
+			final int scale) throws SQLException {
 		rst.updateObject(columnName, x, scale);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object)
 	 */
-	public void updateObject(String columnName, Object x) throws SQLException {
+	@Override
+	public void updateObject(final String columnName, final Object x)
+			throws SQLException {
 		rst.updateObject(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateRef(int, java.sql.Ref)
 	 */
-	public void updateRef(int columnIndex, Ref x) throws SQLException {
+	@Override
+	public void updateRef(final int columnIndex, final Ref x)
+			throws SQLException {
 		rst.updateRef(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateRef(java.lang.String, java.sql.Ref)
 	 */
-	public void updateRef(String columnName, Ref x) throws SQLException {
+	@Override
+	public void updateRef(final String columnName, final Ref x)
+			throws SQLException {
 		rst.updateRef(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateRow()
 	 */
+	@Override
 	public void updateRow() throws SQLException {
 		rst.updateRow();
 	}
@@ -1201,49 +1383,62 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#updateShort(int, short)
 	 */
-	public void updateShort(int columnIndex, short x) throws SQLException {
+	@Override
+	public void updateShort(final int columnIndex, final short x)
+			throws SQLException {
 		rst.updateShort(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateShort(java.lang.String, short)
 	 */
-	public void updateShort(String columnName, short x) throws SQLException {
+	@Override
+	public void updateShort(final String columnName, final short x)
+			throws SQLException {
 		rst.updateShort(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateString(int, java.lang.String)
 	 */
-	public void updateString(int columnIndex, String x) throws SQLException {
+	@Override
+	public void updateString(final int columnIndex, final String x)
+			throws SQLException {
 		rst.updateString(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateString(java.lang.String, java.lang.String)
 	 */
-	public void updateString(String columnName, String x) throws SQLException {
+	@Override
+	public void updateString(final String columnName, final String x)
+			throws SQLException {
 		rst.updateString(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateTime(int, java.sql.Time)
 	 */
-	public void updateTime(int columnIndex, Time x) throws SQLException {
+	@Override
+	public void updateTime(final int columnIndex, final Time x)
+			throws SQLException {
 		rst.updateTime(columnIndex, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateTime(java.lang.String, java.sql.Time)
 	 */
-	public void updateTime(String columnName, Time x) throws SQLException {
+	@Override
+	public void updateTime(final String columnName, final Time x)
+			throws SQLException {
 		rst.updateTime(columnName, x);
 	}
 
 	/**
 	 * @see java.sql.ResultSet#updateTimestamp(int, java.sql.Timestamp)
 	 */
-	public void updateTimestamp(int columnIndex, Timestamp x)
+	@Override
+	public void updateTimestamp(final int columnIndex, final Timestamp x)
 			throws SQLException {
 		rst.updateTimestamp(columnIndex, x);
 	}
@@ -1252,7 +1447,8 @@ public class QueryWrap implements Query {
 	 * @see java.sql.ResultSet#updateTimestamp(java.lang.String,
 	 *      java.sql.Timestamp)
 	 */
-	public void updateTimestamp(String columnName, Timestamp x)
+	@Override
+	public void updateTimestamp(final String columnName, final Timestamp x)
 			throws SQLException {
 		rst.updateTimestamp(columnName, x);
 	}
@@ -1260,6 +1456,7 @@ public class QueryWrap implements Query {
 	/**
 	 * @see java.sql.ResultSet#wasNull()
 	 */
+	@Override
 	public boolean wasNull() throws SQLException {
 		return rst.wasNull();
 	}
@@ -1268,248 +1465,315 @@ public class QueryWrap implements Query {
 		return rst;
 	}
 
+	@Override
 	public int getHoldability() throws SQLException {
 		throw notSupported();
 	}
 
-	public Reader getNCharacterStream(int arg0) throws SQLException {
+	@Override
+	public Reader getNCharacterStream(final int arg0) throws SQLException {
 		throw notSupported();
 	}
 
-	public Reader getNCharacterStream(String arg0) throws SQLException {
+	@Override
+	public Reader getNCharacterStream(final String arg0) throws SQLException {
 		throw notSupported();
 	}
 
-	public String getNString(int arg0) throws SQLException {
+	@Override
+	public String getNString(final int arg0) throws SQLException {
 		throw notSupported();
 	}
 
-	public String getNString(String arg0) throws SQLException {
+	@Override
+	public String getNString(final String arg0) throws SQLException {
 		throw notSupported();
 	}
 
+	@Override
 	public boolean isClosed() throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateAsciiStream(int arg0, InputStream arg1)
+	@Override
+	public void updateAsciiStream(final int arg0, final InputStream arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateAsciiStream(String arg0, InputStream arg1)
+	@Override
+	public void updateAsciiStream(final String arg0, final InputStream arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateAsciiStream(int arg0, InputStream arg1, long arg2)
+	@Override
+	public void updateAsciiStream(final int arg0, final InputStream arg1,
+			final long arg2) throws SQLException {
+		throw notSupported();
+	}
+
+	@Override
+	public void updateAsciiStream(final String arg0, final InputStream arg1,
+			final long arg2) throws SQLException {
+		throw notSupported();
+	}
+
+	@Override
+	public void updateBinaryStream(final int arg0, final InputStream arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateAsciiStream(String arg0, InputStream arg1, long arg2)
+	@Override
+	public void updateBinaryStream(final String arg0, final InputStream arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateBinaryStream(int arg0, InputStream arg1)
+	@Override
+	public void updateBinaryStream(final int arg0, final InputStream arg1,
+			final long arg2) throws SQLException {
+		throw notSupported();
+	}
+
+	@Override
+	public void updateBinaryStream(final String arg0, final InputStream arg1,
+			final long arg2) throws SQLException {
+		throw notSupported();
+	}
+
+	@Override
+	public void updateBlob(final int arg0, final InputStream arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateBinaryStream(String arg0, InputStream arg1)
+	@Override
+	public void updateBlob(final String arg0, final InputStream arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateBinaryStream(int arg0, InputStream arg1, long arg2)
+	@Override
+	public void updateBlob(final int arg0, final InputStream arg1,
+			final long arg2) throws SQLException {
+		throw notSupported();
+	}
+
+	@Override
+	public void updateBlob(final String arg0, final InputStream arg1,
+			final long arg2) throws SQLException {
+		throw notSupported();
+	}
+
+	@Override
+	public void updateCharacterStream(final int arg0, final Reader arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateBinaryStream(String arg0, InputStream arg1, long arg2)
+	@Override
+	public void updateCharacterStream(final String arg0, final Reader arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateBlob(int arg0, InputStream arg1) throws SQLException {
+	@Override
+	public void updateCharacterStream(final int arg0, final Reader arg1,
+			final long arg2) throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateBlob(String arg0, InputStream arg1) throws SQLException {
+	@Override
+	public void updateCharacterStream(final String arg0, final Reader arg1,
+			final long arg2) throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateBlob(int arg0, InputStream arg1, long arg2)
+	@Override
+	public void updateClob(final int arg0, final Reader arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateBlob(String arg0, InputStream arg1, long arg2)
+	@Override
+	public void updateClob(final String arg0, final Reader arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateCharacterStream(int arg0, Reader arg1)
+	@Override
+	public void updateClob(final int arg0, final Reader arg1, final long arg2)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateCharacterStream(String arg0, Reader arg1)
+	@Override
+	public void updateClob(final String arg0, final Reader arg1, final long arg2)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateCharacterStream(int arg0, Reader arg1, long arg2)
+	@Override
+	public void updateNCharacterStream(final int arg0, final Reader arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateCharacterStream(String arg0, Reader arg1, long arg2)
+	@Override
+	public void updateNCharacterStream(final String arg0, final Reader arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateClob(int arg0, Reader arg1) throws SQLException {
+	@Override
+	public void updateNCharacterStream(final int arg0, final Reader arg1,
+			final long arg2) throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateClob(String arg0, Reader arg1) throws SQLException {
+	@Override
+	public void updateNCharacterStream(final String arg0, final Reader arg1,
+			final long arg2) throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateClob(int arg0, Reader arg1, long arg2)
+	@Override
+	public void updateNClob(final int arg0, final Reader arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateClob(String arg0, Reader arg1, long arg2)
+	@Override
+	public void updateNClob(final String arg0, final Reader arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateNCharacterStream(int arg0, Reader arg1)
+	@Override
+	public void updateNClob(final int arg0, final Reader arg1, final long arg2)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateNCharacterStream(String arg0, Reader arg1)
+	@Override
+	public void updateNClob(final String arg0, final Reader arg1,
+			final long arg2) throws SQLException {
+		throw notSupported();
+	}
+
+	@Override
+	public void updateNString(final int arg0, final String arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateNCharacterStream(int arg0, Reader arg1, long arg2)
+	@Override
+	public void updateNString(final String arg0, final String arg1)
 			throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateNCharacterStream(String arg0, Reader arg1, long arg2)
-			throws SQLException {
+	@Override
+	public boolean isWrapperFor(final Class<?> arg0) throws SQLException {
 		throw notSupported();
 	}
 
-	public void updateNClob(int arg0, Reader arg1) throws SQLException {
-		throw notSupported();
-	}
-
-	public void updateNClob(String arg0, Reader arg1) throws SQLException {
-		throw notSupported();
-	}
-
-	public void updateNClob(int arg0, Reader arg1, long arg2)
-			throws SQLException {
-		throw notSupported();
-	}
-
-	public void updateNClob(String arg0, Reader arg1, long arg2)
-			throws SQLException {
-		throw notSupported();
-	}
-
-	public void updateNString(int arg0, String arg1) throws SQLException {
-		throw notSupported();
-	}
-
-	public void updateNString(String arg0, String arg1) throws SQLException {
-		throw notSupported();
-	}
-
-	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
-		throw notSupported();
-	}
-
-	public <T> T unwrap(Class<T> arg0) throws SQLException {
+	@Override
+	public <T> T unwrap(final Class<T> arg0) throws SQLException {
 		throw notSupported();
 	}
 
 	//JDK6: uncomment this for compiling with JDK6 
-	public NClob getNClob(int arg0) throws SQLException {
+	@Override
+	public NClob getNClob(final int arg0) throws SQLException {
 		return rst.getNClob(arg0);
 	}
 
-	public NClob getNClob(String arg0) throws SQLException {
+	@Override
+	public NClob getNClob(final String arg0) throws SQLException {
 		return rst.getNClob(arg0);
 	}
 
-	public RowId getRowId(int arg0) throws SQLException {
+	@Override
+	public RowId getRowId(final int arg0) throws SQLException {
 		return rst.getRowId(arg0);
 	}
 
-	public RowId getRowId(String arg0) throws SQLException {
+	@Override
+	public RowId getRowId(final String arg0) throws SQLException {
 		return rst.getRowId(arg0);
 	}
 
-	public SQLXML getSQLXML(int arg0) throws SQLException {
+	@Override
+	public SQLXML getSQLXML(final int arg0) throws SQLException {
 		return rst.getSQLXML(arg0);
 	}
 
-	public SQLXML getSQLXML(String arg0) throws SQLException {
+	@Override
+	public SQLXML getSQLXML(final String arg0) throws SQLException {
 		return rst.getSQLXML(arg0);
 	}
 
-	public void updateNClob(int arg0, NClob arg1) throws SQLException {
+	@Override
+	public void updateNClob(final int arg0, final NClob arg1)
+			throws SQLException {
 		rst.updateNClob(arg0, arg1);
 	}
 
-	public void updateNClob(String arg0, NClob arg1) throws SQLException {
+	@Override
+	public void updateNClob(final String arg0, final NClob arg1)
+			throws SQLException {
 		rst.updateNClob(arg0, arg1);
 	}
 
-	public void updateRowId(int arg0, RowId arg1) throws SQLException {
+	@Override
+	public void updateRowId(final int arg0, final RowId arg1)
+			throws SQLException {
 		rst.updateRowId(arg0, arg1);
 	}
 
-	public void updateRowId(String arg0, RowId arg1) throws SQLException {
+	@Override
+	public void updateRowId(final String arg0, final RowId arg1)
+			throws SQLException {
 		rst.updateRowId(arg0, arg1);
 	}
 
-	public void updateSQLXML(int arg0, SQLXML arg1) throws SQLException {
+	@Override
+	public void updateSQLXML(final int arg0, final SQLXML arg1)
+			throws SQLException {
 		rst.updateSQLXML(arg0, arg1);
 	}
 
-	public void updateSQLXML(String arg0, SQLXML arg1) throws SQLException {
+	@Override
+	public void updateSQLXML(final String arg0, final SQLXML arg1)
+			throws SQLException {
 		rst.updateSQLXML(arg0, arg1);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+	public <T> T getObject(final int columnIndex, final Class<T> type)
+			throws SQLException {
 		try {
-			Method m = rst.getClass().getMethod("getObject",
+			final Method m = rst.getClass().getMethod("getObject",
 					new Class[] { int.class, Class.class });
 			return (T) m.invoke(rst, new Object[] { columnIndex, type });
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 		}
 		throw notSupported();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getObject(String columnLabel, Class<T> type)
+	public <T> T getObject(final String columnLabel, final Class<T> type)
 			throws SQLException {
 		try {
-			Method m = rst.getClass().getMethod("getObject",
+			final Method m = rst.getClass().getMethod("getObject",
 					new Class[] { String.class, Class.class });
 			return (T) m.invoke(rst, new Object[] { columnLabel, type });
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 		}
 		throw notSupported();
 	}

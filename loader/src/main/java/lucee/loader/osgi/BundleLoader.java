@@ -41,58 +41,63 @@ import lucee.loader.util.Util;
 import org.apache.felix.framework.Felix;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.BundleListener;
 
 public class BundleLoader {
 
 	/**
 	 * build (if necessary) a bundle and load it
 	 * 
-	 * @param cfmlEngineFactory
-	 * @param bundleDir directory where bundles are located
-	 * @param rc Lucee Core File
-	 * @throws BundleException
+	 * @param engFac
+	 * @param cacheRootDir
+	 * @param jarDirectory
+	 * @param rc
+	 * @param old
+	 * @return
 	 * @throws IOException
-	 * @throws BundleBuilderFactoryException
+	 * @throws BundleException
 	 */
-	public static BundleCollection loadBundles(CFMLEngineFactory engFac,
-			File cacheRootDir, File jarDirectory, File rc, BundleCollection old)
-			throws IOException, BundleException {
-		JarFile jf = new JarFile(rc);// TODO this should work in any case, but we should still improve this code
+	public static BundleCollection loadBundles(final CFMLEngineFactory engFac,
+			final File cacheRootDir, final File jarDirectory, final File rc,
+			final BundleCollection old) throws IOException, BundleException {
+		final JarFile jf = new JarFile(rc);// TODO this should work in any case, but we should still improve this code
 		try {
 			// Manifest
-			Manifest mani = jf.getManifest();
+			final Manifest mani = jf.getManifest();
 			if (mani == null)
 				throw new IOException("lucee core [" + rc
-						+ "] is invalid, there is no META-INF/MANIFEST.MF File"); 
-			Attributes attrs = mani.getMainAttributes();
-	
+						+ "] is invalid, there is no META-INF/MANIFEST.MF File");
+			final Attributes attrs = mani.getMainAttributes();
+
 			// default properties
-			Properties defProp = loadDefaultProperties(jf);
-	
+			final Properties defProp = loadDefaultProperties(jf);
+
 			// Get data from Manifest and default.properties
-	
+
 			// Lucee Core Version
 			//String rcv = unwrap(defProp.getProperty("lucee.core.version"));
 			//if(Util.isEmpty(rcv)) throw new IOException("lucee core ["+rc+"] is invalid, no core version is defined in the {Lucee-Core}/default.properties File");
 			//int version = CFMLEngineFactory.toInVersion(rcv);
-			
+
 			// read the config from default.properties
-			Map<String,Object> config=new HashMap<String, Object>();
+			final Map<String, Object> config = new HashMap<String, Object>();
 			{
-				Iterator<Entry<Object, Object>> it = defProp.entrySet().iterator();
+				final Iterator<Entry<Object, Object>> it = defProp.entrySet()
+						.iterator();
 				Entry<Object, Object> e;
 				String k;
-				while(it.hasNext()){
+				while (it.hasNext()) {
 					e = it.next();
-					k=(String) e.getKey();
-					if(!k.startsWith("org.") && !k.startsWith("felix.")) continue;
-					config.put(k, CFMLEngineFactorySupport.removeQuotes((String)e.getValue(),true));
+					k = (String) e.getKey();
+					if (!k.startsWith("org.") && !k.startsWith("felix."))
+						continue;
+					config.put(
+							k,
+							CFMLEngineFactorySupport.removeQuotes(
+									(String) e.getValue(), true));
 				}
 			}
-			
+
 			/* / org.osgi.framework.storage.clean
 			String storageClean = unwrap(defProp
 					.getProperty("org.osgi.framework.storage.clean"));
@@ -108,12 +113,12 @@ public class BundleLoader {
 						"[org.osgi.framework.bootdelegation] setting is necessary in file {Lucee-Core}/default.properties");
 			engFac.log(Logger.LOG_INFO, "org.osgi.framework.bootdelegation:"
 					+ bootDelegation);*/
-	
+
 			/* / org.osgi.framework.system.packages
 			String systemPackages = unwrap(defProp.getProperty("org.osgi.framework.system.packages"));
 			engFac.log(Logger.LOG_INFO, "org.osgi.framework.system.packages:"
 					+ systemPackages);*/
-	
+
 			/*/ org.osgi.framework.bundle.parent
 			String parentClassLoader = unwrap(defProp
 					.getProperty("org.osgi.framework.bundle.parent"));
@@ -125,7 +130,7 @@ public class BundleLoader {
 			engFac.log(Logger.LOG_INFO, "org.osgi.framework.bundle.parent:"
 					+ parentClassLoader);
 			*/
-	
+
 			/*/ felix.log.level
 			int logLevel = 1; // 1 = error, 2 = warning, 3 = information, and 4 = debug
 			String strLogLevel = unwrap(defProp.getProperty("felix.log.level"));
@@ -154,49 +159,48 @@ public class BundleLoader {
 						parentClassLoader, logLevel, null).getBundleContext();
 			}
 			 */
-			
+
 			// close all bundles
 			Felix felix;
 			if (old != null) {
 				removeBundlesEL(old);
-				felix=old.felix;
+				felix = old.felix;
 				felix.stop();// stops all active bundles
 				felix = engFac.getFelix(cacheRootDir, config);
 				//felix.start();
-			} 
-			else felix = engFac.getFelix(cacheRootDir, config);
-			BundleContext bc = felix.getBundleContext(); 
-			
-			
+			} else
+				felix = engFac.getFelix(cacheRootDir, config);
+			final BundleContext bc = felix.getBundleContext();
+
 			// get bundle needed for that core
-			String rb = attrs.getValue("Require-Bundle");
-			if (Util.isEmpty(rb)) {
+			final String rb = attrs.getValue("Require-Bundle");
+			if (Util.isEmpty(rb))
 				throw new IOException(
 						"lucee core ["
 								+ rc
 								+ "] is invalid, no Require-Bundle defintion found in the META-INF/MANIFEST.MF File");
-			}
-	
+
 			// get fragments needed for that core (Lucee specific Key)
-			String rbf = attrs.getValue("Require-Bundle-Fragment");
-	
+			final String rbf = attrs.getValue("Require-Bundle-Fragment");
+
 			// load Required/Available Bundles
-			Map<String, String> requiredBundles = readRequireBundle(rb); // Require-Bundle
-			Map<String, String> requiredBundleFragments = readRequireBundle(rbf); // Require-Bundle-Fragment
-			Map<String, File> availableBundles = loadAvailableBundles(jarDirectory);
-	
+			final Map<String, String> requiredBundles = readRequireBundle(rb); // Require-Bundle
+			final Map<String, String> requiredBundleFragments = readRequireBundle(rbf); // Require-Bundle-Fragment
+			final Map<String, File> availableBundles = loadAvailableBundles(jarDirectory);
+
 			// Add Required Bundles
 			Entry<String, String> e;
 			File f;
 			String id;
-			List<Bundle> bundles = new ArrayList<Bundle>();
-			Iterator<Entry<String, String>> it = requiredBundles.entrySet().iterator();
+			final List<Bundle> bundles = new ArrayList<Bundle>();
+			Iterator<Entry<String, String>> it = requiredBundles.entrySet()
+					.iterator();
 			while (it.hasNext()) {
 				e = it.next();
 				id = e.getKey() + "|" + e.getValue();
 				f = availableBundles.get(id);
 				//StringBuilder sb=new StringBuilder();
-				if(f==null) {
+				if (f == null) {
 					/*sb.append(id+"\n");
 					Iterator<String> _it = availableBundles.keySet().iterator();
 					while(_it.hasNext()){
@@ -205,49 +209,47 @@ public class BundleLoader {
 					throw new RuntimeException(sb.toString());*/
 				}
 				if (f == null)
-					f = engFac.downloadBundle(e.getKey(), e.getValue(),null);
-				bundles.add(BundleUtil.addBundle(engFac, bc, f,null));
+					f = engFac.downloadBundle(e.getKey(), e.getValue(), null);
+				bundles.add(BundleUtil.addBundle(engFac, bc, f, null));
 			}
 
 			// Add Required Bundle Fragments
-			List<Bundle> fragments = new ArrayList<Bundle>();
+			final List<Bundle> fragments = new ArrayList<Bundle>();
 			it = requiredBundleFragments.entrySet().iterator();
 			while (it.hasNext()) {
 				e = it.next();
 				id = e.getKey() + "|" + e.getValue();
 				f = availableBundles.get(id);
-				
+
 				if (f == null)
-					f = engFac.downloadBundle(e.getKey(), e.getValue(),null); // if identification is not defined, it is loaded from the CFMLEngine
-				fragments.add(BundleUtil.addBundle(engFac, bc, f,null));
+					f = engFac.downloadBundle(e.getKey(), e.getValue(), null); // if identification is not defined, it is loaded from the CFMLEngine
+				fragments.add(BundleUtil.addBundle(engFac, bc, f, null));
 			}
-	
+
 			// Add Lucee core Bundle
 			Bundle bundle;
 			//bundles.add(bundle = BundleUtil.addBundle(engFac, bc, rc,null));
-			bundle = BundleUtil.addBundle(engFac, bc, rc,null);
-			
+			bundle = BundleUtil.addBundle(engFac, bc, rc, null);
+
 			// Start the bundles
 			BundleUtil.start(engFac, bundles);
 			BundleUtil.start(engFac, bundle);
-			
 
-			return new BundleCollection(felix,bundle, bundles);
-		}
-		finally {
-			if(jf!=null) {
+			return new BundleCollection(felix, bundle, bundles);
+		} finally {
+			if (jf != null)
 				try {
 					jf.close();
+				} catch (final IOException ioe) {
 				}
-				catch(IOException ioe){}
-			}
 		}
 	}
 
-	private static Map<String, File> loadAvailableBundles(File jarDirectory) {
-		Map<String, File> rtn = new HashMap<String, File>();
-		File[] jars = jarDirectory.listFiles();
-		JarFile jf=null;
+	private static Map<String, File> loadAvailableBundles(
+			final File jarDirectory) {
+		final Map<String, File> rtn = new HashMap<String, File>();
+		final File[] jars = jarDirectory.listFiles();
+		JarFile jf = null;
 		String symbolicName, version;
 		Attributes attrs;
 		for (int i = 0; i < jars.length; i++) {
@@ -268,26 +270,26 @@ public class BundleLoader {
 							"OSGi bundle ["
 									+ jars[i]
 									+ "] is invalid, {Lucee-Core}META-INF/MANIFEST.MF does not contain a \"Bundle-Version\"");
-				
+
 				rtn.put(symbolicName + "|" + version, jars[i]);
-			} catch (Throwable t) {
-			}
-			finally {
-				if(jf!=null){
+			} catch (final Throwable t) {
+			} finally {
+				if (jf != null)
 					try {
 						jf.close();
-					} catch (IOException e) {}
-				}
+					} catch (final IOException e) {
+					}
 			}
 		}
 		return rtn;
-		
+
 	}
 
-	private static Map<String, String> readRequireBundle(String rb)
+	private static Map<String, String> readRequireBundle(final String rb)
 			throws IOException {
-		HashMap<String, String> rtn = new HashMap<String, String>();
-		StringTokenizer st = new StringTokenizer(rb, ","), stl;
+		final HashMap<String, String> rtn = new HashMap<String, String>();
+		final StringTokenizer st = new StringTokenizer(rb, ",");
+		StringTokenizer stl;
 		String line, jarName, jarVersion = null, token;
 		int index;
 		while (st.hasMoreTokens()) {
@@ -303,9 +305,8 @@ public class BundleLoader {
 			while (stl.hasMoreTokens()) {
 				token = stl.nextToken().trim();
 				if (token.startsWith("bundle-version")
-						&& (index = token.indexOf('=')) != -1) {
+						&& (index = token.indexOf('=')) != -1)
 					jarVersion = token.substring(index + 1).trim();
-				}
 			}
 			if (jarVersion == null)
 				throw new IOException(
@@ -320,55 +321,54 @@ public class BundleLoader {
 		return str == null ? null : CFMLEngineFactory.removeQuotes(str, true);
 	}*/
 
-	public static Properties loadDefaultProperties(JarFile jf)
+	public static Properties loadDefaultProperties(final JarFile jf)
 			throws IOException {
-		ZipEntry ze = jf.getEntry("default.properties");
+		final ZipEntry ze = jf.getEntry("default.properties");
 		if (ze == null)
 			throw new IOException(
 					"the Lucee core has no default.properties file!");
 
-		Properties prop = new Properties();
+		final Properties prop = new Properties();
 		InputStream is = null;
 		try {
 			is = jf.getInputStream(ze);
 			prop.load(is);
 		} finally {
-			CFMLEngineFactory.closeEL(is);
+			CFMLEngineFactorySupport.closeEL(is);
 		}
 		return prop;
 	}
 
-	public static void removeBundles(BundleContext bc) throws BundleException {
-		Bundle[] bundles = bc.getBundles();
-		for (int i = 0; i < bundles.length; i++) {
-			removeBundle(bundles[i]);
-		}
+	public static void removeBundles(final BundleContext bc)
+			throws BundleException {
+		final Bundle[] bundles = bc.getBundles();
+		for (final Bundle bundle : bundles)
+			removeBundle(bundle);
 	}
 
-	public static void removeBundles(BundleCollection bc) throws BundleException {
-		Bundle[] bundles = bc.getBundleContext().getBundles();
-		
-		for(Bundle bundle:bundles){
-			if(!BundleUtil.isSystemBundle(bundle))
-			removeBundle(bundle);
-		}
+	public static void removeBundles(final BundleCollection bc)
+			throws BundleException {
+		final Bundle[] bundles = bc.getBundleContext().getBundles();
+
+		for (final Bundle bundle : bundles)
+			if (!BundleUtil.isSystemBundle(bundle))
+				removeBundle(bundle);
 	}
-	public static void removeBundlesEL(BundleCollection bc) {
-		Bundle[] bundles = bc.getBundleContext().getBundles();
-		
-		for(Bundle bundle:bundles){
-			if(!BundleUtil.isSystemBundle(bundle)) {
+
+	public static void removeBundlesEL(final BundleCollection bc) {
+		final Bundle[] bundles = bc.getBundleContext().getBundles();
+
+		for (final Bundle bundle : bundles)
+			if (!BundleUtil.isSystemBundle(bundle))
 				try {
 					removeBundle(bundle);
-				} catch (BundleException e) {
+				} catch (final BundleException e) {
 					// TODO remove 
 					e.printStackTrace();
 				}
-			}
-		}
 	}
 
-	public static void removeBundle(Bundle bundle) throws BundleException {
+	public static void removeBundle(final Bundle bundle) throws BundleException {
 		if (bundle == null)
 			return;
 
@@ -379,7 +379,7 @@ public class BundleLoader {
 		while (bundle.getState() == Bundle.STARTING) {
 			try {
 				Thread.sleep(10);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				break;
 			}
 			sleept += 10;
@@ -397,7 +397,7 @@ public class BundleLoader {
 		while (bundle.getState() == Bundle.STOPPING) {
 			try {
 				Thread.sleep(10);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				break;
 			}
 			sleept += 10;
@@ -409,7 +409,7 @@ public class BundleLoader {
 			bundle.uninstall();
 	}
 
-	private static void log(int level, String msg) {
+	private static void log(final int level, final String msg) {
 		System.out.println(msg);
 	}
 }

@@ -34,8 +34,8 @@ public final class DebugQuery extends QueryWrap {
 	 * @param data
 	 * @throws IllegalArgumentException
 	 */
-	public DebugQuery(String name, String[] columns, String[][] data)
-			throws IllegalArgumentException {
+	public DebugQuery(final String name, final String[] columns,
+			final String[][] data) throws IllegalArgumentException {
 		super(toQuery(name, columns, data), name);
 	}
 
@@ -46,31 +46,31 @@ public final class DebugQuery extends QueryWrap {
 	 * @param columns
 	 * @throws IllegalArgumentException
 	 */
-	public DebugQuery(String name, String[] columns)
+	public DebugQuery(final String name, final String[] columns)
 			throws IllegalArgumentException {
 		super(toQuery(name, columns, 0), name);
 	}
 
-	private static lucee.runtime.type.Query toQuery(String name,
-			String[] columns, String[][] data) {
+	private static lucee.runtime.type.Query toQuery(final String name,
+			final String[] columns, final String[][] data) {
 
-		lucee.runtime.type.Query query = toQuery(name, columns, data.length);
+		final lucee.runtime.type.Query query = toQuery(name, columns,
+				data.length);
 
 		for (int row = 0; row < data.length; row++) {
-			int len = data[row].length > columns.length ? columns.length
+			final int len = data[row].length > columns.length ? columns.length
 					: data[row].length;
-			for (int col = 0; col < len; col++) {
+			for (int col = 0; col < len; col++)
 				try {
 					query.setAt(columns[col], row + 1, data[row][col]);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 				}
-			}
 		}
 		return query;
 	}
 
-	private static lucee.runtime.type.Query toQuery(String name,
-			String[] columns, int rows) {
+	private static lucee.runtime.type.Query toQuery(final String name,
+			final String[] columns, final int rows) {
 		return CFMLEngineFactory.getInstance().getCreationUtil()
 				.createQuery(columns, rows, name);
 	}

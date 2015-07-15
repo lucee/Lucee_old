@@ -19,9 +19,7 @@
 package lucee.runtime.type;
 
 import lucee.runtime.Component;
-import lucee.runtime.Page;
 import lucee.runtime.PageContext;
-import lucee.runtime.PageSource;
 import lucee.runtime.component.Member;
 import lucee.runtime.dump.Dumpable;
 import lucee.runtime.exp.PageException;
@@ -53,7 +51,6 @@ public interface UDF extends Function, Dumpable, Member, Cloneable {
 	 * return all function arguments of this UDF
 	 * 
 	 * @return the arguments.
-	 * @throws PageException
 	 */
 	public abstract FunctionArgument[] getFunctionArguments();
 
@@ -65,6 +62,7 @@ public interface UDF extends Function, Dumpable, Member, Cloneable {
 	 * @return default value
 	 * @throws PageException
 	 */
+	@Deprecated
 	public Object getDefaultValue(PageContext pc, int index)
 			throws PageException;
 
@@ -147,7 +145,7 @@ public interface UDF extends Function, Dumpable, Member, Cloneable {
 	public abstract String getHint();
 
 	//public abstract PageSource getPageSource();
-	
+
 	public abstract String getSource();
 
 	public abstract Struct getMetaData(PageContext pc) throws PageException;
@@ -161,6 +159,7 @@ public interface UDF extends Function, Dumpable, Member, Cloneable {
 	 * @return owner component
 	 * @deprecated
 	 */
+	@Deprecated
 	public Component getOwnerComponent();
 
 	/**
@@ -193,6 +192,7 @@ public interface UDF extends Function, Dumpable, Member, Cloneable {
 
 	/**
 	 * unique identifier for the function
+	 * 
 	 * @return
 	 */
 	public abstract String id();

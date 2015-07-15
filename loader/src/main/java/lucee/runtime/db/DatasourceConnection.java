@@ -61,6 +61,7 @@ public interface DatasourceConnection extends Connection {
 	public PreparedStatement getPreparedStatement(SQL sql, int resultSetType,
 			int resultSetConcurrency) throws SQLException;
 
+	@Override
 	public void close() throws SQLException;
 
 }

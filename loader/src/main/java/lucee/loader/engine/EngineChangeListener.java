@@ -24,9 +24,8 @@ package lucee.loader.engine;
 public interface EngineChangeListener {
 
 	/**
-	 * will be called whene there is a change oon the engine
+	 * will be called when there is a change on the engine
 	 * 
-	 * @param newEngine new CFML Engine
 	 */
 	public void onUpdate();
 }

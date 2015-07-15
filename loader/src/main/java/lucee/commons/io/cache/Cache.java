@@ -21,7 +21,6 @@ package lucee.commons.io.cache;
 import java.io.IOException;
 import java.util.List;
 
-import lucee.commons.io.cache.exp.CacheException;
 import lucee.runtime.config.Config;
 import lucee.runtime.type.Struct;
 
@@ -31,7 +30,7 @@ public interface Cache {
 	 * initialize the cache
 	 * 
 	 * @param arguments configuration arguments
-	 * @throws CacheException
+	 * @throws IOException
 	 */
 	public void init(Config config, String cacheName, Struct arguments)
 			throws IOException;
@@ -42,7 +41,7 @@ public interface Cache {
 	 * 
 	 * @param key key of the cache entry to get
 	 * @return cache entry
-	 * @throws CacheException
+	 * @throws IOException
 	 */
 	public CacheEntry getCacheEntry(String key) throws IOException;
 
@@ -52,7 +51,7 @@ public interface Cache {
 	 * 
 	 * @param key key of the value to get
 	 * @return value
-	 * @throws CacheException
+	 * @throws IOException
 	 */
 	public Object getValue(String key) throws IOException;
 
@@ -80,7 +79,8 @@ public interface Cache {
 	 * 
 	 * @param value
 	 */
-	public void put(String key, Object value, Long idleTime, Long until) throws IOException;
+	public void put(String key, Object value, Long idleTime, Long until)
+			throws IOException;
 
 	/**
 	 * check if there is a entry inside the cache that match the given key

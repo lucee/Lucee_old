@@ -42,14 +42,14 @@ public final class PageServletException extends ServletException implements
 
 	private static final long serialVersionUID = -3654238294705464067L;
 
-	private PageException pe;
+	private final PageException pe;
 
 	/**
 	 * constructor of the class
 	 * 
 	 * @param pe page exception to hold
 	 */
-	public PageServletException(PageException pe) {
+	public PageServletException(final PageException pe) {
 		super(pe.getMessage());
 		this.pe = pe;
 	}
@@ -57,6 +57,7 @@ public final class PageServletException extends ServletException implements
 	/**
 	 * @see lucee.runtime.exp.PageExceptionBox#getPageException()
 	 */
+	@Override
 	public PageException getPageException() {
 		return pe;
 	}
@@ -64,6 +65,7 @@ public final class PageServletException extends ServletException implements
 	/**
 	 * @see lucee.runtime.exp.IPageException#getDetail()
 	 */
+	@Override
 	public String getDetail() {
 		return pe.getDetail();
 	}
@@ -71,6 +73,7 @@ public final class PageServletException extends ServletException implements
 	/**
 	 * @see lucee.runtime.exp.IPageException#getErrorCode()
 	 */
+	@Override
 	public String getErrorCode() {
 		return pe.getErrorCode();
 	}
@@ -78,6 +81,7 @@ public final class PageServletException extends ServletException implements
 	/**
 	 * @see lucee.runtime.exp.IPageException#getExtendedInfo()
 	 */
+	@Override
 	public String getExtendedInfo() {
 		return pe.getExtendedInfo();
 	}
@@ -86,7 +90,8 @@ public final class PageServletException extends ServletException implements
 	 * 
 	 * @see lucee.runtime.exp.IPageException#getCatchBlock(lucee.runtime.PageContext)
 	 */
-	public Struct getCatchBlock(PageContext pc) {
+	@Override
+	public Struct getCatchBlock(final PageContext pc) {
 		return pe.getCatchBlock(pc.getConfig());
 	}
 
@@ -94,7 +99,8 @@ public final class PageServletException extends ServletException implements
 	 * 
 	 * @see lucee.runtime.exp.IPageException#getCatchBlock(lucee.runtime.PageContext)
 	 */
-	public CatchBlock getCatchBlock(Config config) {
+	@Override
+	public CatchBlock getCatchBlock(final Config config) {
 		return pe.getCatchBlock(config);
 	}
 
@@ -102,7 +108,8 @@ public final class PageServletException extends ServletException implements
 	 * @see lucee.runtime.exp.IPageException#getErrorBlock(PageContext
 	 *      pc,ErrorPage ep)
 	 */
-	public Struct getErrorBlock(PageContext pc, ErrorPage ep) {
+	@Override
+	public Struct getErrorBlock(final PageContext pc, final ErrorPage ep) {
 		return pe.getErrorBlock(pc, ep);
 	}
 
@@ -110,8 +117,9 @@ public final class PageServletException extends ServletException implements
 	 * @see lucee.runtime.exp.IPageException#addContext(lucee.runtime.PageSource,
 	 *      int, int, java.lang.StackTraceElement)
 	 */
-	public void addContext(PageSource template, int line, int column,
-			StackTraceElement ste) {
+	@Override
+	public void addContext(final PageSource template, final int line,
+			final int column, final StackTraceElement ste) {
 		pe.addContext(template, line, column, ste);
 	}
 
@@ -119,35 +127,40 @@ public final class PageServletException extends ServletException implements
 	 * @see lucee.runtime.dump.Dumpable#toDumpData(lucee.runtime.PageContext,
 	 *      int, lucee.runtime.dump.DumpProperties)
 	 */
-	public DumpData toDumpData(PageContext pageContext, int maxlevel,
-			DumpProperties dp) {
+	@Override
+	public DumpData toDumpData(final PageContext pageContext,
+			final int maxlevel, final DumpProperties dp) {
 		return pe.toDumpData(pageContext, maxlevel, dp);
 	}
 
 	/**
 	 * @see lucee.runtime.exp.IPageException#setDetail(java.lang.String)
 	 */
-	public void setDetail(String detail) {
+	@Override
+	public void setDetail(final String detail) {
 		pe.setDetail(detail);
 	}
 
 	/**
 	 * @see lucee.runtime.exp.IPageException#setErrorCode(java.lang.String)
 	 */
-	public void setErrorCode(String errorCode) {
+	@Override
+	public void setErrorCode(final String errorCode) {
 		pe.setErrorCode(errorCode);
 	}
 
 	/**
 	 * @see lucee.runtime.exp.IPageException#setExtendedInfo(java.lang.String)
 	 */
-	public void setExtendedInfo(String extendedInfo) {
+	@Override
+	public void setExtendedInfo(final String extendedInfo) {
 		pe.setExtendedInfo(extendedInfo);
 	}
 
 	/**
 	 * @see lucee.runtime.exp.IPageException#getTypeAsString()
 	 */
+	@Override
 	public String getTypeAsString() {
 		return pe.getTypeAsString();
 	}
@@ -155,13 +168,15 @@ public final class PageServletException extends ServletException implements
 	/**
 	 * @see lucee.runtime.exp.IPageException#typeEqual(java.lang.String)
 	 */
-	public boolean typeEqual(String type) {
+	@Override
+	public boolean typeEqual(final String type) {
 		return pe.typeEqual(type);
 	}
 
 	/**
 	 * @see lucee.runtime.exp.IPageException#getCustomTypeAsString()
 	 */
+	@Override
 	public String getCustomTypeAsString() {
 		return pe.getCustomTypeAsString();
 	}
@@ -176,6 +191,7 @@ public final class PageServletException extends ServletException implements
 	/**
 	 * @see lucee.runtime.exp.IPageException#getTracePointer()
 	 */
+	@Override
 	public int getTracePointer() {
 		return pe.getTracePointer();
 	}
@@ -183,17 +199,20 @@ public final class PageServletException extends ServletException implements
 	/**
 	 * @see lucee.runtime.exp.IPageException#setTracePointer(int)
 	 */
-	public void setTracePointer(int tracePointer) {
+	@Override
+	public void setTracePointer(final int tracePointer) {
 		pe.setTracePointer(tracePointer);
 	}
 
 	/**
 	 * @see lucee.runtime.exp.IPageException#getAdditional()
 	 */
+	@Override
 	public Struct getAdditional() {
 		return pe.getAdditional();
 	}
 
+	@Override
 	public Struct getAddional() {
 		return pe.getAdditional();
 	}
@@ -201,6 +220,7 @@ public final class PageServletException extends ServletException implements
 	/**
 	 * @see lucee.runtime.exp.IPageException#getStackTraceAsString()
 	 */
+	@Override
 	public String getStackTraceAsString() {
 		return pe.getStackTraceAsString();
 	}

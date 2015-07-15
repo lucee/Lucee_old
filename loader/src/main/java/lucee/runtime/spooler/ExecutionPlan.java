@@ -31,6 +31,7 @@ public interface ExecutionPlan extends Serializable {
 	 * @return the interval in seconds
 	 * @deprecated use instead <code>getInterval();</code>
 	 */
+	@Deprecated
 	public int getIntervall();
 
 	/**

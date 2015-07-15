@@ -32,6 +32,7 @@ public interface Reference {
 	 * @throws PageException
 	 * @deprecated use instead <code>{@link #getKey()}</code>
 	 */
+	@Deprecated
 	public abstract String getKeyAsString() throws PageException;
 
 	/**
@@ -41,23 +42,23 @@ public interface Reference {
 	public abstract Collection.Key getKey() throws PageException;
 
 	/**
-	 * @param pc PageContext of the actuell Request
+	 * @param pc PageContext of the actual Request
 	 * @return returns the value of the Variable
 	 * @throws PageException
 	 */
 	public abstract Object get(PageContext pc) throws PageException;
 
 	/**
-	 * @param pc PageContext of the actuell Request
+	 * @param pc PageContext of the actual Request
+	 * @param defaultValue defaukt value
 	 * @return returns the value of the Variable
-	 * @throws PageException
 	 */
 	public abstract Object get(PageContext pc, Object defaultValue);
 
 	/**
-	 * @param pc PageContext of the actuell Request
+	 * @param pc PageContext of the actual Request
 	 * @param value resets the value of the variable
-	 * @return new Value setted
+	 * @return new Value set
 	 * @throws PageException
 	 */
 	public abstract Object set(PageContext pc, Object value)
@@ -66,8 +67,7 @@ public interface Reference {
 	/**
 	 * @param pc PageContext of the actuell Request
 	 * @param value resets the value of the variable
-	 * @return new Value setted
-	 * @throws PageException
+	 * @return new value set
 	 */
 	public abstract Object setEL(PageContext pc, Object value);
 
@@ -85,7 +85,6 @@ public interface Reference {
 	 * 
 	 * @param pc
 	 * @return removed Object
-	 * @throws PageException
 	 */
 	public abstract Object removeEL(PageContext pc);
 
@@ -103,7 +102,6 @@ public interface Reference {
 	 * 
 	 * @param pc
 	 * @return removed Object
-	 * @throws PageException
 	 */
 	public abstract Object touchEL(PageContext pc);
 

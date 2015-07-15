@@ -41,7 +41,7 @@ public interface URL extends Scope {
 			throws UnsupportedEncodingException;
 
 	public abstract void setScriptProtecting(ApplicationContext ac, boolean b);
-	
+
 	public abstract void reinitialize(ApplicationContext ac);
 
 }

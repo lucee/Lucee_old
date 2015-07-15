@@ -35,11 +35,12 @@ public abstract class PageException extends JspException implements
 	 * 
 	 * @param message error message
 	 */
-	public PageException(String message) {
+	public PageException(final String message) {
 		super(message);
 	}
-	
+
 	public abstract void setExposeMessage(boolean exposeMessage);
+
 	public abstract boolean getExposeMessage();
 
 }

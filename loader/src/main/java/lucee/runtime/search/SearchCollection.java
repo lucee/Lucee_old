@@ -100,8 +100,8 @@ public interface SearchCollection extends Serializable {
 	public abstract IndexResult index(PageContext pc, String key, short type,
 			String urlpath, String title, String body, String language,
 			String[] extensions, String query, boolean recurse,
-			String categoryTree, String[] categories, long timeout,String custom1,
-			String custom2, String custom3, String custom4)
+			String categoryTree, String[] categories, long timeout,
+			String custom1, String custom2, String custom3, String custom4)
 			throws PageException, MalformedURLException, SearchException;
 
 	/**
@@ -143,7 +143,7 @@ public interface SearchCollection extends Serializable {
 	 * @throws SearchException
 	 */
 	public abstract IndexResult indexURL(String id, String title, URL url,
-			String[] extensions, boolean recurse, String language,long timeout)
+			String[] extensions, boolean recurse, String language, long timeout)
 			throws SearchException;
 
 	/**
@@ -284,9 +284,9 @@ public interface SearchCollection extends Serializable {
 	public int getDocumentCount(String id);
 
 	public abstract Object getCategoryInfo();
-	
+
 	public Query getIndexesAsQuery();
-	
+
 	void addIndex(SearchIndex si);
 
 }

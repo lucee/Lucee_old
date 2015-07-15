@@ -33,27 +33,28 @@ public final class EnumerationWrapper<T> implements Enumeration<T> {
 	/**
 	 * @param map Constructor with a Map
 	 */
-	public EnumerationWrapper(Map<T,?> map) {
+	public EnumerationWrapper(final Map<T, ?> map) {
 		this(map.keySet().iterator());
 	}
 
 	/**
 	 * @param set Constructor with a Set
 	 */
-	public EnumerationWrapper(Set<T> set) {
+	public EnumerationWrapper(final Set<T> set) {
 		this(set.iterator());
 	}
 
 	/**
 	 * @param it Constructor with a iterator
 	 */
-	public EnumerationWrapper(Iterator<T> it) {
+	public EnumerationWrapper(final Iterator<T> it) {
 		this.it = it;
 	}
 
 	/**
 	 * @see java.util.Enumeration#hasMoreElements()
 	 */
+	@Override
 	public boolean hasMoreElements() {
 		return it.hasNext();
 	}
@@ -61,6 +62,7 @@ public final class EnumerationWrapper<T> implements Enumeration<T> {
 	/**
 	 * @see java.util.Enumeration#nextElement()
 	 */
+	@Override
 	public T nextElement() {
 		return it.next();
 	}

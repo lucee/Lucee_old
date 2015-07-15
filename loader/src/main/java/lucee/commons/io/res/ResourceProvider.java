@@ -36,7 +36,7 @@ public interface ResourceProvider extends Serializable {
 	 * @param scheme of the provider (can be "null")
 	 * @param arguments initals argument (can be "null")
 	 */
-	public ResourceProvider init(String scheme, Map<String,String> arguments);
+	public ResourceProvider init(String scheme, Map<String, String> arguments);
 
 	/**
 	 * return a resource that match given path

@@ -38,7 +38,7 @@ public final class ExtensionFilter implements FileFilter {
 	 * 
 	 * @param extension Endung die geprueft werden soll.
 	 */
-	public ExtensionFilter(String extension) {
+	public ExtensionFilter(final String extension) {
 		this(new String[] { extension }, false, true);
 	}
 
@@ -47,20 +47,20 @@ public final class ExtensionFilter implements FileFilter {
 	 * 
 	 * @param extension Endung die geprueft werden soll.
 	 */
-	public ExtensionFilter(String extension, boolean allowDir) {
+	public ExtensionFilter(final String extension, final boolean allowDir) {
 		this(new String[] { extension }, allowDir, true);
 	}
 
-	public ExtensionFilter(String[] extensions) {
+	public ExtensionFilter(final String[] extensions) {
 		this(extensions, false, true);
 	}
 
-	public ExtensionFilter(String[] extensions, boolean allowDir) {
+	public ExtensionFilter(final String[] extensions, final boolean allowDir) {
 		this(extensions, allowDir, true);
 	}
 
-	public ExtensionFilter(String[] extensions, boolean allowDir,
-			boolean ignoreCase) {
+	public ExtensionFilter(final String[] extensions, final boolean allowDir,
+			final boolean ignoreCase) {
 		for (int i = 0; i < extensions.length; i++) {
 			if (!extensions[i].startsWith("."))
 				extensions[i] = "." + extensions[i];
@@ -75,16 +75,16 @@ public final class ExtensionFilter implements FileFilter {
 	/**
 	 * @see java.io.FileFilter#accept(java.io.File)
 	 */
-	public boolean accept(File res) {
+	@Override
+	public boolean accept(final File res) {
 		if (res.isDirectory())
 			return allowDir;
 		if (res.exists()) {
-			String name = ignoreCase ? res.getName().toLowerCase() : res
+			final String name = ignoreCase ? res.getName().toLowerCase() : res
 					.getName();
-			for (int i = 0; i < extensions.length; i++) {
-				if (name.endsWith(extensions[i]))
+			for (final String extension : extensions)
+				if (name.endsWith(extension))
 					return true;
-			}
 		}
 		return false;
 	}

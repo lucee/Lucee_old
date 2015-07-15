@@ -30,21 +30,22 @@ public final class LockTimeoutException extends Exception {
 	 * @param name name of the Lock
 	 * @param timeout
 	 */
-	public LockTimeoutException(int type, String name, int timeout) {
+	public LockTimeoutException(final int type, final String name,
+			final int timeout) {
 		//A timeout occurred while attempting to lock lockname
 		super("a timeout occurred on a " + toString(type) + " lock with name ["
 				+ name + "] after " + getTime(timeout));
 	}
 
-	private static String getTime(int timeout) {
+	private static String getTime(final int timeout) {
 		if (timeout / 1000 * 1000 == timeout) {
-			int s = timeout / 1000;
+			final int s = timeout / 1000;
 			return s + (s > 1 ? " seconds" : " second");
 		}
 		return timeout + (timeout > 1 ? " milliseconds" : " millisecond");
 	}
 
-	private static String toString(int type) {
+	private static String toString(final int type) {
 		if (LockManager.TYPE_EXCLUSIVE == type)
 			return "exclusive";
 		return "read-only";

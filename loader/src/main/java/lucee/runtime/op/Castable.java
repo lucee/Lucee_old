@@ -42,7 +42,6 @@ public interface Castable extends Serializable {
 	 * method is not castable
 	 * 
 	 * @return String representation of the Object
-	 * @throws PageException
 	 */
 	public String castToString(String defaultValue);
 
@@ -58,7 +57,6 @@ public interface Castable extends Serializable {
 	 * cast the castable value to a boolean value
 	 * 
 	 * @return boolean Value representation of the Object
-	 * @throws PageException
 	 */
 	public Boolean castToBoolean(Boolean defaultValue);
 
@@ -74,7 +72,6 @@ public interface Castable extends Serializable {
 	 * cast the castable value to a double value
 	 * 
 	 * @return double Value representation of the Object
-	 * @throws PageException
 	 */
 	public double castToDoubleValue(double defaultValue);
 
@@ -92,7 +89,6 @@ public interface Castable extends Serializable {
 	 * @param defaultValue returned when it is not possible to cast to a
 	 *            dateTime object
 	 * @return date time representation of the Object
-	 * @throws PageException
 	 */
 	public DateTime castToDateTime(DateTime defaultValue);
 

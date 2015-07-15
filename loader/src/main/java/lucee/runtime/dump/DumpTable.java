@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class DumpTable implements DumpData {
 
-	private List<DumpRow> rows = new ArrayList<DumpRow>();
+	private final List<DumpRow> rows = new ArrayList<DumpRow>();
 	private String title;
 	private String comment;
 	private String highLightColor;
@@ -35,22 +35,23 @@ public class DumpTable implements DumpData {
 	private String fontColor;
 	private String width;
 	private String height;
-	private String type;
+	private final String type;
 	private String id;
 	private String ref;
 
-	public DumpTable(String highLightColor, String normalColor,
-			String borderColor) {
+	public DumpTable(final String highLightColor, final String normalColor,
+			final String borderColor) {
 		this(null, highLightColor, normalColor, borderColor, borderColor);
 	}
 
-	public DumpTable(String type, String highLightColor, String normalColor,
-			String borderColor) {
+	public DumpTable(final String type, final String highLightColor,
+			final String normalColor, final String borderColor) {
 		this(type, highLightColor, normalColor, borderColor, borderColor);
 	}
 
-	public DumpTable(String type, String highLightColor, String normalColor,
-			String borderColor, String fontColor) {
+	public DumpTable(final String type, final String highLightColor,
+			final String normalColor, final String borderColor,
+			final String fontColor) {
 		this.highLightColor = highLightColor;
 		this.normalColor = normalColor;
 		this.borderColor = borderColor;
@@ -75,7 +76,7 @@ public class DumpTable implements DumpData {
 	/**
 	 * @param title sets the title of the HTML Box
 	 */
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 
@@ -91,7 +92,7 @@ public class DumpTable implements DumpData {
 	/**
 	 * @param comment sets the comment of the HTML Box
 	 */
-	public void setComment(String comment) {
+	public void setComment(final String comment) {
 		this.comment = comment;
 	}
 
@@ -108,7 +109,7 @@ public class DumpTable implements DumpData {
 	 * @param width sets the With of the HTML Box, can be a number or a
 	 *            procentual value
 	 */
-	public void setWidth(String width) {
+	public void setWidth(final String width) {
 		this.width = width;
 	}
 
@@ -116,7 +117,7 @@ public class DumpTable implements DumpData {
 	 * @param height sets the Height of the HTML Box, can be a number or a
 	 *            procentual value
 	 */
-	public void setHeight(String height) {
+	public void setHeight(final String height) {
 		this.height = height;
 	}
 
@@ -130,7 +131,7 @@ public class DumpTable implements DumpData {
 	/**
 	 * @param borderColor the borderColor to set
 	 */
-	public void setBorderColor(String borderColor) {
+	public void setBorderColor(final String borderColor) {
 		this.borderColor = borderColor;
 	}
 
@@ -144,7 +145,7 @@ public class DumpTable implements DumpData {
 	/**
 	 * @param fontColor the fontColor to set
 	 */
-	public void setFontColor(String fontColor) {
+	public void setFontColor(final String fontColor) {
 		this.fontColor = fontColor;
 	}
 
@@ -158,7 +159,7 @@ public class DumpTable implements DumpData {
 	/**
 	 * @param highLightColor the highLightColor to set
 	 */
-	public void setHighLightColor(String highLightColor) {
+	public void setHighLightColor(final String highLightColor) {
 		this.highLightColor = highLightColor;
 	}
 
@@ -172,7 +173,7 @@ public class DumpTable implements DumpData {
 	/**
 	 * @param normalColor the normalColor to set
 	 */
-	public void setNormalColor(String normalColor) {
+	public void setNormalColor(final String normalColor) {
 		this.normalColor = normalColor;
 	}
 
@@ -187,46 +188,49 @@ public class DumpTable implements DumpData {
 	 * @return the rows
 	 */
 	public DumpRow[] getRows() {
-		return (DumpRow[]) rows.toArray(new DumpRow[rows.size()]);
+		return rows.toArray(new DumpRow[rows.size()]);
 	}
 
-	public void appendRow(DumpRow row) {
+	public void appendRow(final DumpRow row) {
 		rows.add(row);
 	}
 
-	public void appendRow(int highlightType, DumpData item1) {
+	public void appendRow(final int highlightType, final DumpData item1) {
 		appendRow(new DumpRow(highlightType, new DumpData[] { item1 }));
 	}
 
-	public void appendRow(int highlightType, DumpData item1, DumpData item2) {
+	public void appendRow(final int highlightType, final DumpData item1,
+			final DumpData item2) {
 		appendRow(new DumpRow(highlightType, new DumpData[] { item1, item2 }));
 	}
 
-	public void appendRow(int highlightType, DumpData item1, DumpData item2,
-			DumpData item3) {
+	public void appendRow(final int highlightType, final DumpData item1,
+			final DumpData item2, final DumpData item3) {
 		appendRow(new DumpRow(highlightType, new DumpData[] { item1, item2,
 				item3 }));
 	}
 
-	public void appendRow(int highlightType, DumpData item1, DumpData item2,
-			DumpData item3, DumpData item4) {
+	public void appendRow(final int highlightType, final DumpData item1,
+			final DumpData item2, final DumpData item3, final DumpData item4) {
 		appendRow(new DumpRow(highlightType, new DumpData[] { item1, item2,
 				item3, item4 }));
 	}
 
-	public void appendRow(int highlightType, DumpData item1, DumpData item2,
-			DumpData item3, DumpData item4, DumpData item5) {
+	public void appendRow(final int highlightType, final DumpData item1,
+			final DumpData item2, final DumpData item3, final DumpData item4,
+			final DumpData item5) {
 		appendRow(new DumpRow(highlightType, new DumpData[] { item1, item2,
 				item3, item4, item5 }));
 	}
 
-	public void appendRow(int highlightType, DumpData item1, DumpData item2,
-			DumpData item3, DumpData item4, DumpData item5, DumpData item6) {
+	public void appendRow(final int highlightType, final DumpData item1,
+			final DumpData item2, final DumpData item3, final DumpData item4,
+			final DumpData item5, final DumpData item6) {
 		appendRow(new DumpRow(highlightType, new DumpData[] { item1, item2,
 				item3, item4, item5, item6 }));
 	}
 
-	public void prependRow(DumpRow row) {
+	public void prependRow(final DumpRow row) {
 		rows.add(0, row);
 	}
 
@@ -244,7 +248,7 @@ public class DumpTable implements DumpData {
 		return type;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
@@ -252,7 +256,7 @@ public class DumpTable implements DumpData {
 		return id;
 	}
 
-	public void setRef(String ref) {
+	public void setRef(final String ref) {
 		this.ref = ref;
 	}
 

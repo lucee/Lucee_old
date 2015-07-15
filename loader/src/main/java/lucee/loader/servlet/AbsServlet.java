@@ -36,8 +36,8 @@ public abstract class AbsServlet extends HttpServlet implements
 		try {
 			// make sure that config is registered
 			engine = CFMLEngineFactory.getInstance(getServletConfig(), this);
-		} catch (ServletException e) {
-			
+		} catch (final ServletException e) {
+
 		}
 	}
 }

@@ -22,8 +22,8 @@ import javax.servlet.ServletException;
 import lucee.loader.engine.CFMLEngine;
 
 public class CFMLTagEngineFactoryImpl extends BaseScriptEngineFactory {
-	
+
 	public CFMLTagEngineFactoryImpl() throws ServletException {
-		super(true,CFMLEngine.DIALECT_CFML);
+		super(true, CFMLEngine.DIALECT_CFML);
 	}
 }

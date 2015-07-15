@@ -42,30 +42,31 @@ import lucee.runtime.util.Creation;
 
 public class CFCProxy {
 
-	private CFMLEngine engine;
-	private Cast caster;
-	private Creation creator;
+	private final CFMLEngine engine;
+	private final Cast caster;
+	private final Creation creator;
 
 	private Component cfc = null;
-	private String path;
+	private final String path;
 	private Map thisData;
 	private boolean invokeDirectly = true;
 	private boolean autoFlush;
 
-	public CFCProxy(String path) throws Throwable {
+	public CFCProxy(final String path) throws Throwable {
 		this(path, null, true);
 	}
 
-	public CFCProxy(String path, boolean invokeDirectly) throws Throwable {
+	public CFCProxy(final String path, final boolean invokeDirectly)
+			throws Throwable {
 		this(path, null, invokeDirectly);
 	}
 
-	public CFCProxy(String path, Map initialThis) throws Throwable {
+	public CFCProxy(final String path, final Map initialThis) throws Throwable {
 		this(path, initialThis, true);
 	}
 
-	public CFCProxy(String path, Map initialThis, boolean invokeDirectly)
-			throws Throwable {
+	public CFCProxy(final String path, final Map initialThis,
+			final boolean invokeDirectly) throws Throwable {
 		engine = CFMLEngineFactory.getInstance();
 		caster = engine.getCastUtil();
 		creator = engine.getCreationUtil();
@@ -76,24 +77,23 @@ public class CFCProxy {
 	}
 
 	private void initCFC(PageContext pc) {
-		if (cfc == null && (invokeDirectly || pc != null)) {
+		if (cfc == null && (invokeDirectly || pc != null))
 			try {
 				if (pc == null)
 					pc = engine.getThreadPageContext();
 				cfc = engine.getCreationUtil()
 						.createComponentFromPath(pc, path);
-			} catch (PageException pe) {
+			} catch (final PageException pe) {
 			}
-		}
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void setThisScope(Map data) {
+	public void setThisScope(final Map data) {
 		if (data != null) {
 			if (thisData == null)
 				this.thisData = new HashMap();
 
-			Iterator<Entry> it = data.entrySet().iterator();
+			final Iterator<Entry> it = data.entrySet().iterator();
 			Entry entry;
 			while (it.hasNext()) {
 				entry = it.next();
@@ -108,8 +108,8 @@ public class CFCProxy {
 		if (cfc == null)
 			return null;
 
-		Struct rtn = creator.createStruct();
-		Iterator<Entry<Key, Object>> it = cfc.entryIterator();
+		final Struct rtn = creator.createStruct();
+		final Iterator<Entry<Key, Object>> it = cfc.entryIterator();
 		Entry<Key, Object> entry;
 		while (it.hasNext()) {
 			entry = it.next();
@@ -118,24 +118,25 @@ public class CFCProxy {
 		return rtn;
 	}
 
-	public final Object invoke(String methodName, Object args[])
+	public final Object invoke(final String methodName, final Object args[])
 			throws Throwable {
 		if (invokeDirectly)
 			return _invoke(methodName, args);
 		return _invoke(methodName, args, null, null, null);
 	}
 
-	public final Object invoke(String methodName, Object args[],
-			HttpServletRequest request, HttpServletResponse response)
+	public final Object invoke(final String methodName, final Object args[],
+			final HttpServletRequest request, final HttpServletResponse response)
 			throws Throwable {
 		if (invokeDirectly)
 			return _invoke(methodName, args);
 		return _invoke(methodName, args, request, response, null);
 	}
 
-	public final Object invoke(String methodName, Object args[],
-			HttpServletRequest request, HttpServletResponse response,
-			OutputStream out) throws Throwable {
+	public final Object invoke(final String methodName, final Object args[],
+			final HttpServletRequest request,
+			final HttpServletResponse response, final OutputStream out)
+			throws Throwable {
 		if (invokeDirectly)
 			return _invoke(methodName, args);
 		return _invoke(methodName, args, request, response, out);
@@ -145,63 +146,60 @@ public class CFCProxy {
 		return false;
 	}
 
-	private Object _invoke(String methodName, Object[] args)
+	private Object _invoke(final String methodName, final Object[] args)
 			throws PageException {
-		CFMLEngine engine = CFMLEngineFactory.getInstance();
-		PageContext pc = engine.getThreadPageContext();
+		final CFMLEngine engine = CFMLEngineFactory.getInstance();
+		final PageContext pc = engine.getThreadPageContext();
 		initCFC(pc);
 		return cfc.call(pc, methodName, args);
 	}
 
-	private Object _invoke(String methodName, Object[] args,
+	private Object _invoke(final String methodName, final Object[] args,
 			HttpServletRequest req, HttpServletResponse rsp, OutputStream out)
 			throws PageException {
-		CFMLEngine engine = CFMLEngineFactory.getInstance();
-		Creation creator = engine.getCreationUtil();
-		PageContext originalPC = engine.getThreadPageContext();
+		final CFMLEngine engine = CFMLEngineFactory.getInstance();
+		final Creation creator = engine.getCreationUtil();
+		final PageContext originalPC = engine.getThreadPageContext();
 
 		// no OutputStream
 		if (out == null)
 			out = DevNullOutputStream.DEV_NULL_OUTPUT_STREAM;
 
 		// no Request
-		if (req == null) {
+		if (req == null)
 			// TODO new File
 			req = creator.createHttpServletRequest(new File("."), "Lucee", "/",
 					"", null, null, null, null, null);
-		}
 		// noRespone
-		if (rsp == null) {
+		if (rsp == null)
 			rsp = creator.createHttpServletResponse(out);
-		}
 
-		PageContext pc = creator.createPageContext(req, rsp, out);
+		final PageContext pc = creator.createPageContext(req, rsp, out);
 		try {
 			engine.registerThreadPageContext(pc);
 			initCFC(pc);
 			return cfc.call(pc, methodName, args);
 		} finally {
-			if (autoFlush) {
+			if (autoFlush)
 				try {
 					pc.getRootWriter().flush();
-				} catch (Throwable t) {
+				} catch (final Throwable t) {
 				}
-			}
 			engine.registerThreadPageContext(originalPC);
 		}
 	}
 
 	public void flush() throws IOException {
-		CFMLEngine engine = CFMLEngineFactory.getInstance();
-		PageContext pc = engine.getThreadPageContext();
+		final CFMLEngine engine = CFMLEngineFactory.getInstance();
+		final PageContext pc = engine.getThreadPageContext();
 		pc.getRootWriter().flush();
 	}
 
-	public void setAutoFlush(boolean autoFlush) {
+	public void setAutoFlush(final boolean autoFlush) {
 		this.autoFlush = autoFlush;
 	}
 
-	public void setApplicationExecution(boolean doApp) {
+	public void setApplicationExecution(final boolean doApp) {
 		//executeApplication = doApp;
 	}
 
@@ -210,7 +208,7 @@ public class CFCProxy {
 final class DevNullOutputStream extends OutputStream implements Serializable {
 
 	private static final long serialVersionUID = -4707810151743493285L;
-	
+
 	public static final DevNullOutputStream DEV_NULL_OUTPUT_STREAM = new DevNullOutputStream();
 
 	/**
@@ -222,31 +220,36 @@ final class DevNullOutputStream extends OutputStream implements Serializable {
 	/**
 	 * @see java.io.OutputStream#close()
 	 */
+	@Override
 	public void close() {
 	}
 
 	/**
 	 * @see java.io.OutputStream#flush()
 	 */
+	@Override
 	public void flush() {
 	}
 
 	/**
 	 * @see java.io.OutputStream#write(byte[], int, int)
 	 */
-	public void write(byte[] b, int off, int len) {
+	@Override
+	public void write(final byte[] b, final int off, final int len) {
 	}
 
 	/**
 	 * @see java.io.OutputStream#write(byte[])
 	 */
-	public void write(byte[] b) {
+	@Override
+	public void write(final byte[] b) {
 	}
 
 	/**
 	 * @see java.io.OutputStream#write(int)
 	 */
-	public void write(int b) {
+	@Override
+	public void write(final int b) {
 	}
 
 }

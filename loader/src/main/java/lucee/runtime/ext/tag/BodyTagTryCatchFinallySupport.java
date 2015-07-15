@@ -33,16 +33,17 @@ public abstract class BodyTagTryCatchFinallySupport extends BodyTagSupport
 	/**
 	 * @see javax.servlet.jsp.tagext.TryCatchFinally#doCatch(java.lang.Throwable)
 	 */
+	@Override
 	public void doCatch(Throwable t) throws Throwable {
 		if (t instanceof PageServletException) {
-			PageServletException pse = (PageServletException) t;
+			final PageServletException pse = (PageServletException) t;
 			t = pse.getPageException();
 		}
 		if (bodyContent != null) {
-			Excepton util = CFMLEngineFactory.getInstance().getExceptionUtil();
-			if (util.isOfType(Excepton.TYPE_ABORT, t)) {
+			final Excepton util = CFMLEngineFactory.getInstance()
+					.getExceptionUtil();
+			if (util.isOfType(Excepton.TYPE_ABORT, t))
 				bodyContent.writeOut(bodyContent.getEnclosingWriter());
-			}
 			bodyContent.clearBuffer();
 		}
 		throw t;
@@ -51,6 +52,7 @@ public abstract class BodyTagTryCatchFinallySupport extends BodyTagSupport
 	/**
 	 * @see javax.servlet.jsp.tagext.TryCatchFinally#doFinally()
 	 */
+	@Override
 	public void doFinally() {
 
 	}

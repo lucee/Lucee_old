@@ -23,9 +23,6 @@ package lucee.runtime.type.scope;
  */
 public interface Server extends Scope {
 
-	/**
-	 * @param sn
-	 */
 	public abstract void reload();
 
 }

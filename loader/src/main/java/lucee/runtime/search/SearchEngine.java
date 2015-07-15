@@ -42,16 +42,6 @@ public interface SearchEngine {
 	 */
 	public static final boolean DENY_OVERWRITE = false;
 
-	/**
-	 * constructor of the class
-	 * 
-	 * @param config
-	 * @param searchDir directory where the Lucee xml file is
-	 * @param log
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws SearchException
-	 */
 	public abstract void init(Config config, Resource searchDir)
 			throws SAXException, IOException, SearchException;
 

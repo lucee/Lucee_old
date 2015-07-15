@@ -44,14 +44,16 @@ import javax.servlet.descriptor.JspConfigDescriptor;
 import lucee.cli.util.EnumerationWrapper;
 
 public class ServletContextImpl implements ServletContext {
-	private Map<String, Object> attributes;
-	private Map<String, String> parameters;
-	private int majorVersion;
-	private int minorVersion;
-	private File root;
+	private final Map<String, Object> attributes;
+	private final Map<String, String> parameters;
+	private final int majorVersion;
+	private final int minorVersion;
+	private final File root;
 
-	public ServletContextImpl(File root, Map<String, Object> attributes,
-			Map<String, String> parameters, int majorVersion, int minorVersion) {
+	public ServletContextImpl(final File root,
+			final Map<String, Object> attributes,
+			final Map<String, String> parameters, final int majorVersion,
+			final int minorVersion) {
 		this.root = root;
 		this.attributes = attributes;
 		this.parameters = parameters;
@@ -62,13 +64,15 @@ public class ServletContextImpl implements ServletContext {
 	/**
 	 * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
 	 */
-	public Object getAttribute(String key) {
+	@Override
+	public Object getAttribute(final String key) {
 		return attributes.get(key);
 	}
 
 	/**
 	 * @see javax.servlet.ServletContext#getAttributeNames()
 	 */
+	@Override
 	public Enumeration<String> getAttributeNames() {
 		return new EnumerationWrapper<String>(attributes);
 	}
@@ -76,13 +80,15 @@ public class ServletContextImpl implements ServletContext {
 	/**
 	 * @see javax.servlet.ServletContext#getInitParameter(java.lang.String)
 	 */
-	public String getInitParameter(String key) {
+	@Override
+	public String getInitParameter(final String key) {
 		return parameters.get(key);
 	}
 
 	/**
 	 * @see javax.servlet.ServletContext#getInitParameterNames()
 	 */
+	@Override
 	public Enumeration<String> getInitParameterNames() {
 		return new EnumerationWrapper<String>(parameters);
 	}
@@ -90,6 +96,7 @@ public class ServletContextImpl implements ServletContext {
 	/**
 	 * @see javax.servlet.ServletContext#getMajorVersion()
 	 */
+	@Override
 	public int getMajorVersion() {
 		return majorVersion;
 	}
@@ -97,6 +104,7 @@ public class ServletContextImpl implements ServletContext {
 	/**
 	 * @see javax.servlet.ServletContext#getMinorVersion()
 	 */
+	@Override
 	public int getMinorVersion() {
 		return minorVersion;
 	}
@@ -104,37 +112,41 @@ public class ServletContextImpl implements ServletContext {
 	/**
 	 * @see javax.servlet.ServletContext#getMimeType(java.lang.String)
 	 */
-	public String getMimeType(String file) {
+	@Override
+	public String getMimeType(final String file) {
 		throw notSupported("getMimeType(String file)");
 	}
 
 	/**
 	 * @see javax.servlet.ServletContext#getRealPath(java.lang.String)
 	 */
-	public String getRealPath(String realpath) {
+	@Override
+	public String getRealPath(final String realpath) {
 		return getRealFile(realpath).getAbsolutePath();
 	}
 
 	/**
 	 * @see javax.servlet.ServletContext#getResource(java.lang.String)
 	 */
-	public URL getResource(String realpath) throws MalformedURLException {
-		File file = getRealFile(realpath);
+	@Override
+	public URL getResource(final String realpath) throws MalformedURLException {
+		final File file = getRealFile(realpath);
 		return file.toURI().toURL();
 	}
 
 	/**
 	 * @see javax.servlet.ServletContext#getResourceAsStream(java.lang.String)
 	 */
-	public InputStream getResourceAsStream(String realpath) {
+	@Override
+	public InputStream getResourceAsStream(final String realpath) {
 		try {
 			return new FileInputStream(getRealFile(realpath));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			return null;
 		}
 	}
 
-	public File getRealFile(String realpath) {
+	public File getRealFile(final String realpath) {
 		return new File(root, realpath);
 	}
 
@@ -142,20 +154,24 @@ public class ServletContextImpl implements ServletContext {
 		return root;
 	}
 
-	public Set<String> getResourcePaths(String realpath) {
+	@Override
+	public Set<String> getResourcePaths(final String realpath) {
 		throw notSupported("getResourcePaths(String realpath)");
 	}
 
-	public RequestDispatcher getRequestDispatcher(String path) {
+	@Override
+	public RequestDispatcher getRequestDispatcher(final String path) {
 		throw notSupported("getNamedDispatcher(String name)");
 	}
 
-	public ServletContext getContext(String key) {
+	@Override
+	public ServletContext getContext(final String key) {
 		// TODO ?
 		return this;
 	}
 
-	public RequestDispatcher getNamedDispatcher(String name) {
+	@Override
+	public RequestDispatcher getNamedDispatcher(final String name) {
 		throw notSupported("getNamedDispatcher(String name)");
 	}
 
@@ -163,7 +179,8 @@ public class ServletContextImpl implements ServletContext {
 	 * @see javax.servlet.ServletContext#log(java.lang.String,
 	 *      java.lang.Throwable)
 	 */
-	public void log(String msg, Throwable t) {// TODO better
+	@Override
+	public void log(final String msg, final Throwable t) {// TODO better
 		if (t == null)
 			System.out.println(msg);
 		else
@@ -177,21 +194,24 @@ public class ServletContextImpl implements ServletContext {
 	 * @see javax.servlet.ServletContext#log(java.lang.Exception,
 	 *      java.lang.String)
 	 */
-	public void log(Exception e, String msg) {
+	@Override
+	public void log(final Exception e, final String msg) {
 		log(msg, e);
 	}
 
 	/**
 	 * @see javax.servlet.ServletContext#log(java.lang.String)
 	 */
-	public void log(String msg) {
+	@Override
+	public void log(final String msg) {
 		log(msg, null);
 	}
 
 	/**
 	 * @see javax.servlet.ServletContext#removeAttribute(java.lang.String)
 	 */
-	public void removeAttribute(String key) {
+	@Override
+	public void removeAttribute(final String key) {
 		attributes.remove(key);
 	}
 
@@ -199,110 +219,117 @@ public class ServletContextImpl implements ServletContext {
 	 * @see javax.servlet.ServletContext#setAttribute(java.lang.String,
 	 *      java.lang.Object)
 	 */
-	public void setAttribute(String key, Object value) {
+	@Override
+	public void setAttribute(final String key, final Object value) {
 		attributes.put(key, value);
 	}
 
+	@Override
 	public String getServletContextName() {
 		// can return null
 		return null;
 	}
 
+	@Override
 	public String getServerInfo() {
 		// deprecated
 		throw notSupported("getServlet()");
 	}
 
-	public Servlet getServlet(String arg0) throws ServletException {
+	@Override
+	public Servlet getServlet(final String arg0) throws ServletException {
 		// deprecated
 		throw notSupported("getServlet()");
 	}
 
+	@Override
 	public Enumeration<String> getServletNames() {
 		// deprecated
 		throw notSupported("getServlet()");
 	}
 
+	@Override
 	public Enumeration<Servlet> getServlets() {
 		// deprecated
 		throw notSupported("getServlet()");
 	}
 
-	private RuntimeException notSupported(String method) {
+	private RuntimeException notSupported(final String method) {
 		throw new RuntimeException(new ServletException("method " + method
 				+ " not supported"));
 	}
 
 	@Override
-	public Dynamic addFilter(String arg0, String arg1) {
+	public Dynamic addFilter(final String arg0, final String arg1) {
 		throw notSupported("");
 	}
 
 	@Override
-	public Dynamic addFilter(String arg0, Filter arg1) {
+	public Dynamic addFilter(final String arg0, final Filter arg1) {
 		throw notSupported("");
 	}
 
 	@Override
-	public Dynamic addFilter(String arg0, Class<? extends Filter> arg1) {
+	public Dynamic addFilter(final String arg0,
+			final Class<? extends Filter> arg1) {
 		throw notSupported("");
 	}
 
 	@Override
-	public void addListener(String arg0) {
+	public void addListener(final String arg0) {
 		throw notSupported("");
 	}
 
 	@Override
-	public <T extends EventListener> void addListener(T arg0) {
+	public <T extends EventListener> void addListener(final T arg0) {
 		throw notSupported("");
 	}
 
 	@Override
-	public void addListener(Class<? extends EventListener> arg0) {
+	public void addListener(final Class<? extends EventListener> arg0) {
 		throw notSupported("");
 	}
 
 	@Override
-	public javax.servlet.ServletRegistration.Dynamic addServlet(String arg0,
-			String arg1) {
+	public javax.servlet.ServletRegistration.Dynamic addServlet(
+			final String arg0, final String arg1) {
 		throw notSupported("");
 	}
 
 	@Override
-	public javax.servlet.ServletRegistration.Dynamic addServlet(String arg0,
-			Servlet arg1) {
+	public javax.servlet.ServletRegistration.Dynamic addServlet(
+			final String arg0, final Servlet arg1) {
 		throw notSupported("");
 	}
 
 	@Override
-	public javax.servlet.ServletRegistration.Dynamic addServlet(String arg0,
-			Class<? extends Servlet> arg1) {
+	public javax.servlet.ServletRegistration.Dynamic addServlet(
+			final String arg0, final Class<? extends Servlet> arg1) {
 		throw notSupported("addServlet");
 	}
 
 	@Override
-	public <T extends Filter> T createFilter(Class<T> arg0)
+	public <T extends Filter> T createFilter(final Class<T> arg0)
 			throws ServletException {
 		throw notSupported("createFilter");
 	}
 
 	@Override
-	public <T extends EventListener> T createListener(Class<T> arg0)
+	public <T extends EventListener> T createListener(final Class<T> arg0)
 			throws ServletException {
 		throw notSupported("createListener");
 	}
 
 	@Override
-	public <T extends Servlet> T createServlet(Class<T> arg0)
+	public <T extends Servlet> T createServlet(final Class<T> arg0)
 			throws ServletException {
 		throw notSupported("createServlet");
 	}
 
 	@Override
-	public void declareRoles(String... arg0) {
+	public void declareRoles(final String... arg0) {
 		throw notSupported("declareRoles(String ...)");
-		
+
 	}
 
 	@Override
@@ -336,7 +363,7 @@ public class ServletContextImpl implements ServletContext {
 	}
 
 	@Override
-	public FilterRegistration getFilterRegistration(String arg0) {
+	public FilterRegistration getFilterRegistration(final String arg0) {
 		throw notSupported("getFilterRegistration(String)");
 	}
 
@@ -351,7 +378,7 @@ public class ServletContextImpl implements ServletContext {
 	}
 
 	@Override
-	public ServletRegistration getServletRegistration(String arg0) {
+	public ServletRegistration getServletRegistration(final String arg0) {
 		throw notSupported("getServletRegistration(String)");
 	}
 
@@ -371,8 +398,8 @@ public class ServletContextImpl implements ServletContext {
 	}
 
 	@Override
-	public boolean setInitParameter(String name, String value) {
-		if(!parameters.containsKey(name)) {
+	public boolean setInitParameter(final String name, final String value) {
+		if (!parameters.containsKey(name)) {
 			this.parameters.put(name, value);
 			return true;
 		}
@@ -380,9 +407,9 @@ public class ServletContextImpl implements ServletContext {
 	}
 
 	@Override
-	public void setSessionTrackingModes(Set<SessionTrackingMode> arg0) {
+	public void setSessionTrackingModes(final Set<SessionTrackingMode> arg0) {
 		throw notSupported("setSessionTrackingModes(Set<SessionTrackingMode>) ");
-		
+
 	}
 
 }

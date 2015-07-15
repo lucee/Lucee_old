@@ -66,7 +66,7 @@ public interface QueryCache {
 	/**
 	 * clear the cache
 	 * 
-	 * @throws IOException
+	 * @param pc
 	 */
 	public abstract void clear(PageContext pc);
 
@@ -80,11 +80,11 @@ public interface QueryCache {
 	/**
 	 * removes query from cache
 	 * 
+	 * @param pc
 	 * @param sql
 	 * @param datasource
 	 * @param username
 	 * @param password
-	 * @throws IOException
 	 */
 	public abstract void remove(PageContext pc, SQL sql, String datasource,
 			String username, String password);

@@ -32,6 +32,7 @@ public interface FunctionValue extends Castable, Serializable, Dumpable {
 	 * @return Returns the name.
 	 * @deprecated use instead <code>getNameAsString();</code>
 	 */
+	@Deprecated
 	public abstract String getName();
 
 	/**

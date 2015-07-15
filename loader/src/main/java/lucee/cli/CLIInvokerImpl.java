@@ -32,17 +32,17 @@ import lucee.loader.engine.CFMLEngineFactory;
 
 public class CLIInvokerImpl implements CLIInvoker {
 
-	private ServletConfigImpl servletConfig;
-	private CFMLEngine engine;
+	private final ServletConfigImpl servletConfig;
+	private final CFMLEngine engine;
 	private long lastAccess;
 
-	public CLIInvokerImpl(File root, String servletName)
+	public CLIInvokerImpl(final File root, final String servletName)
 			throws ServletException {
 
-		Map<String, Object> attributes = new HashMap<String, Object>();
-		Map<String, String> initParams = new HashMap<String, String>();
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		final Map<String, String> initParams = new HashMap<String, String>();
 
-		String param = System.getProperty("lucee.cli.config");
+		final String param = System.getProperty("lucee.cli.config");
 
 		if (param != null && !param.isEmpty()) {
 
@@ -50,26 +50,24 @@ public class CLIInvokerImpl implements CLIInvoker {
 					new File(param, "lucee-web").getAbsolutePath());
 			initParams.put("lucee-server-directory",
 					new File(param).getAbsolutePath()); // will create a subfolder named lucee-server
-		} else {
-
+		} else
 			initParams.put("lucee-server-directory",
 					new File(root, "WEB-INF").getAbsolutePath());
-		}
 
-		ServletContextImpl servletContext = new ServletContextImpl(root,
+		final ServletContextImpl servletContext = new ServletContextImpl(root,
 				attributes, initParams, 1, 0);
 		servletConfig = new ServletConfigImpl(servletContext, servletName);
 		engine = CFMLEngineFactory.getInstance(servletConfig);
 	}
 
 	@Override
-	public void invoke(Map<String, String> config) throws RemoteException {
+	public void invoke(final Map<String, String> config) throws RemoteException {
 
 		try {
 
 			engine.cli(config, servletConfig);
 			lastAccess = System.currentTimeMillis();
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new RemoteException("failed to call CFML Engine", t);
 		}
 	}

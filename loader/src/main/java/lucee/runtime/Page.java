@@ -57,7 +57,7 @@ public abstract class Page implements Serializable {
 	 * @param pc PageContext
 	 * @throws Throwable
 	 */
-	public Object call(PageContext pc) throws Throwable {
+	public Object call(final PageContext pc) throws Throwable {
 		return null;
 	}
 
@@ -80,7 +80,7 @@ public abstract class Page implements Serializable {
 	/**
 	 * @param pageSource
 	 */
-	public void setPageSource(PageSource pageSource) {
+	public void setPageSource(final PageSource pageSource) {
 		this.pageSource = pageSource;
 	}
 
@@ -101,21 +101,22 @@ public abstract class Page implements Serializable {
 	/**
 	 * @param loadType sets the load type
 	 */
-	public void setLoadType(byte loadType) {
+	public void setLoadType(final byte loadType) {
 		this.loadType = loadType;
 	}
 
-	public Object udfCall(PageContext pageContext, UDF udf, int functionIndex)
-			throws Throwable {
+	public Object udfCall(final PageContext pageContext, final UDF udf,
+			final int functionIndex) throws Throwable {
 		return null;
 	}
 
-	public void threadCall(PageContext pageContext, int threadIndex)
+	public void threadCall(final PageContext pageContext, final int threadIndex)
 			throws Throwable {
 	}
 
-	public Object udfDefaultValue(PageContext pc, int functionIndex,
-			int argumentIndex, Object defaultValue) {
+	public Object udfDefaultValue(final PageContext pc,
+			final int functionIndex, final int argumentIndex,
+			final Object defaultValue) {
 		return null;
 	}
 

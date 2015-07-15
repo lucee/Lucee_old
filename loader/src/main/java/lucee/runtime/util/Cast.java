@@ -630,6 +630,7 @@ public interface Cast {
 	public Long toLong(Object o, Long defaultValue);
 
 	public Collection.Key toKey(Object o) throws PageException;
+
 	public Collection.Key toKey(String str);
 
 	public Collection.Key toKey(Object o, Collection.Key defaultValue);
@@ -869,7 +870,7 @@ public interface Cast {
 	 * @return casted Struct
 	 * @throws PageException
 	 */
-	public Map<?,?> toMap(Object o) throws PageException;
+	public Map<?, ?> toMap(Object o) throws PageException;
 
 	/**
 	 * cast a Object to a Map Object
@@ -1036,15 +1037,14 @@ public interface Cast {
 	 * @throws PageException
 	 */
 	public DateTime toDateTime(Object o, TimeZone tz) throws PageException;
-	
 
 	/**
 	 * cast a Object to a DateTime Object
 	 * 
 	 * @param o Object to cast
 	 * @param tz
+	 * @param defaultValue
 	 * @return casted DateTime Object
-	 * @throws PageException
 	 */
 	public DateTime toDateTime(Object o, TimeZone tz, DateTime defaultValue);
 
@@ -1156,12 +1156,10 @@ public interface Cast {
 	 * @return casted Variable Name
 	 */
 	public String toVariableName(Object obj, String defaultValue);
-	
+
 	@Deprecated
 	public Object toVariableName(Object obj, Object defaultValue);
 
-	
-	
 	/**
 	 * cast a Object to a TimeSpan Object (alias for toTimeSpan)
 	 * 
@@ -1180,7 +1178,6 @@ public interface Cast {
 	 */
 	public TimeSpan toTimespan(Object o, TimeSpan defaultValue);
 
-
 	/**
 	 * convert milliseconds to a timespan
 	 * 
@@ -1189,7 +1186,6 @@ public interface Cast {
 	 */
 	public TimeSpan toTimespan(long millis);
 
-	
 	/**
 	 * cast a Throwable Object to a PageException Object
 	 * 
@@ -1197,15 +1193,15 @@ public interface Cast {
 	 * @return casted PageException Object
 	 */
 	public PageException toPageException(Throwable t);
-	
+
 	/**
-	 * cast a Throwable Object to a PageRuntimeException Object (RuntimeException)
+	 * cast a Throwable Object to a PageRuntimeException Object
+	 * (RuntimeException)
 	 * 
 	 * @param t Throwable to cast
 	 * @return casted PageException Object
 	 */
 	public RuntimeException toPageRuntimeException(Throwable t);
-
 
 	/**
 	 * return the type name of a object (string, boolean, int aso.), type is not
@@ -1266,17 +1262,18 @@ public interface Cast {
 	 */
 	public Object castTo(PageContext pc, short type, Object o)
 			throws PageException;
-	
+
 	/**
 	 * cast a value to a value defined by type a class
 	 * 
 	 * @param pc
-	 * @param trgClass class to generate 
-	 * @param o Object to cast
+	 * @param trgClass class to generate
+	 * @param obj Object to cast
 	 * @return casted Value
 	 * @throws PageException
 	 */
-	public Object castTo(PageContext pc, Class trgClass, Object obj) throws PageException;
+	public Object castTo(PageContext pc, Class trgClass, Object obj)
+			throws PageException;
 
 	/**
 	 * cast a value to void (Empty String)
@@ -1564,12 +1561,13 @@ public interface Cast {
 	public Object toNull(Object value) throws PageException;
 
 	public Float toFloat(Object o) throws PageException;
-	public Float toFloat(Object o,Float defaultValue);
-	public float toFloatValue(Object o) throws PageException;
-	public float toFloatValue(Object o,float defaultValue);
 
-	
-	
+	public Float toFloat(Object o, Float defaultValue);
+
+	public float toFloatValue(Object o) throws PageException;
+
+	public float toFloatValue(Object o, float defaultValue);
+
 	/**
 	 * casts a Object to null
 	 * 
@@ -1630,16 +1628,20 @@ public interface Cast {
 	public Charset toCharset(String str, Charset defaultValue);
 
 	public BigDecimal toBigDecimal(Object obj) throws PageException;
+
 	public BigDecimal toBigDecimal(Object obj, BigDecimal defaultValue);
 
 	public Component toComponent(Object obj) throws PageException;
+
 	public Component toComponent(Object obj, Component defaultValue);
 
 	public TimeZone toTimeZone(Object obj) throws PageException;
+
 	public TimeZone toTimeZone(Object obj, TimeZone defaultValue);
 
 	public Calendar toCalendar(long time, TimeZone timeZone, Locale locale);
 
-	public DumpData toDumpTable(Struct sct,String title,PageContext pageContext, int maxlevel, DumpProperties dp);
+	public DumpData toDumpTable(Struct sct, String title,
+			PageContext pageContext, int maxlevel, DumpProperties dp);
 
 }

@@ -35,13 +35,15 @@ public abstract class BodyTagSupport extends TagSupport implements BodyTag {
 	/**
 	 * @see javax.servlet.jsp.tagext.BodyTag#setBodyContent(javax.servlet.jsp.tagext.BodyContent)
 	 */
-	public void setBodyContent(BodyContent bodyContent) {
+	@Override
+	public void setBodyContent(final BodyContent bodyContent) {
 		this.bodyContent = bodyContent;
 	}
 
 	/**
 	 * @see javax.servlet.jsp.tagext.BodyTag#doInitBody()
 	 */
+	@Override
 	public void doInitBody() throws JspException {
 
 	}
@@ -49,6 +51,7 @@ public abstract class BodyTagSupport extends TagSupport implements BodyTag {
 	/**
 	 * @see javax.servlet.jsp.tagext.IterationTag#doAfterBody()
 	 */
+	@Override
 	public int doAfterBody() throws JspException {
 		return SKIP_BODY;
 	}
@@ -56,6 +59,7 @@ public abstract class BodyTagSupport extends TagSupport implements BodyTag {
 	/**
 	 * @see javax.servlet.jsp.tagext.Tag#release()
 	 */
+	@Override
 	public void release() {
 		super.release();
 		bodyContent = null;

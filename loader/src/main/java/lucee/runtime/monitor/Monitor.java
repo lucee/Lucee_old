@@ -25,7 +25,7 @@ public interface Monitor {
 	public static final short TYPE_INTERVAL = 1;
 	public static final short TYPE_REQUEST = 2;
 	public static final short TYPE_ACTION = 4;
-	
+
 	@Deprecated
 	public static final short TYPE_INTERVALL = TYPE_INTERVAL;
 

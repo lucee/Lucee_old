@@ -53,6 +53,7 @@ public interface QueryStack {
 	 * @deprecated use instead
 	 *             <code>{@link #getDataFromACollection(PageContext,String)}</code>
 	 */
+	@Deprecated
 	public abstract Object getDataFromACollection(String key);
 
 	/**
@@ -71,6 +72,7 @@ public interface QueryStack {
 	 * @deprecated use instead
 	 *             <code>{@link #getDataFromACollection(PageContext,Collection.Key)}</code>
 	 */
+	@Deprecated
 	public abstract Object getDataFromACollection(Collection.Key key);
 
 	/**

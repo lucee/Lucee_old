@@ -27,5 +27,5 @@ public interface CacheItem {
 
 	public String getMeta();
 
-	public long getExecutionTime();	
+	public long getExecutionTime();
 }

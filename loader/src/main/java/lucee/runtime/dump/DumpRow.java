@@ -20,8 +20,8 @@ package lucee.runtime.dump;
 
 public class DumpRow {
 
-	private int highlightType;
-	private DumpData[] items;
+	private final int highlightType;
+	private final DumpData[] items;
 
 	/**
 	 * constructor of the class
@@ -29,7 +29,7 @@ public class DumpRow {
 	 * @param highlightType binary Values define wich columns are higlithed
 	 * @param items items as DumpData Array
 	 */
-	public DumpRow(int highlightType, DumpData[] items) {
+	public DumpRow(final int highlightType, final DumpData[] items) {
 		this.highlightType = highlightType;
 		this.items = items;
 	}
@@ -40,7 +40,7 @@ public class DumpRow {
 	 * @param highlightType binary Values define wich columns are higlithed
 	 * @param item1 item for the array
 	 */
-	public DumpRow(int highlightType, DumpData item1) {
+	public DumpRow(final int highlightType, final DumpData item1) {
 		this(highlightType, new DumpData[] { item1 });
 	}
 
@@ -51,7 +51,8 @@ public class DumpRow {
 	 * @param item1 item for the array
 	 * @param item2 item for the array
 	 */
-	public DumpRow(int highlightType, DumpData item1, DumpData item2) {
+	public DumpRow(final int highlightType, final DumpData item1,
+			final DumpData item2) {
 		this(highlightType, new DumpData[] { item1, item2 });
 	}
 
@@ -63,8 +64,8 @@ public class DumpRow {
 	 * @param item2 item for the array
 	 * @param item3 item for the array
 	 */
-	public DumpRow(int highlightType, DumpData item1, DumpData item2,
-			DumpData item3) {
+	public DumpRow(final int highlightType, final DumpData item1,
+			final DumpData item2, final DumpData item3) {
 		this(highlightType, new DumpData[] { item1, item2, item3 });
 	}
 
@@ -77,8 +78,8 @@ public class DumpRow {
 	 * @param item3 item for the array
 	 * @param item4 item for the array
 	 */
-	public DumpRow(int highlightType, DumpData item1, DumpData item2,
-			DumpData item3, DumpData item4) {
+	public DumpRow(final int highlightType, final DumpData item1,
+			final DumpData item2, final DumpData item3, final DumpData item4) {
 		this(highlightType, new DumpData[] { item1, item2, item3, item4 });
 	}
 
@@ -92,8 +93,9 @@ public class DumpRow {
 	 * @param item4 item for the array
 	 * @param item5 item for the array
 	 */
-	public DumpRow(int highlightType, DumpData item1, DumpData item2,
-			DumpData item3, DumpData item4, DumpData item5) {
+	public DumpRow(final int highlightType, final DumpData item1,
+			final DumpData item2, final DumpData item3, final DumpData item4,
+			final DumpData item5) {
 		this(highlightType,
 				new DumpData[] { item1, item2, item3, item4, item5 });
 	}
@@ -109,8 +111,9 @@ public class DumpRow {
 	 * @param item5 item for the array
 	 * @param item6 item for the array
 	 */
-	public DumpRow(int highlightType, DumpData item1, DumpData item2,
-			DumpData item3, DumpData item4, DumpData item5, DumpData item6) {
+	public DumpRow(final int highlightType, final DumpData item1,
+			final DumpData item2, final DumpData item3, final DumpData item4,
+			final DumpData item5, final DumpData item6) {
 		this(highlightType, new DumpData[] { item1, item2, item3, item4, item5,
 				item6 });
 	}

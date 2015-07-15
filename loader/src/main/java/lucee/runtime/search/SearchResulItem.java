@@ -62,24 +62,28 @@ public interface SearchResulItem {
 	 * @deprecated use instead <code>getCustom(int index)</code>
 	 * @return Returns the custom1.
 	 */
+	@Deprecated
 	public abstract String getCustom1();
 
 	/**
 	 * @deprecated use instead <code>getCustom(int index)</code>
 	 * @return Returns the custom2.
 	 */
+	@Deprecated
 	public abstract String getCustom2();
 
 	/**
 	 * @deprecated use instead <code>getCustom(int index)</code>
 	 * @return Returns the custom3.
 	 */
+	@Deprecated
 	public abstract String getCustom3();
 
 	/**
 	 * @deprecated use instead <code>getCustom(int index)</code>
 	 * @return Returns the custom4.
 	 */
+	@Deprecated
 	public abstract String getCustom4();
 
 	public abstract String getCustom(int index) throws SearchException;

@@ -19,7 +19,6 @@
 package lucee.runtime.type.scope;
 
 import lucee.runtime.config.ConfigServer;
-import lucee.runtime.exp.PageException;
 
 public interface ClusterRemote {
 
@@ -39,7 +38,6 @@ public interface ClusterRemote {
 	 * check if the value can distributed over the "cluster"
 	 * 
 	 * @param value
-	 * @throws PageException
 	 */
 	public boolean checkValue(Object value);
 

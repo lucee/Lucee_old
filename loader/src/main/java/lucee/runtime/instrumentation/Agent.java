@@ -23,13 +23,15 @@ import java.lang.instrument.Instrumentation;
 public class Agent {
 	private static Instrumentation instrumentation;
 
-	public static void premain(String agentArgs, Instrumentation inst) {
+	public static void premain(final String agentArgs,
+			final Instrumentation inst) {
 		System.out.println("Agent-premain:" + agentArgs);
 		if (inst != null)
 			instrumentation = inst;
 	}
 
-	public static void agentmain(String agentArgs, Instrumentation inst) {
+	public static void agentmain(final String agentArgs,
+			final Instrumentation inst) {
 		System.out.println("Agent-agentmain:" + agentArgs);
 		if (inst != null)
 			instrumentation = inst;
@@ -42,7 +44,7 @@ public class Agent {
 	}
 
 	public static Instrumentation getInstrumentation(
-			Instrumentation defaultValue) {
+			final Instrumentation defaultValue) {
 		if (instrumentation == null)
 			return defaultValue;
 		return instrumentation;

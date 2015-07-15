@@ -55,6 +55,7 @@ public interface Resource extends Serializable {
 	 *         application; <code>false</code> otherwise
 	 * @deprecated use instead <code>#isReadable()</code>
 	 */
+	@Deprecated
 	public abstract boolean canRead();
 
 	/**
@@ -79,6 +80,7 @@ public interface Resource extends Serializable {
 	 *         <code>false</code> otherwise.
 	 * @deprecated use instead <code>#isWriteable()</code>
 	 */
+	@Deprecated
 	public abstract boolean canWrite();
 
 	/**
@@ -102,10 +104,11 @@ public interface Resource extends Serializable {
 	 * true,
 	 * also the children oif the directory will be deleted.
 	 * 
-	 * @throws IOException
-	 *             if the file doesn't exists or can't delete
+	 * if the file doesn't exists or can't delete
+	 * 
 	 * @deprecated replaced with method remove(boolean)
 	 */
+	@Deprecated
 	public boolean delete();
 
 	/**
@@ -240,7 +243,7 @@ public interface Resource extends Serializable {
 	/**
 	 * returns a resource that is relative to the current resource
 	 * 
-	 * @param realpath
+	 * @param relpath
 	 * @return relative resource to the current
 	 */
 	public Resource getRealResource(String relpath);
@@ -290,6 +293,7 @@ public interface Resource extends Serializable {
 	 *         abstract pathname is hidden
 	 * @deprecated use instead <code>{@link #getAttribute(short)}</code>
 	 */
+	@Deprecated
 	public abstract boolean isHidden();
 
 	/**
@@ -300,6 +304,7 @@ public interface Resource extends Serializable {
 	 *         abstract pathname is a archive
 	 * @deprecated use instead <code>{@link #getAttribute(short)}</code>
 	 */
+	@Deprecated
 	public abstract boolean isArchive();
 
 	/**
@@ -310,6 +315,7 @@ public interface Resource extends Serializable {
 	 *         abstract pathname is a system resource
 	 * @deprecated use instead <code>{@link #getAttribute(short)}</code>
 	 */
+	@Deprecated
 	public abstract boolean isSystem();
 
 	/**
@@ -472,6 +478,7 @@ public interface Resource extends Serializable {
 	 * 
 	 * @deprecated use instead <code>#moveTo(Resource)</code>
 	 */
+	@Deprecated
 	public boolean renameTo(Resource dest);
 
 	/**
@@ -524,6 +531,7 @@ public interface Resource extends Serializable {
 	 * @deprecated use instead <code>{@link #setWritable(boolean)}</code>
 	 * 
 	 */
+	@Deprecated
 	public boolean setReadOnly();
 
 	//public void setWritable(boolean value) throws IOException;
@@ -543,10 +551,9 @@ public interface Resource extends Serializable {
 	 *         successfully created; <code>false</code> if the named file
 	 *         already exists
 	 * 
-	 * @throws IOException
-	 *             If an I/O error occurred
 	 * @deprecated use instead <code>#createFile(boolean)</code>
 	 */
+	@Deprecated
 	public boolean createNewFile();
 
 	/**
@@ -572,6 +579,7 @@ public interface Resource extends Serializable {
 	 *         created; <code>false</code> otherwise
 	 * @deprecated use <code>#createDirectory(boolean)</code>
 	 */
+	@Deprecated
 	public boolean mkdir();
 
 	/**
@@ -585,6 +593,7 @@ public interface Resource extends Serializable {
 	 *         otherwise
 	 * @deprecated use <code>#createDirectory(boolean)</code>
 	 */
+	@Deprecated
 	public boolean mkdirs();
 
 	/**
@@ -640,6 +649,7 @@ public interface Resource extends Serializable {
 	 * @deprecated use instead
 	 *             <code>{@link #setAttribute(short, boolean)}</code>
 	 */
+	@Deprecated
 	public void setHidden(boolean value) throws IOException;
 
 	/**
@@ -651,6 +661,7 @@ public interface Resource extends Serializable {
 	 * @deprecated use instead
 	 *             <code>{@link #setAttribute(short, boolean)}</code>
 	 */
+	@Deprecated
 	public void setSystem(boolean value) throws IOException;
 
 	/**
@@ -662,6 +673,7 @@ public interface Resource extends Serializable {
 	 * @deprecated use instead
 	 *             <code>{@link #setAttribute(short, boolean)}</code>
 	 */
+	@Deprecated
 	public void setArchive(boolean value) throws IOException;
 
 	/**
@@ -680,8 +692,6 @@ public interface Resource extends Serializable {
 	 * 
 	 * @param attribute
 	 * @return value of the attribute
-	 * @throws IOException throwed when attributes are not supported or
-	 *             the resource doesn't exists
 	 */
 	public boolean getAttribute(short attribute);
 }

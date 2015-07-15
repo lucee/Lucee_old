@@ -19,7 +19,6 @@
 package lucee.runtime.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -77,7 +76,7 @@ public interface ResourceUtil {
 	 * @param pc Page Context to et actuell position in filesystem
 	 * @param path relative or absolute path for file object
 	 * @return file object from destination
-	 * @throws ExpressionException
+	 * @throws PageException
 	 */
 	public Resource toResourceExisting(PageContext pc, String path)
 			throws PageException;
@@ -91,7 +90,7 @@ public interface ResourceUtil {
 	 * @param pc Page Context to et actuell position in filesystem
 	 * @param destination relative or absolute path for file object
 	 * @return file object from destination
-	 * @throws ExpressionException
+	 * @throws PageException
 	 */
 	public Resource toResourceExistingParent(PageContext pc, String destination)
 			throws PageException;
@@ -137,6 +136,7 @@ public interface ResourceUtil {
 	 * @return mime type of the file
 	 * @deprecated use instead <code>getContentType</code>
 	 */
+	@Deprecated
 	public String getMimeType(Resource res, String defaultValue);
 
 	/**
@@ -147,6 +147,7 @@ public interface ResourceUtil {
 	 * @return mime type of the file
 	 * @deprecated use instead <code>getContentType</code>
 	 */
+	@Deprecated
 	public String getMimeType(byte[] barr, String defaultValue);
 
 	/**
@@ -175,6 +176,7 @@ public interface ResourceUtil {
 	 * @deprecated use instead
 	 *             <code>getExtension(Resource res, String defaultValue);</code>
 	 */
+	@Deprecated
 	public String getExtension(Resource res);
 
 	/**
@@ -193,12 +195,12 @@ public interface ResourceUtil {
 	 * @deprecated use instead
 	 *             <code>getExtension(String strFile, String defaultValue);</code>
 	 */
+	@Deprecated
 	public String getExtension(String strFile);
 
 	/**
 	 * get the Extension of a file resource
 	 * 
-	 * @param res
 	 * @return extension of file
 	 */
 	public String getExtension(String strFile, String defaultValue);
@@ -206,9 +208,7 @@ public interface ResourceUtil {
 	/**
 	 * copy a file or directory recursive (with his content)
 	 * 
-	 * @param file file or directory to delete
 	 * @throws IOException
-	 * @throws FileNotFoundException
 	 */
 	public void copyRecursive(Resource src, Resource trg) throws IOException;
 
@@ -219,7 +219,6 @@ public interface ResourceUtil {
 	 * @param trg
 	 * @param filter
 	 * @throws IOException
-	 * @throws FileNotFoundException
 	 */
 	public void copyRecursive(Resource src, Resource trg, ResourceFilter filter)
 			throws IOException;
@@ -326,7 +325,7 @@ public interface ResourceUtil {
 	 * @throws IOException
 	 */
 	public void checkRemoveOK(Resource resource) throws IOException;
-	
+
 	@Deprecated
 	public String toString(Resource r, String charset) throws IOException;
 
@@ -342,143 +341,168 @@ public interface ResourceUtil {
 
 	public String parsePlaceHolder(String path);
 
-	public ResourceFilter getExtensionResourceFilter(String extension, boolean allowDir);
-	public ResourceFilter getExtensionResourceFilter(String extensions[], boolean allowDir);
+	public ResourceFilter getExtensionResourceFilter(String extension,
+			boolean allowDir);
+
+	public ResourceFilter getExtensionResourceFilter(String extensions[],
+			boolean allowDir);
 
 	public ContentType getContentType(Resource file);
 
-    /**
-     * cast a String (argumet destination) to a File Object, 
-     * if destination is not a absolute, file object will be relative to current position (get from PageContext)
-     * at least parent must exist
-     * @param pc Page Context to et actuell position in filesystem
-     * @param destination relative or absolute path for file object
-     * @return file object from destination
-     * @throws ExpressionException
-     */
-
-    public Resource toResourceExistingParent(PageContext pc ,String destination, boolean allowRealpath) throws PageException;
-    
-    public Resource toResourceNotExisting(PageContext pc ,String destination,boolean allowRealpath, boolean checkComponentMappings);
-	public boolean isUNCPath(String path);
-    /**
-     * transalte the path of the file to a existing file path by changing case of letters
-     * Works only on Linux, becasue 
-     * 
-     * Example Unix:
-     * we have a existing file with path "/usr/virtual/myFile.txt"
-     * now you call this method with path "/Usr/Virtual/myfile.txt"
-     * the result of the method will be "/usr/virtual/myFile.txt"
-     * 
-     * if there are more file with rhe same name but different cases
-     * Example:
-     *  /usr/virtual/myFile.txt
-     *  /usr/virtual/myfile.txt
-     *  /Usr/Virtual/myFile.txt
-     *  the nearest case wil returned
-     * 
-     * @param res
-     * @return file
-     */
-    public Resource toExactResource(Resource res);
-    
-	public String prettifyPath(String path);
-	
 	/**
-     * Returns the canonical form of this abstract pathname.
-     * @param res file to get canoncial form from it
-     *
-     * @return  The canonical pathname string denoting the same file or
-     *          directory as this abstract pathname
-     *
-     * @throws  SecurityException
-     *          If a required system property value cannot be accessed.
-     */
-    public String getCanonicalPathSilent(Resource res);
-    
-    /**
-     * Returns the canonical form of this abstract pathname.
-     * @param res file to get canoncial form from it
-     *
-     * @return  The canonical pathname string denoting the same file or
-     *          directory as this abstract pathname
-     *
-     * @throws  SecurityException
-     *          If a required system property value cannot be accessed.
-     */
-    public Resource getCanonicalResourceSilent(Resource res);
-    
-    /**
-     * creates a new File
-     * @param res
-     * @return was successfull
-     */
-    public boolean createNewResourceSilent(Resource res);
+	 * cast a String (argumet destination) to a File Object,
+	 * if destination is not a absolute, file object will be relative to current
+	 * position (get from PageContext)
+	 * at least parent must exist
+	 * 
+	 * @param pc Page Context to et actuell position in filesystem
+	 * @param destination relative or absolute path for file object
+	 * @return file object from destination
+	 * @throws PageException
+	 */
+	public Resource toResourceExistingParent(PageContext pc,
+			String destination, boolean allowRealpath) throws PageException;
 
-    /**
-     * similar to linux bash fuction touch, create file if not exist otherwise change last modified date
-     * @param res
-     * @throws IOException
-     */
-    public void touch(Resource res) throws IOException;
-    
-    public void clear(Resource res) throws IOException;
-    	
-    /**
-     * change extesnion of file and return new file
-     * @param file
-     * @param newExtension
-     * @return  file with new Extension
-     */
-    public Resource changeExtension(Resource file, String newExtension);
-    
-    /**
-     * @param res delete the content of a directory
-     */
-    public void deleteContent(Resource src,ResourceFilter filter);
+	public Resource toResourceNotExisting(PageContext pc, String destination,
+			boolean allowRealpath, boolean checkComponentMappings);
 
-    public void copy(Resource src, Resource trg) throws IOException;
-    
-	public void removeChildrenSilent(Resource res,ResourceNameFilter filter);
-	public void removeChildrenSilent(Resource res,ResourceFilter filter);
+	public boolean isUNCPath(String path);
+
+	/**
+	 * transalte the path of the file to a existing file path by changing case
+	 * of letters
+	 * Works only on Linux, becasue
+	 * 
+	 * Example Unix:
+	 * we have a existing file with path "/usr/virtual/myFile.txt"
+	 * now you call this method with path "/Usr/Virtual/myfile.txt"
+	 * the result of the method will be "/usr/virtual/myFile.txt"
+	 * 
+	 * if there are more file with rhe same name but different cases
+	 * Example:
+	 * /usr/virtual/myFile.txt
+	 * /usr/virtual/myfile.txt
+	 * /Usr/Virtual/myFile.txt
+	 * the nearest case wil returned
+	 * 
+	 * @param res
+	 * @return file
+	 */
+	public Resource toExactResource(Resource res);
+
+	public String prettifyPath(String path);
+
+	/**
+	 * Returns the canonical form of this abstract pathname.
+	 * 
+	 * @param res file to get canoncial form from it
+	 * 
+	 * @return The canonical pathname string denoting the same file or
+	 *         directory as this abstract pathname
+	 * 
+	 * @throws SecurityException
+	 *             If a required system property value cannot be accessed.
+	 */
+	public String getCanonicalPathSilent(Resource res);
+
+	/**
+	 * Returns the canonical form of this abstract pathname.
+	 * 
+	 * @param res file to get canoncial form from it
+	 * 
+	 * @return The canonical pathname string denoting the same file or
+	 *         directory as this abstract pathname
+	 * 
+	 * @throws SecurityException
+	 *             If a required system property value cannot be accessed.
+	 */
+	public Resource getCanonicalResourceSilent(Resource res);
+
+	/**
+	 * creates a new File
+	 * 
+	 * @param res
+	 * @return was successfull
+	 */
+	public boolean createNewResourceSilent(Resource res);
+
+	/**
+	 * similar to linux bash fuction touch, create file if not exist otherwise
+	 * change last modified date
+	 * 
+	 * @param res
+	 * @throws IOException
+	 */
+	public void touch(Resource res) throws IOException;
+
+	public void clear(Resource res) throws IOException;
+
+	/**
+	 * change extesnion of file and return new file
+	 * 
+	 * @param file
+	 * @param newExtension
+	 * @return file with new Extension
+	 */
+	public Resource changeExtension(Resource file, String newExtension);
+
+	/**
+	 * delete the content of a directory
+	 */
+	public void deleteContent(Resource src, ResourceFilter filter);
+
+	public void copy(Resource src, Resource trg) throws IOException;
+
+	public void removeChildrenSilent(Resource res, ResourceNameFilter filter);
+
+	public void removeChildrenSilent(Resource res, ResourceFilter filter);
+
 	public void removeChildrenSilent(Resource res);
+
 	public void removeSilent(Resource res, boolean force);
+
 	public void createFileSilent(Resource res, boolean force);
+
 	public void createDirectorySilent(Resource res, boolean force);
 
 	/**
-	 * return the size of the Resource, other than method length of Resource this method return the size of all files in a directory
-	 * @param collectionDir
-	 * @return
+	 * return the size of the Resource, other than method length of Resource
+	 * this method return the size of all files in a directory
+	 * 
+	 * @param res
+	 * @param filter
 	 */
 	public long getRealSize(Resource res, ResourceFilter filter);
 
 	public int getChildCount(Resource res, ResourceFilter filter);
 
 	/**
-	 * return Boolean.True when directory is empty, Boolean.FALSE when directory s not empty and null if directory does not exists
+	 * return Boolean.True when directory is empty, Boolean.FALSE when directory
+	 * s not empty and null if directory does not exists
+	 * 
 	 * @param res
 	 * @return
 	 */
 	public boolean isEmptyDirectory(Resource res, ResourceFilter filter);
-	
+
 	public void deleteEmptyFolders(Resource res) throws IOException;
-	
-	public Resource getResource(PageContext pc,PageSource ps, Resource defaultValue);
-	
-	public int directrySize(Resource dir,ResourceFilter filter);
-	
-	public int directrySize(Resource dir,ResourceNameFilter filter);
-	
+
+	public Resource getResource(PageContext pc, PageSource ps,
+			Resource defaultValue);
+
+	public int directrySize(Resource dir, ResourceFilter filter);
+
+	public int directrySize(Resource dir, ResourceNameFilter filter);
+
 	public String[] names(Resource[] resources);
-	
-    public Resource[] merge(Resource[] srcs, Resource... trgs);
+
+	public Resource[] merge(Resource[] srcs, Resource... trgs);
 
 	public void removeEmptyFolders(Resource dir) throws IOException;
-	
-	public List<Resource> listRecursive(Resource res,ResourceFilter filter) ;
-	
+
+	public List<Resource> listRecursive(Resource res, ResourceFilter filter);
+
 	public char getSeparator(ResourceProvider rp);
 
-	public ResourceProvider getFileResourceProvider(); 
+	public ResourceProvider getFileResourceProvider();
 }

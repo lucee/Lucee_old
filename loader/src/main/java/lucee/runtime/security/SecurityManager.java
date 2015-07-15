@@ -184,7 +184,8 @@ public interface SecurityManager {
 	 * @param serverPassword
 	 * @throws PageException
 	 */
-	public abstract void checkFileLocation(ConfigWeb config, Resource res, String serverPassword) throws PageException;
+	public abstract void checkFileLocation(ConfigWeb config, Resource res,
+			String serverPassword) throws PageException;
 
 	/**
 	 * @return clone the security Manager

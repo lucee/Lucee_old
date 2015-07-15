@@ -51,6 +51,7 @@ public interface VariableUtil {
 	 * @deprecated use instead
 	 *             <code>get(PageContext pc, Object coll, Collection.Key key, Object defaultValue);</code>
 	 */
+	@Deprecated
 	public abstract Object get(PageContext pc, Object coll, String key,
 			Object defaultValue);
 
@@ -116,6 +117,7 @@ public interface VariableUtil {
 	 * @deprecated use instead
 	 *             <code>set(PageContext pc, Object coll, Collection.Key key,Object value)</code>
 	 */
+	@Deprecated
 	public Object set(PageContext pc, Object coll, String key, Object value)
 			throws PageException;
 
@@ -133,6 +135,7 @@ public interface VariableUtil {
 	 * @deprecated use instead
 	 *             <code>setEL(PageContext pc, Object coll, Collection.Key key,Object value);</code>
 	 */
+	@Deprecated
 	public abstract Object setEL(PageContext pc, Object coll, String key,
 			Object value);
 
@@ -157,7 +160,7 @@ public interface VariableUtil {
 	 */
 	@Deprecated
 	public abstract Object removeEL(Object coll, String key);
-	
+
 	public abstract Object removeEL(Object coll, Collection.Key key);
 
 	/**
@@ -170,9 +173,9 @@ public interface VariableUtil {
 	 */
 	@Deprecated
 	public abstract Object remove(Object coll, String key) throws PageException;
-	
 
-	public abstract Object remove(Object coll, Collection.Key key) throws PageException;
+	public abstract Object remove(Object coll, Collection.Key key)
+			throws PageException;
 
 	/**
 	 * call a Function (UDF, Method) with or witout named values
@@ -199,6 +202,7 @@ public interface VariableUtil {
 	 * @deprecated use instead
 	 *             <code>callFunctionWithoutNamedValues(PageContext pc, Object coll, Collection.Key key, Object[] args)</code>
 	 */
+	@Deprecated
 	public abstract Object callFunctionWithoutNamedValues(PageContext pc,
 			Object coll, String key, Object[] args) throws PageException;
 
@@ -227,6 +231,7 @@ public interface VariableUtil {
 	 * @deprecated use instead
 	 *             <code>callFunctionWithNamedValues(PageContext pc, Object coll, Collection.Key key, Object[] args)</code>
 	 */
+	@Deprecated
 	public abstract Object callFunctionWithNamedValues(PageContext pc,
 			Object coll, String key, Object[] args) throws PageException;
 

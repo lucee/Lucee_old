@@ -275,13 +275,16 @@ public interface Operation {
 	 */
 	public boolean equals(Object left, Object right, boolean caseSensitive)
 			throws PageException;
-	
 
-	public boolean equalsComplexEL(Object left, Object right, boolean caseSensitive,boolean checkOnlyPublicAppearance);
-	public boolean equalsComplex(Object left, Object right, boolean caseSensitive,boolean checkOnlyPublicAppearance) throws PageException;
+	public boolean equalsComplexEL(Object left, Object right,
+			boolean caseSensitive, boolean checkOnlyPublicAppearance);
+
+	public boolean equalsComplex(Object left, Object right,
+			boolean caseSensitive, boolean checkOnlyPublicAppearance)
+			throws PageException;
 
 	/**
-	 * check if left is inside right (String-> ignore case)
+	 * check if left is inside right
 	 * 
 	 * @param left string to check
 	 * @param right substring to find in string
@@ -316,7 +319,7 @@ public interface Operation {
 	public boolean imp(Object left, Object right) throws PageException;
 
 	/**
-	 * check if left is not inside right (String-> ignore case)
+	 * check if left is not inside right
 	 * 
 	 * @param left string to check
 	 * @param right substring to find in string

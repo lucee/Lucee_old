@@ -96,6 +96,7 @@ public interface Undefined extends Scope {
 	 * @deprecated use instead
 	 *             <code>{@link #getCollection(lucee.runtime.type.Collection.Key)}</code>
 	 */
+	@Deprecated
 	public abstract Object getCollection(String key) throws PageException;
 
 	public List<String> getScopeNames();
@@ -118,6 +119,7 @@ public interface Undefined extends Scope {
 	 * @deprecated use instead
 	 *             <code>{@link #getCascading(lucee.runtime.type.Collection.Key)}</code>
 	 */
+	@Deprecated
 	public abstract Object getCascading(String key);
 
 	/**

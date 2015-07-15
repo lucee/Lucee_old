@@ -36,7 +36,8 @@ public class FileServlet extends AbsServlet {
 	/**
 	 * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
 	 */
-	public void init(ServletConfig sg) throws ServletException {
+	@Override
+	public void init(final ServletConfig sg) throws ServletException {
 		super.init(sg);
 		engine = CFMLEngineFactory.getInstance(sg, this);
 	}
@@ -45,8 +46,9 @@ public class FileServlet extends AbsServlet {
 	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest,
 	 *      javax.servlet.http.HttpServletResponse)
 	 */
-	protected void service(HttpServletRequest req, HttpServletResponse rsp)
-			throws ServletException, IOException {
+	@Override
+	protected void service(final HttpServletRequest req,
+			final HttpServletResponse rsp) throws ServletException, IOException {
 		engine.serviceFile(this, req, rsp);
 	}
 }

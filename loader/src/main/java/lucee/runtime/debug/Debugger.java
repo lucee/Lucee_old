@@ -147,6 +147,7 @@ public interface Debugger {
 	 * @deprecated use instead
 	 *             <code>addQuery(Query query,String datasource,String name,SQL sql, int recordcount, PageSource src,long time)</code>
 	 */
+	@Deprecated
 	public void addQuery(Query query, String datasource, String name, SQL sql,
 			int recordcount, PageSource src, int time);
 

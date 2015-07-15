@@ -30,14 +30,14 @@ public final class SearchException extends Exception {
 	 * 
 	 * @param message
 	 */
-	public SearchException(String message) {
+	public SearchException(final String message) {
 		super(message);
 	}
 
 	/**
 	 * @param e
 	 */
-	public SearchException(Exception e) {
+	public SearchException(final Exception e) {
 		super(e.getMessage());
 		setStackTrace(e.getStackTrace());
 	}

@@ -32,8 +32,9 @@ public class DumpProperties {
 	private final boolean metainfo;
 	private final boolean showUDFs;
 
-	public DumpProperties(int maxlevel, Set<String> show, Set<String> hide, int keys,
-			boolean metainfo, boolean showUDFs) {
+	public DumpProperties(final int maxlevel, final Set<String> show,
+			final Set<String> hide, final int keys, final boolean metainfo,
+			final boolean showUDFs) {
 		this.show = show;
 		this.hide = hide;
 		this.maxlevel = maxlevel;

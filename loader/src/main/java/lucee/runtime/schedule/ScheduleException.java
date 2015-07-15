@@ -30,7 +30,7 @@ public final class ScheduleException extends Exception {
 	 * 
 	 * @param message
 	 */
-	public ScheduleException(String message) {
+	public ScheduleException(final String message) {
 		super(message);
 	}
 

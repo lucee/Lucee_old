@@ -36,7 +36,7 @@ public interface SpoolerTask extends Serializable {
 	 * execute Task
 	 * 
 	 * @param config
-	 * @throws SpoolerException
+	 * @throws PageException
 	 */
 	public Object execute(Config config) throws PageException;
 

@@ -32,6 +32,7 @@ public interface QueryEntry extends Serializable {
 	 * @return return the query executionn time in mili seconds
 	 * @deprecated use instead <code>getExecutionTime()</code>
 	 */
+	@Deprecated
 	public abstract int getExe();
 
 	/**

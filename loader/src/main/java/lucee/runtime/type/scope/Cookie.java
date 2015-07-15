@@ -39,6 +39,7 @@ public interface Cookie extends Scope, UserScope {
 	 * @throws PageException
 	 * @deprecated
 	 */
+	@Deprecated
 	public abstract void setCookie(Collection.Key name, Object value,
 			Object expires, boolean secure, String path, String domain)
 			throws PageException;
@@ -55,6 +56,7 @@ public interface Cookie extends Scope, UserScope {
 	 * @throws PageException
 	 * @deprecated
 	 */
+	@Deprecated
 	public abstract void setCookie(Collection.Key name, Object value,
 			int expires, boolean secure, String path, String domain)
 			throws PageException;
@@ -70,6 +72,7 @@ public interface Cookie extends Scope, UserScope {
 	 * @param domain domain of the cookie
 	 * @deprecated
 	 */
+	@Deprecated
 	public abstract void setCookieEL(Collection.Key name, Object value,
 			int expires, boolean secure, String path, String domain);
 

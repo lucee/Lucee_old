@@ -31,36 +31,35 @@ public interface PageSource extends Serializable {
 
 	/**
 	 * loads a page
+	 * 
 	 * @param pc
 	 * @param forceReload
-	 * @param defaultValue
-	 * @return
-	 * @throws PageException throws a exception when compilation fails or page does not exist
+	 * @throws PageException throws a exception when compilation fails or page
+	 *             does not exist
 	 */
-	public Page loadPage(PageContext pc, boolean forceReload) throws PageException;
-	
-	/**
-	 * loads a page
-	 * @param pc
-	 * @param forceReload
-	 * @param defaultValue
-	 * @return
-	 * @throws PageException throws a exception when compilation fails
-	 */
-	public Page loadPageThrowTemplateException(PageContext pc, boolean forceReload, Page defaultValue) throws PageException;
-	
+	public Page loadPage(PageContext pc, boolean forceReload)
+			throws PageException;
 
 	/**
 	 * loads a page
+	 * 
 	 * @param pc
 	 * @param forceReload
 	 * @param defaultValue
-	 * @return
 	 * @throws PageException throws a exception when compilation fails
+	 */
+	public Page loadPageThrowTemplateException(PageContext pc,
+			boolean forceReload, Page defaultValue) throws PageException;
+
+	/**
+	 * loads a page
+	 * 
+	 * @param pc
+	 * @param forceReload
+	 * @param defaultValue
 	 */
 	public Page loadPage(PageContext pc, boolean forceReload, Page defaultValue);
 
-	
 	/**
 	 * returns the ralpath without the mapping
 	 * 
@@ -104,7 +103,7 @@ public interface PageSource extends Serializable {
 	 *         filename (Example: my.package.test_cfm)
 	 */
 	public String getClassName();
-	
+
 	/**
 	 * @return returns the a package matching to file (Example: lucee.web)
 	 */
@@ -161,7 +160,6 @@ public interface PageSource extends Serializable {
 	 * @return returns how many this page is accessed since server is in use.
 	 */
 	public abstract int getAccessCount();
-	
 
 	/**
 	 * return file object, based on physical path and realpath
@@ -176,10 +174,11 @@ public interface PageSource extends Serializable {
 	public String getDisplayPath();
 
 	public int getDialect();
-	
+
 	/**
-	 * returns true if the page source can be executed, means the source exists or is trusted and loaded
+	 * returns true if the page source can be executed, means the source exists
+	 * or is trusted and loaded
 	 */
 	public boolean executable();
-	
+
 }

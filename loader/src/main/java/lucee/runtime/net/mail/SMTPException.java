@@ -30,7 +30,7 @@ public abstract class SMTPException extends Exception {
 	 * 
 	 * @param message
 	 */
-	public SMTPException(String message) {
+	public SMTPException(final String message) {
 		super(message);
 	}
 }

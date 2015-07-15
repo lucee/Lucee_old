@@ -20,7 +20,7 @@ package lucee.runtime.type;
 import lucee.runtime.exp.PageException;
 
 public interface Resetable {
-	
+
 	public void reset() throws PageException;
 
 }

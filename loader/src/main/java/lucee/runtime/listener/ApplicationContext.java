@@ -121,6 +121,7 @@ public interface ApplicationContext extends Serializable {
 	/**
 	 * @deprecated use instead getDefDataSource()
 	 */
+	@Deprecated
 	public String getDefaultDataSource();
 
 	public boolean isORMEnabled();
@@ -128,6 +129,7 @@ public interface ApplicationContext extends Serializable {
 	/**
 	 * @deprecated use instead getDefaultDataSource()
 	 */
+	@Deprecated
 	public String getORMDatasource();
 
 	public ORMConfiguration getORMConfiguration();
@@ -299,11 +301,13 @@ public interface ApplicationContext extends Serializable {
 
 	public void setTypeChecking(boolean typeChecking);
 
-	Map<Collection.Key, Map<Collection.Key, Object>> getTagAttributeDefaultValues(PageContext pc);
+	Map<Collection.Key, Map<Collection.Key, Object>> getTagAttributeDefaultValues(
+			PageContext pc);
 
-	public Map<Collection.Key, Object> getTagAttributeDefaultValues(PageContext pc,String fullName);
+	public Map<Collection.Key, Object> getTagAttributeDefaultValues(
+			PageContext pc, String fullName);
 
-	public void setTagAttributeDefaultValues(PageContext pc,Struct sct);
+	public void setTagAttributeDefaultValues(PageContext pc, Struct sct);
 
 	public TimeSpan getRequestTimeout();
 
@@ -324,11 +328,11 @@ public interface ApplicationContext extends Serializable {
 	public void setWSType(short wstype);
 
 	public Object getCachedWithin(int type);
-	
-	public void setCachedWithin(int type, Object value);
-	
-	public abstract boolean getCGIScopeReadonly();
-	public void setCGIScopeReadonly(boolean cgiScopeReadonly);
 
+	public void setCachedWithin(int type, Object value);
+
+	public abstract boolean getCGIScopeReadonly();
+
+	public void setCGIScopeReadonly(boolean cgiScopeReadonly);
 
 }

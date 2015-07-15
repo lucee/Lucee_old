@@ -79,43 +79,48 @@ public class CFMLEngineWrapper implements CFMLEngine {
 	 * 
 	 * @param engine
 	 */
-	public CFMLEngineWrapper(CFMLEngine engine) {
+	public CFMLEngineWrapper(final CFMLEngine engine) {
 		this.engine = engine;
 	}
 
 	@Override
-	public void addServletConfig(ServletConfig config) throws ServletException {
+	public void addServletConfig(final ServletConfig config)
+			throws ServletException {
 		engine.addServletConfig(config);
 	}
 
-
 	@Override
-	public void service(HttpServlet servlet, HttpServletRequest req,
-			HttpServletResponse rsp) throws ServletException, IOException {
+	public void service(final HttpServlet servlet,
+			final HttpServletRequest req, final HttpServletResponse rsp)
+			throws ServletException, IOException {
 		engine.service(servlet, req, rsp);
 	}
 
 	@Override
-	public void serviceCFML(HttpServlet servlet, HttpServletRequest req,
-			HttpServletResponse rsp) throws ServletException, IOException {
+	public void serviceCFML(final HttpServlet servlet,
+			final HttpServletRequest req, final HttpServletResponse rsp)
+			throws ServletException, IOException {
 		engine.serviceCFML(servlet, req, rsp);
 	}
 
 	@Override
-	public void serviceAMF(HttpServlet servlet, HttpServletRequest req,
-			HttpServletResponse rsp) throws ServletException, IOException {
+	public void serviceAMF(final HttpServlet servlet,
+			final HttpServletRequest req, final HttpServletResponse rsp)
+			throws ServletException, IOException {
 		engine.serviceAMF(servlet, req, rsp);
 	}
 
 	@Override
-	public void serviceFile(HttpServlet servlet, HttpServletRequest req,
-			HttpServletResponse rsp) throws ServletException, IOException {
+	public void serviceFile(final HttpServlet servlet,
+			final HttpServletRequest req, final HttpServletResponse rsp)
+			throws ServletException, IOException {
 		engine.serviceFile(servlet, req, rsp);
 	}
 
 	@Override
-	public void serviceRest(HttpServlet servlet, HttpServletRequest req,
-			HttpServletResponse rsp) throws ServletException, IOException {
+	public void serviceRest(final HttpServlet servlet,
+			final HttpServletRequest req, final HttpServletResponse rsp)
+			throws ServletException, IOException {
 		engine.serviceRest(servlet, req, rsp);
 	}
 
@@ -133,14 +138,14 @@ public class CFMLEngineWrapper implements CFMLEngine {
 	public URL getUpdateLocation() {
 		return engine.getUpdateLocation();
 	}
-	
+
 	@Override
 	public Identification getIdentification() {
 		return engine.getIdentification();
 	}
 
 	@Override
-	public boolean can(int type, Password password) {
+	public boolean can(final int type, final Password password) {
 		return engine.can(type, password);
 	}
 
@@ -155,15 +160,16 @@ public class CFMLEngineWrapper implements CFMLEngine {
 	}
 
 	@Override
-	public void reset(String configId) {
+	public void reset(final String configId) {
 		engine.reset(configId);
 	}
 
-	public void setEngine(CFMLEngine engine) {
+	public void setEngine(final CFMLEngine engine) {
 		this.engine = engine;
 	}
-	public boolean isIdentical(CFMLEngine engine) {
-		return this.engine==engine;
+
+	public boolean isIdentical(final CFMLEngine engine) {
+		return this.engine == engine;
 	}
 
 	@Override
@@ -197,8 +203,8 @@ public class CFMLEngineWrapper implements CFMLEngine {
 	}
 
 	@Override
-	public CFMLFactory getCFMLFactory(ServletConfig srvConfig, HttpServletRequest req)
-			throws ServletException {
+	public CFMLFactory getCFMLFactory(final ServletConfig srvConfig,
+			final HttpServletRequest req) throws ServletException {
 		return engine.getCFMLFactory(srvConfig, req);
 	}
 
@@ -253,9 +259,10 @@ public class CFMLEngineWrapper implements CFMLEngine {
 	 * 
 	 * @param other
 	 * @param checkReferenceEqualityOnly
-	 * @return
+	 * @return is equal to given engine
 	 */
-	public boolean equalTo(CFMLEngine other, boolean checkReferenceEqualityOnly) {
+	public boolean equalTo(CFMLEngine other,
+			final boolean checkReferenceEqualityOnly) {
 		while (other instanceof CFMLEngineWrapper)
 			other = ((CFMLEngineWrapper) other).engine;
 		if (checkReferenceEqualityOnly)
@@ -264,23 +271,25 @@ public class CFMLEngineWrapper implements CFMLEngine {
 	}
 
 	@Override
-	public void cli(Map<String, String> config, ServletConfig servletConfig)
-			throws IOException, JspException, ServletException {
+	public void cli(final Map<String, String> config,
+			final ServletConfig servletConfig) throws IOException,
+			JspException, ServletException {
 		engine.cli(config, servletConfig);
 	}
 
 	@Override
-	public void registerThreadPageContext(PageContext pc) {
+	public void registerThreadPageContext(final PageContext pc) {
 		engine.registerThreadPageContext(pc);
 	}
 
 	@Override
-	public ConfigServer getConfigServer(Password password) throws PageException {
+	public ConfigServer getConfigServer(final Password password)
+			throws PageException {
 		return engine.getConfigServer(password);
 	}
 
 	@Override
-	public ConfigServer getConfigServer(String key, long timeNonce)
+	public ConfigServer getConfigServer(final String key, final long timeNonce)
 			throws PageException {
 		return engine.getConfigServer(key, timeNonce);
 	}
@@ -311,12 +320,12 @@ public class CFMLEngineWrapper implements CFMLEngine {
 	}
 
 	@Override
-	public ScriptEngineFactory getScriptEngineFactory(int dialect) {
+	public ScriptEngineFactory getScriptEngineFactory(final int dialect) {
 		return engine.getScriptEngineFactory(dialect);
 	}
 
 	@Override
-	public ScriptEngineFactory getTagEngineFactory(int dialect) {
+	public ScriptEngineFactory getTagEngineFactory(final int dialect) {
 		return engine.getTagEngineFactory(dialect);
 	}
 
@@ -346,21 +355,28 @@ public class CFMLEngineWrapper implements CFMLEngine {
 	}
 
 	@Override
-	public PageContext createPageContext(File contextRoot,String host, String scriptName,
-			String queryString, Cookie[] cookies, Map<String, Object> headers,
-			Map<String, String> parameters, Map<String, Object> attributes,
-			OutputStream os, long timeout, boolean register) throws ServletException {
-		return engine.createPageContext(contextRoot,host, scriptName, queryString, cookies, headers, parameters, attributes, os,timeout,register);
+	public PageContext createPageContext(final File contextRoot,
+			final String host, final String scriptName,
+			final String queryString, final Cookie[] cookies,
+			final Map<String, Object> headers,
+			final Map<String, String> parameters,
+			final Map<String, Object> attributes, final OutputStream os,
+			final long timeout, final boolean register) throws ServletException {
+		return engine.createPageContext(contextRoot, host, scriptName,
+				queryString, cookies, headers, parameters, attributes, os,
+				timeout, register);
 	}
 
 	@Override
-	public void releasePageContext(PageContext pc, boolean unregister) {
-		engine.releasePageContext(pc,unregister);
+	public void releasePageContext(final PageContext pc,
+			final boolean unregister) {
+		engine.releasePageContext(pc, unregister);
 	}
 
 	@Override
-	public ConfigWeb createConfig(File contextRoot, String host, String scriptName) throws ServletException {
-		return engine.createConfig(contextRoot,host, scriptName);
+	public ConfigWeb createConfig(final File contextRoot, final String host,
+			final String scriptName) throws ServletException {
+		return engine.createConfig(contextRoot, host, scriptName);
 	}
 
 	@Override

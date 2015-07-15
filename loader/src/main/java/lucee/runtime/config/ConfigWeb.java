@@ -31,7 +31,7 @@ import lucee.runtime.search.SearchEngine;
 /**
  * Web Context
  */
-public interface ConfigWeb extends Config,ServletConfig {
+public interface ConfigWeb extends Config, ServletConfig {
 
 	/**
 	 * @return lockmanager
@@ -48,23 +48,22 @@ public interface ConfigWeb extends Config,ServletConfig {
 	public Resource getConfigServerDir();
 
 	public CFMLFactory getFactory();
-	
 
 	/**
 	 * 
 	 * @param type Config.CACHE_TYPE_***
 	 * @return
-	 */public CacheHandlerCollection getCacheHandlerCollection(int type,CacheHandlerCollection defaultValue);
-	 
-	 
-	 public IdentificationWeb getIdentification();
-	 
-	 public ConfigServer getConfigServer(Password password) throws PageException;
-	 
+	 */
+	public CacheHandlerCollection getCacheHandlerCollection(int type,
+			CacheHandlerCollection defaultValue);
+
+	@Override
+	public IdentificationWeb getIdentification();
+
+	public ConfigServer getConfigServer(Password password) throws PageException;
+
 	public SearchEngine getSearchEngine(PageContext pc) throws PageException;
 
 	public boolean getSuppressWSBeforeArg();
-
-
 
 }

@@ -53,6 +53,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #getAt(lucee.runtime.type.Collection.Key, int)}</code>
 	 */
+	@Deprecated
 	public Object getAt(String key, int row) throws PageException;
 
 	/**
@@ -75,6 +76,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #getAt(lucee.runtime.type.Collection.Key, int, Object)}</code>
 	 */
+	@Deprecated
 	public Object getAt(String key, int row, Object defaultValue);
 
 	/**
@@ -98,6 +100,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #setAtEL(lucee.runtime.type.Collection.Key, int, Object)}</code>
 	 */
+	@Deprecated
 	public Object setAt(String key, int row, Object value) throws PageException;
 
 	/**
@@ -122,6 +125,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #setAtEL(lucee.runtime.type.Collection.Key, int, Object)}</code>
 	 */
+	@Deprecated
 	public Object setAtEL(String key, int row, Object value);
 
 	/**
@@ -171,6 +175,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #addColumn(lucee.runtime.type.Collection.Key, Array)}</code>
 	 */
+	@Deprecated
 	public boolean addColumn(String columnName, Array content)
 			throws PageException;
 
@@ -200,6 +205,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #addColumn(lucee.runtime.type.Collection.Key, Array, int)}</code>
 	 */
+	@Deprecated
 	public boolean addColumn(String columnName, Array content, int type)
 			throws PageException;
 
@@ -220,6 +226,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	/**
 	 * @return Coloned Object
 	 */
+	@Override
 	public Object clone();
 
 	/**
@@ -230,7 +237,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	/**
 	 * @return returns all types as Map (key==column)
 	 */
-	public Map<Collection.Key,String> getTypesAsMap();
+	public Map<Collection.Key, String> getTypesAsMap();
 
 	/**
 	 * return the query column matching to key
@@ -241,6 +248,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #getColumn(lucee.runtime.type.Collection.Key)}</code>
 	 */
+	@Deprecated
 	public QueryColumn getColumn(String key) throws PageException;
 
 	/**
@@ -260,6 +268,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #getColumn(lucee.runtime.type.Collection.Key, QueryColumn)}</code>
 	 */
+	@Deprecated
 	public QueryColumn getColumn(String key, QueryColumn column);
 
 	/**
@@ -279,6 +288,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #removeColumn(lucee.runtime.type.Collection.Key)}</code>
 	 */
+	@Deprecated
 	public QueryColumn removeColumn(String key) throws PageException;
 
 	/**
@@ -298,6 +308,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #removeColumnEL(lucee.runtime.type.Collection.Key)}</code>
 	 */
+	@Deprecated
 	public QueryColumn removeColumnEL(String key);
 
 	/**
@@ -323,6 +334,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #sort(lucee.runtime.type.Collection.Key)}</code>
 	 */
+	@Deprecated
 	public void sort(String column) throws PageException;
 
 	/**
@@ -342,6 +354,7 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @deprecated use instead
 	 *             <code>{@link #sort(lucee.runtime.type.Collection.Key, int)}</code>
 	 */
+	@Deprecated
 	public void sort(String strColumn, int order) throws PageException;
 
 	/**
@@ -352,11 +365,11 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @throws PageException
 	 */
 	public void sort(Collection.Key strColumn, int order) throws PageException;
-	
+
 	public String getCacheType();
-	
+
 	public void setCacheType(String cacheType);
-	
+
 	/**
 	 * sets if query is form cache or not
 	 * 
@@ -385,10 +398,12 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	public void rename(Collection.Key columnName, Collection.Key newColumnName)
 			throws PageException;
 
+	@Override
 	public Collection.Key[] getColumnNames();
 
+	@Override
 	public String[] getColumnNamesAsString();
-	
+
 	public int getColumnCount();
 
 	public Query getGeneratedKeys();
@@ -406,9 +421,9 @@ public interface Query extends Collection, Iterator, com.allaire.cfx.Query {
 	 * @return returns the execution time
 	 * @deprecated use <code>getExecutionTime()</code> instead
 	 */
+	@Deprecated
 	public int executionTime();
 
 	public void enableShowQueryUsage();
-
 
 }

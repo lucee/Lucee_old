@@ -21,6 +21,7 @@ package lucee.runtime.type;
 /**
  * @deprecated replaced with <code>UDF</code>
  */
+@Deprecated
 public interface UserDefinedFunction extends UDF {
 
 }

@@ -61,27 +61,31 @@ public class Util {
 	 * @param out
 	 * @throws IOException
 	 */
-	public final static void copy(InputStream in, OutputStream out)
-			throws IOException {
-		byte[] buffer = new byte[0xffff];
-        int len;
-        while((len = in.read(buffer)) !=-1)
-          out.write(buffer, 0, len);
-        
-        closeEL(in);
-        closeEL(out);
-	}
-    
 	@Deprecated
-    public final static void copy(InputStream in, OutputStream out, boolean closeIS, boolean closeOS) throws IOException {
-        byte[] buffer = new byte[0xffff];
-        int len;
-        while((len = in.read(buffer)) !=-1)
-          out.write(buffer, 0, len);
-        
-        if(closeIS)closeEL(in);
-        if(closeOS)closeEL(out);
-    }
+	public final static void copy(final InputStream in, final OutputStream out)
+			throws IOException {
+		final byte[] buffer = new byte[0xffff];
+		int len;
+		while ((len = in.read(buffer)) != -1)
+			out.write(buffer, 0, len);
+
+		closeEL(in);
+		closeEL(out);
+	}
+
+	@Deprecated
+	public final static void copy(final InputStream in, final OutputStream out,
+			final boolean closeIS, final boolean closeOS) throws IOException {
+		final byte[] buffer = new byte[0xffff];
+		int len;
+		while ((len = in.read(buffer)) != -1)
+			out.write(buffer, 0, len);
+
+		if (closeIS)
+			closeEL(in);
+		if (closeOS)
+			closeEL(out);
+	}
 
 	/**
 	 * @deprecated use instead
@@ -93,19 +97,19 @@ public class Util {
 	 * @return readed data from InputStream
 	 * @throws IOException
 	 */
-	public static String toString(InputStream is) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(is)); 
-        StringBuffer content=new StringBuffer();
-        
-        String line=br.readLine();
-        if(line!=null) {
-            content.append(line);
-            while((line=br.readLine())!=null)   {
-                content.append("\n"+line);
-            }
-        }
-        br.close();
-        return content.toString();
+	@Deprecated
+	public static String toString(final InputStream is) throws IOException {
+		final BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		final StringBuffer content = new StringBuffer();
+
+		String line = br.readLine();
+		if (line != null) {
+			content.append(line);
+			while ((line = br.readLine()) != null)
+				content.append("\n" + line);
+		}
+		br.close();
+		return content.toString();
 	}
 
 	/**
@@ -113,16 +117,20 @@ public class Util {
 	 *             CFMLEngineFactory.getInstance.getCastUtil().toBooleanValue
 	 *             (...)
 	 * @param str
-	 * @return
 	 * @throws IOException
 	 */
+	@Deprecated
 	public static boolean toBooleanValue(String str) throws IOException {
-		str=str.trim().toLowerCase();
+		str = str.trim().toLowerCase();
 
-		if("true".equals(str)) return true;
-		if("false".equals(str)) return false;
-		if("yes".equals(str)) return true;
-		if("no".equals(str)) return false;
+		if ("true".equals(str))
+			return true;
+		if ("false".equals(str))
+			return false;
+		if ("yes".equals(str))
+			return true;
+		if ("no".equals(str))
+			return false;
 		throw new IOException("can't cast string to a boolean value");
 	}
 
@@ -134,7 +142,8 @@ public class Util {
 	 * @param is
 	 * @param os
 	 */
-	public static void closeEL(InputStream is, OutputStream os) {
+	@Deprecated
+	public static void closeEL(final InputStream is, final OutputStream os) {
 		closeEL(is);
 		closeEL(os);
 	}
@@ -143,11 +152,13 @@ public class Util {
 	 * @deprecated no replacement
 	 * @param zf
 	 */
-	public static void closeEL(ZipFile zf) {
+	@Deprecated
+	public static void closeEL(final ZipFile zf) {
 		try {
-			if(zf!=null)zf.close();
-		} 
-		catch (Throwable e) {}
+			if (zf != null)
+				zf.close();
+		} catch (final Throwable e) {
+		}
 	}
 
 	/**
@@ -157,11 +168,13 @@ public class Util {
 	 *             close inputstream without a Exception
 	 * @param is
 	 */
-	public static void closeEL(InputStream is) {
+	@Deprecated
+	public static void closeEL(final InputStream is) {
 		try {
-			if(is!=null)is.close();
-		} 
-		catch (Throwable e) {}
+			if (is != null)
+				is.close();
+		} catch (final Throwable e) {
+		}
 	}
 
 	/**
@@ -169,13 +182,15 @@ public class Util {
 	 *             CFMLEngineFactory.getInstance.getIOUtil().closeSilent(Reader
 	 *             r)
 	 *             close reader without a Exception
-	 * @param is
+	 * @param r
 	 */
-	public static void closeEL(Reader r) {
+	@Deprecated
+	public static void closeEL(final Reader r) {
 		try {
-			if(r!=null)r.close();
-		} 
-		catch (Throwable e) {}
+			if (r != null)
+				r.close();
+		} catch (final Throwable e) {
+		}
 	}
 
 	/**
@@ -183,13 +198,15 @@ public class Util {
 	 *             CFMLEngineFactory.getInstance.getIOUtil().closeSilent(Writer
 	 *             w)
 	 *             close reader without a Exception
-	 * @param is
+	 * @param w
 	 */
-	public static void closeEL(Writer w) {
+	@Deprecated
+	public static void closeEL(final Writer w) {
 		try {
-			if(w!=null)w.close();
-		} 
-		catch (Throwable e) {}
+			if (w != null)
+				w.close();
+		} catch (final Throwable e) {
+		}
 	}
 
 	/**
@@ -199,11 +216,13 @@ public class Util {
 	 *             close outputstream without a Exception
 	 * @param os
 	 */
-	public static void closeEL(OutputStream os) {
+	@Deprecated
+	public static void closeEL(final OutputStream os) {
 		try {
-			if(os!=null)os.close();
-		} 
-		catch (Throwable e) {}
+			if (os != null)
+				os.close();
+		} catch (final Throwable e) {
+		}
 	}
 
 	/**
@@ -215,22 +234,22 @@ public class Util {
 	 * @throws IOException
 	 * @throws PageException
 	 */
-	public static String getContentAsString(InputStream is, String charset)
-			throws IOException, PageException {
-        BufferedReader br = (charset==null)?
-                new BufferedReader(new InputStreamReader(is)):
-                new BufferedReader(new InputStreamReader(is,charset)); 
-        StringBuffer content=new StringBuffer();
-        
-        String line=br.readLine();
-        if(line!=null) {
-            content.append(line);
-            while((line=br.readLine())!=null)   {
-                content.append("\n"+line);
-            }
-        }
-        br.close();
-        return content.toString();
+	@Deprecated
+	public static String getContentAsString(final InputStream is,
+			final String charset) throws IOException, PageException {
+		final BufferedReader br = (charset == null) ? new BufferedReader(
+				new InputStreamReader(is)) : new BufferedReader(
+				new InputStreamReader(is, charset));
+		final StringBuffer content = new StringBuffer();
+
+		String line = br.readLine();
+		if (line != null) {
+			content.append(line);
+			while ((line = br.readLine()) != null)
+				content.append("\n" + line);
+		}
+		br.close();
+		return content.toString();
 	}
 
 	/**
@@ -239,7 +258,7 @@ public class Util {
 	 * @param str
 	 * @return is empty or not
 	 */
-	public static boolean isEmpty(String str) {
+	public static boolean isEmpty(final String str) {
 		return str == null || str.length() == 0;
 	}
 
@@ -249,7 +268,7 @@ public class Util {
 	 * @param str
 	 * @return is empty or not
 	 */
-	public static boolean isEmpty(String str, boolean trim) {
+	public static boolean isEmpty(final String str, final boolean trim) {
 		if (!trim)
 			return isEmpty(str);
 		return str == null || str.trim().length() == 0;
@@ -258,9 +277,9 @@ public class Util {
 	/**
 	 * @deprecated no replacement
 	 * @param str
-	 * @return
 	 */
-	public static int length(String str) {
+	@Deprecated
+	public static int length(final String str) {
 		if (str == null)
 			return 0;
 		return str.length();
@@ -275,27 +294,30 @@ public class Util {
 	 * @param onlyFirst replace only first or all
 	 * @return new String
 	 */
-	public static String replace(String str, String sub1, String sub2,
-			boolean onlyFirst) {
-        if(sub1.equals(sub2)) return str;
-        
-        if(!onlyFirst && sub1.length()==1 && sub2.length()==1)return str.replace(sub1.charAt(0),sub2.charAt(0));
-        
-        
-        StringBuffer sb=new StringBuffer();
-        int start=0;
-        int pos;
-        int sub1Length=sub1.length();
-        
-        while((pos=str.indexOf(sub1,start))!=-1){
-            sb.append(str.substring(start,pos));
-            sb.append(sub2);
-            start=pos+sub1Length;
-            if(onlyFirst)break;
-        }
-        sb.append(str.substring(start));
-        
-        return sb.toString();
+	@Deprecated
+	public static String replace(final String str, final String sub1,
+			final String sub2, final boolean onlyFirst) {
+		if (sub1.equals(sub2))
+			return str;
+
+		if (!onlyFirst && sub1.length() == 1 && sub2.length() == 1)
+			return str.replace(sub1.charAt(0), sub2.charAt(0));
+
+		final StringBuffer sb = new StringBuffer();
+		int start = 0;
+		int pos;
+		final int sub1Length = sub1.length();
+
+		while ((pos = str.indexOf(sub1, start)) != -1) {
+			sb.append(str.substring(start, pos));
+			sb.append(sub2);
+			start = pos + sub1Length;
+			if (onlyFirst)
+				break;
+		}
+		sb.append(str.substring(start));
+
+		return sb.toString();
 	}
 
 	/**
@@ -307,7 +329,8 @@ public class Util {
 	 * @param path
 	 * @return updated path
 	 */
-	public static String parsePlaceHolder(String path) {
+	@Deprecated
+	public static String parsePlaceHolder(final String path) {
 		return CFMLEngineFactory.getInstance().getResourceUtil()
 				.parsePlaceHolder(path);
 	}
@@ -319,26 +342,28 @@ public class Util {
 	 *             returns the Temp Directory of the System
 	 * @return temp directory
 	 */
+	@Deprecated
 	public static File getTempDirectory() {
-        if(tempFile!=null) return tempFile;
-        
-        String tmpStr = System.getProperty("java.io.tmpdir");
-        if(tmpStr!=null) {
-            tempFile=new File(tmpStr);
-            if(tempFile.exists()) {
-                tempFile=getCanonicalFileEL(tempFile);
-                return tempFile;
-            }
-        }
-        try {
-            File tmp = File.createTempFile("a","a");
-            tempFile=tmp.getParentFile();
-            tempFile=getCanonicalFileEL(tempFile);
-            tmp.delete();
-        }
-        catch(IOException ioe) {}
-        
-        return tempFile;
+		if (tempFile != null)
+			return tempFile;
+
+		final String tmpStr = System.getProperty("java.io.tmpdir");
+		if (tmpStr != null) {
+			tempFile = new File(tmpStr);
+			if (tempFile.exists()) {
+				tempFile = getCanonicalFileEL(tempFile);
+				return tempFile;
+			}
+		}
+		try {
+			final File tmp = File.createTempFile("a", "a");
+			tempFile = tmp.getParentFile();
+			tempFile = getCanonicalFileEL(tempFile);
+			tmp.delete();
+		} catch (final IOException ioe) {
+		}
+
+		return tempFile;
 	}
 
 	/**
@@ -348,6 +373,7 @@ public class Util {
 	 *             returns the Home Directory of the System
 	 * @return home directory
 	 */
+	@Deprecated
 	public static File getHomeDirectory() {
 		return (File) CFMLEngineFactory.getInstance().getResourceUtil()
 				.getHomeDirectory();
@@ -359,6 +385,7 @@ public class Util {
 	 *             getSystemDirectory()
 	 * @return return System directory
 	 */
+	@Deprecated
 	public static File getSystemDirectory() {
 		return (File) CFMLEngineFactory.getInstance().getResourceUtil()
 				.getSystemDirectory();
@@ -375,10 +402,11 @@ public class Util {
 	 * @throws SecurityException
 	 *             If a required system property value cannot be accessed.
 	 */
-	public static File getCanonicalFileEL(File file) {
+	@Deprecated
+	public static File getCanonicalFileEL(final File file) {
 		try {
 			return file.getCanonicalFile();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			return file;
 		}
 	}
@@ -386,16 +414,16 @@ public class Util {
 	/**
 	 * @deprecated deprecated with no replacement
 	 * @param date
-	 * @return
 	 */
-	public static String toHTTPTimeString(Date date) {
+	@Deprecated
+	public static String toHTTPTimeString(final Date date) {
 		return replace(HTTP_TIME_STRING_FORMAT.format(date), "+00:00", "", true);
 	}
 
 	/**
 	 * @deprecated deprecated with no replacement
-	 * @return
 	 */
+	@Deprecated
 	public static String toHTTPTimeString() {
 		return replace(HTTP_TIME_STRING_FORMAT.format(new Date()), "+00:00",
 				"", true);
@@ -404,7 +432,8 @@ public class Util {
 	/**
 	 * @deprecated deprecated with no replacement
 	 */
-	public static boolean hasUpperCase(String str) {
+	@Deprecated
+	public static boolean hasUpperCase(final String str) {
 		if (isEmpty(str))
 			return false;
 		return !str.equals(str.toLowerCase());
@@ -412,25 +441,30 @@ public class Util {
 
 	/**
 	 * @deprecated use instead
-	 *             CFMLEngineFactory.getInstance().getIOUtil().toBufferedInputStream
+	 *             CFMLEngineFactory.getInstance().getIOUtil().
+	 *             toBufferedInputStream
 	 *             (...)
-	 * @param os
-	 * @return
+	 * @param is
 	 */
-	public static BufferedInputStream toBufferedInputStream(InputStream is) {
-		if(is instanceof BufferedInputStream) return (BufferedInputStream) is;
+	@Deprecated
+	public static BufferedInputStream toBufferedInputStream(final InputStream is) {
+		if (is instanceof BufferedInputStream)
+			return (BufferedInputStream) is;
 		return new BufferedInputStream(is);
 	}
 
 	/**
 	 * @deprecated use instead
-	 *             CFMLEngineFactory.getInstance().getIOUtil().toBufferedOutputStream
+	 *             CFMLEngineFactory.getInstance().getIOUtil().
+	 *             toBufferedOutputStream
 	 *             (...)
 	 * @param os
-	 * @return
 	 */
-	public static BufferedOutputStream toBufferedOutputStream(OutputStream os) {
-		if(os instanceof BufferedOutputStream) return (BufferedOutputStream) os;
+	@Deprecated
+	public static BufferedOutputStream toBufferedOutputStream(
+			final OutputStream os) {
+		if (os instanceof BufferedOutputStream)
+			return (BufferedOutputStream) os;
 		return new BufferedOutputStream(os);
 	}
 
@@ -441,30 +475,33 @@ public class Util {
 	 * @param out
 	 * @throws IOException
 	 */
-	public static void copy(Resource in, Resource out) throws IOException {
-		InputStream is=null;
-		OutputStream os=null;
+	@Deprecated
+	public static void copy(final Resource in, final Resource out)
+			throws IOException {
+		InputStream is = null;
+		OutputStream os = null;
 		try {
-			is=toBufferedInputStream(in.getInputStream());
-			os=toBufferedOutputStream(out.getOutputStream());
-		}
-		catch(IOException ioe) {
+			is = toBufferedInputStream(in.getInputStream());
+			os = toBufferedOutputStream(out.getOutputStream());
+		} catch (final IOException ioe) {
 			closeEL(os);
 			closeEL(is);
 			throw ioe;
 		}
-		copy(is,os);
+		copy(is, os);
 	}
 
 	/**
 	 * @deprecated use instead
-	 *             CFMLEngineFactory.getInstance().getStringUtil().toVariableName
+	 *             CFMLEngineFactory.getInstance().getStringUtil().
+	 *             toVariableName
 	 *             (...)
 	 * @param str
 	 * @param addIdentityNumber
-	 * @return
 	 */
-	public static String toVariableName(String str, boolean addIdentityNumber) {
+	@Deprecated
+	public static String toVariableName(final String str,
+			final boolean addIdentityNumber) {
 		return CFMLEngineFactory.getInstance().getStringUtil()
 				.toVariableName(str, addIdentityNumber, false);
 	}
@@ -474,9 +511,9 @@ public class Util {
 	 *             CFMLEngineFactory.getInstance().getStringUtil().first(...);
 	 * @param str
 	 * @param delimiter
-	 * @return
 	 */
-	public static String first(String str, String delimiter) {
+	@Deprecated
+	public static String first(final String str, final String delimiter) {
 		return CFMLEngineFactory.getInstance().getStringUtil()
 				.first(str, delimiter, true);
 	}
@@ -486,9 +523,9 @@ public class Util {
 	 *             CFMLEngineFactory.getInstance().getStringUtil().last(...);
 	 * @param str
 	 * @param delimiter
-	 * @return
 	 */
-	public static String last(String str, String delimiter) {
+	@Deprecated
+	public static String last(final String str, final String delimiter) {
 		return CFMLEngineFactory.getInstance().getStringUtil()
 				.last(str, delimiter, true);
 	}
@@ -499,19 +536,17 @@ public class Util {
 	 *             (...);
 	 * @param str
 	 * @param trim
-	 * @return
 	 */
-	public static String removeQuotes(String str, boolean trim) {
+	@Deprecated
+	public static String removeQuotes(final String str, final boolean trim) {
 		return CFMLEngineFactory.getInstance().getStringUtil()
 				.removeQuotes(str, trim);
 	}
 
-	public static void delete(File f) {
-		if(f.isDirectory()) {
-			for(File c:f.listFiles()){
+	public static void delete(final File f) {
+		if (f.isDirectory())
+			for (final File c : f.listFiles())
 				delete(c);
-			}
-		}
 		f.delete();
 	}
 }

@@ -44,6 +44,7 @@ public interface Query extends ResultSet {
 	 * @return All column Names of resultset as string
 	 * @deprecated use instead <code>getColumnNamesAsString()</code>
 	 */
+	@Deprecated
 	public String[] getColumns();
 
 	public String[] getColumnNamesAsString();

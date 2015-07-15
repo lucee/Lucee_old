@@ -34,7 +34,6 @@ import lucee.runtime.type.UDF;
 import lucee.runtime.type.UDFProperties;
 import lucee.runtime.type.scope.Scope;
 
-
 /**
  * interface for a Component
  */
@@ -60,16 +59,9 @@ public interface Component extends Struct, Objects, CIObject {
 	 */
 	public static final int ACCESS_PRIVATE = 3;
 
-	
-	
 	public static final int MODIFIER_NONE = Member.MODIFIER_NONE;
 	public static final int MODIFIER_FINAL = Member.MODIFIER_FINAL;
 	public static final int MODIFIER_ABSTRACT = Member.MODIFIER_ABSTRACT;
-	
-	
-	
-	
-
 
 	/**
 	 * returns java class to the component interface (all UDFs),
@@ -80,6 +72,7 @@ public interface Component extends Struct, Objects, CIObject {
 	 * @deprecated use instead
 	 *             <code>getJavaAccessClass(PageContext pc,RefBoolean isNew,boolean writeLog, boolean takeTop, boolean create, boolean supressWSbeforeArg,boolean output)</code>
 	 */
+	@Deprecated
 	public Class<?> getJavaAccessClass(RefBoolean isNew) throws PageException;
 
 	/**
@@ -91,13 +84,15 @@ public interface Component extends Struct, Objects, CIObject {
 	 * @deprecated use instead
 	 *             <code>getJavaAccessClass(PageContext pc,RefBoolean isNew,boolean writeLog, boolean takeTop, boolean create, boolean supressWSbeforeArg, boolean output, boolean returnValue)</code>
 	 */
+	@Deprecated
 	public Class<?> getJavaAccessClass(PageContext pc, RefBoolean isNew,
 			boolean writeLog, boolean takeTop, boolean create,
 			boolean supressWSbeforeArg) throws PageException;
-	
+
 	public Class<?> getJavaAccessClass(PageContext pc, RefBoolean isNew,
 			boolean writeLog, boolean takeTop, boolean create,
-			boolean supressWSbeforeArg,boolean output,boolean returnValue) throws PageException;
+			boolean supressWSbeforeArg, boolean output, boolean returnValue)
+			throws PageException;
 
 	/**
 	 * @return Returns the display name.
@@ -154,15 +149,11 @@ public interface Component extends Struct, Objects, CIObject {
 
 	/**
 	 * is a persistent component (orm)
-	 * 
-	 * @return
 	 */
 	public boolean isPersistent();
 
 	/**
 	 * has accessors set
-	 * 
-	 * @return
 	 */
 	public boolean isAccessors();
 
@@ -209,6 +200,7 @@ public interface Component extends Struct, Objects, CIObject {
 	 * @deprecated use instead
 	 *             <code>getProperties(boolean onlyPeristent, boolean includeBaseProperties, boolean preferBaseProperties, boolean inheritedMappedSuperClassOnly)</code>
 	 */
+	@Deprecated
 	public Property[] getProperties(boolean onlyPeristent);
 
 	/**
@@ -216,7 +208,6 @@ public interface Component extends Struct, Objects, CIObject {
 	 * 
 	 * @param onlyPeristent if true return only columns where attribute
 	 *            persistent is not set to false
-	 * @return
 	 */
 	public Property[] getProperties(boolean onlyPeristent,
 			boolean includeBaseProperties, boolean preferBaseProperties,
@@ -248,7 +239,8 @@ public interface Component extends Struct, Objects, CIObject {
 
 	public void registerUDF(Collection.Key key, UDF udf) throws PageException;
 
-	public void registerUDF(Collection.Key key, UDFProperties props) throws PageException;
+	public void registerUDF(Collection.Key key, UDFProperties props)
+			throws PageException;
 
 	// access
 	Set<Key> keySet(int access);
@@ -283,7 +275,7 @@ public interface Component extends Struct, Objects, CIObject {
 	Member getMember(int access, Collection.Key key, boolean dataMember,
 			boolean superAccess);
 
-	public Scope staticScope(); 
+	public Scope staticScope();
 
 	public Interface[] getInterfaces();
 

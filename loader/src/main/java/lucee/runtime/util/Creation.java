@@ -168,13 +168,15 @@ public interface Creation {
 	 * @return struct
 	 */
 	public abstract Struct createStruct();
+
 	public abstract Struct createStruct(int type);
+
 	@Deprecated
 	public abstract Struct createStruct(String type) throws PageException;
-	
-	public abstract Struct createCastableStruct(Object value); 
-	public abstract Struct createCastableStruct(Object value, int type); 
 
+	public abstract Struct createCastableStruct(Object value);
+
+	public abstract Struct createCastableStruct(Object value, int type);
 
 	/**
 	 * creates a query object with given data
@@ -186,6 +188,7 @@ public interface Creation {
 	 * @deprecated usse instead
 	 *             <code>createQuery(Collection.Key[] columns, int rows, String name)</code>
 	 */
+	@Deprecated
 	public abstract Query createQuery(String[] columns, int rows, String name);
 
 	/**
@@ -209,9 +212,10 @@ public interface Creation {
 	 * @deprecated usse instead
 	 *             <code>createQuery(Collection.Key[] columns, String[] types, int rows, String name)</code>
 	 */
-	public abstract Query createQuery(String[] columns, String[] types, int rows,
-			String name) throws PageException;
-	
+	@Deprecated
+	public abstract Query createQuery(String[] columns, String[] types,
+			int rows, String name) throws PageException;
+
 	/**
 	 * creates a query object with given data
 	 * 
@@ -220,8 +224,8 @@ public interface Creation {
 	 * @param name
 	 * @return created query Object
 	 */
-	public abstract Query createQuery(Collection.Key[] columns, String[] types, int rows,
-			String name) throws PageException;
+	public abstract Query createQuery(Collection.Key[] columns, String[] types,
+			int rows, String name) throws PageException;
 
 	/**
 	 * @param dc Connection to a database
@@ -312,7 +316,7 @@ public interface Creation {
 	 * lucee.extensions.net.HTTPUtil
 	 * 
 	 * @param pc Pagecontext for loading the CFC
-	 * @param fullname fullanem of the cfc example:lucee.extensions.net.HTTPUtil
+	 * @param fullName full name of the cfc example:lucee.extensions.net.HTTPUtil
 	 * @return loaded cfc
 	 * @throws PageException
 	 */
@@ -333,23 +337,28 @@ public interface Creation {
 	public abstract Component createComponentFromPath(PageContext pc,
 			String path) throws PageException;
 
-	public abstract RefBoolean createRefBoolean(boolean b); 
-	public abstract RefInteger createRefInteger(int i); 
-	public abstract RefLong createRefLong(long l); 
+	public abstract RefBoolean createRefBoolean(boolean b);
+
+	public abstract RefInteger createRefInteger(int i);
+
+	public abstract RefLong createRefLong(long l);
+
 	public abstract RefDouble createRefDouble(long d);
 
-	public abstract String createUUID(); 
+	public abstract String createUUID();
+
 	public abstract String createGUID();
 
 	public abstract Property createProperty(String name, String type);
 
-	public abstract Mapping createMapping(Config config, String virtual, String strPhysical,String strArchive, short inspect, 
-			boolean physicalFirst, boolean hidden, boolean readonly,boolean topLevel, boolean appMapping,
-			boolean ignoreVirtual,ApplicationListener appListener, int listenerMode, int listenerType);
+	public abstract Mapping createMapping(Config config, String virtual,
+			String strPhysical, String strArchive, short inspect,
+			boolean physicalFirst, boolean hidden, boolean readonly,
+			boolean topLevel, boolean appMapping, boolean ignoreVirtual,
+			ApplicationListener appListener, int listenerMode, int listenerType);
 
 	public abstract DateTime now();
 
 	public abstract <K> KeyLock<K> createKeyLock();
 
-	
 }

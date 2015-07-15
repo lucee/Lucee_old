@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 
 import lucee.loader.TP;
 import lucee.loader.engine.CFMLEngineFactory;
+import lucee.loader.engine.CFMLEngineFactorySupport;
 
 /**
  * returns th current built in version
@@ -54,46 +55,47 @@ public class VersionInfo {
 	}
 
 	private static void init() {
-		if (version != null) return;
+		if (version != null)
+			return;
 		String content = "9000000:" + System.currentTimeMillis();
 		try {
 			content = getContentAsString(new TP().getClass().getClassLoader()
 					.getResourceAsStream("lucee/version"), "UTF-8");
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 		}
 
-		int index = content.indexOf(':');
-		version = CFMLEngineFactory.toVersion(content.substring(0, index),CFMLEngineFactory.VERSION_ZERO);
-		String d=content.substring(index + 1);
-		try{
+		final int index = content.indexOf(':');
+		version = CFMLEngineFactorySupport.toVersion(
+				content.substring(0, index), CFMLEngineFactory.VERSION_ZERO);
+		final String d = content.substring(index + 1);
+		try {
 			created = Long.parseLong(d);
-		}
-		catch(NumberFormatException nfe){
+		} catch (final NumberFormatException nfe) {
 			try {
-				created=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss z").parse(d).getTime();
-			} catch (ParseException pe) {
+				created = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss z")
+						.parse(d).getTime();
+			} catch (final ParseException pe) {
 				pe.printStackTrace();
-				created=0;
+				created = 0;
 			}
 		}
 
 	}
 
-	private static String getContentAsString(InputStream is, String charset)
-			throws IOException {
+	private static String getContentAsString(final InputStream is,
+			final String charset) throws IOException {
 
-		BufferedReader br = (charset == null) ? new BufferedReader(
+		final BufferedReader br = (charset == null) ? new BufferedReader(
 				new InputStreamReader(is)) : new BufferedReader(
 				new InputStreamReader(is, charset));
-		StringBuffer content = new StringBuffer();
+		final StringBuffer content = new StringBuffer();
 
 		String line = br.readLine();
 		if (line != null) {
 			content.append(line);
-			while ((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null)
 				content.append("\n" + line);
-			}
 		}
 		br.close();
 		return content.toString();

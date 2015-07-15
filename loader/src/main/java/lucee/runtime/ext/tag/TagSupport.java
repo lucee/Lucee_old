@@ -43,27 +43,30 @@ public abstract class TagSupport implements Tag {
 	 * 
 	 * @param pageContext
 	 */
-	public void setPageContext(PageContext pageContext) {
+	public void setPageContext(final PageContext pageContext) {
 		this.pageContext = pageContext;
 	}
 
 	/**
 	 * @see javax.servlet.jsp.tagext.Tag#setPageContext(javax.servlet.jsp.PageContext)
 	 */
-	public void setPageContext(javax.servlet.jsp.PageContext pageContext) {
+	@Override
+	public void setPageContext(final javax.servlet.jsp.PageContext pageContext) {
 		this.pageContext = (PageContext) pageContext;
 	}
 
 	/**
 	 * @see javax.servlet.jsp.tagext.Tag#setParent(javax.servlet.jsp.tagext.Tag)
 	 */
-	public void setParent(Tag parent) {
+	@Override
+	public void setParent(final Tag parent) {
 		this.parent = parent;
 	}
 
 	/**
 	 * @see javax.servlet.jsp.tagext.Tag#getParent()
 	 */
+	@Override
 	public Tag getParent() {
 		return parent;
 	}
@@ -71,6 +74,7 @@ public abstract class TagSupport implements Tag {
 	/**
 	 * @see javax.servlet.jsp.tagext.Tag#doStartTag()
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 		return SKIP_BODY;
 	}
@@ -78,6 +82,7 @@ public abstract class TagSupport implements Tag {
 	/**
 	 * @see javax.servlet.jsp.tagext.Tag#doEndTag()
 	 */
+	@Override
 	public int doEndTag() throws JspException {
 		return EVAL_PAGE;
 	}
@@ -85,6 +90,7 @@ public abstract class TagSupport implements Tag {
 	/**
 	 * @see javax.servlet.jsp.tagext.Tag#release()
 	 */
+	@Override
 	public void release() {
 		pageContext = null;
 		parent = null;
@@ -99,10 +105,12 @@ public abstract class TagSupport implements Tag {
 	 * @param attribute
 	 * @throws PageException
 	 */
-	public void required(String tagName, String actionName,
-			String attributeName, Object attribute) throws PageException {
+	public void required(final String tagName, final String actionName,
+			final String attributeName, final Object attribute)
+			throws PageException {
 		if (attribute == null) {
-			Excepton util = CFMLEngineFactory.getInstance().getExceptionUtil();
+			final Excepton util = CFMLEngineFactory.getInstance()
+					.getExceptionUtil();
 			throw util.createApplicationException("Attribute [" + attributeName
 					+ "] for tag [" + tagName
 					+ "] is required if attribute action has the value ["

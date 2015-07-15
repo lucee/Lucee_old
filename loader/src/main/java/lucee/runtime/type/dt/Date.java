@@ -30,7 +30,7 @@ public abstract class Date extends DateTime {
 	 * 
 	 * @param date date object
 	 */
-	public Date(DateTime date) {
+	public Date(final DateTime date) {
 		super(date.getTime());
 	}
 
@@ -39,7 +39,7 @@ public abstract class Date extends DateTime {
 	 * 
 	 * @param time
 	 */
-	public Date(long time) {
+	public Date(final long time) {
 		super(time);
 	}
 

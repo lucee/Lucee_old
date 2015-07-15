@@ -27,7 +27,7 @@ import java.net.URLClassLoader;
 
 public class MainEntryPoint {
 
-	public static void main(String[] args) throws Throwable {
+	public static void main(final String[] args) throws Throwable {
 		File libDir = new File("./").getCanonicalFile();
 		System.out.println(libDir);
 
@@ -41,35 +41,35 @@ public class MainEntryPoint {
 			children = libDir.listFiles(new ExtFilter());
 		}
 
-		URL[] urls = new URL[children.length];
+		final URL[] urls = new URL[children.length];
 		System.out.println("Loading Jars");
 		for (int i = 0; i < children.length; i++) {
 			urls[i] = new URL("jar:file://" + children[i] + "!/");
 			System.out.println("- " + urls[i]);
 		}
 		System.out.println();
-		URLClassLoader cl=null;
+		URLClassLoader cl = null;
 		try {
-			cl = new URLClassLoader(urls,ClassLoader.getSystemClassLoader());
-			Class<?> cli = cl.loadClass("lucee.cli.CLI");
-			Method main = cli.getMethod("main", new Class[] { String[].class });
+			cl = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+			final Class<?> cli = cl.loadClass("lucee.cli.CLI");
+			final Method main = cli.getMethod("main",
+					new Class[] { String[].class });
 			main.invoke(null, new Object[] { args });
-		}
-		finally {
-			if(cl!=null) {
+		} finally {
+			if (cl != null)
 				try {
 					cl.close();
+				} catch (final IOException ioe) {
 				}
-				catch(IOException ioe){}
-			}
 		}
 	}
 
 	public static class ExtFilter implements FilenameFilter {
 
-		private String ext = ".jar";
+		private final String ext = ".jar";
 
-		public boolean accept(File dir, String name) {
+		@Override
+		public boolean accept(final File dir, final String name) {
 			return name.toLowerCase().endsWith(ext);
 		}
 

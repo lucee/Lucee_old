@@ -27,6 +27,7 @@ import java.util.List;
 import lucee.commons.io.log.Log;
 import lucee.commons.io.res.Resource;
 import lucee.loader.engine.CFMLEngineFactory;
+import lucee.loader.engine.CFMLEngineFactorySupport;
 import lucee.loader.util.Util;
 import lucee.runtime.util.ClassUtil;
 
@@ -41,73 +42,76 @@ public class BundleUtil {
 			return addBundle(context,bundle.getAbsolutePath(),bundle,start);
 		}*/
 
+	public static Bundle addBundle(final CFMLEngineFactory factory,
+			final BundleContext context, final File bundle, final Log log)
+			throws IOException, BundleException {
 
-	public static Bundle addBundle(CFMLEngineFactory factory,
-			BundleContext context, File bundle, Log log) throws IOException,
-			BundleException {
-		
-		return addBundle(factory, context, bundle.getAbsolutePath(), new FileInputStream(bundle), true, log);
+		return addBundle(factory, context, bundle.getAbsolutePath(),
+				new FileInputStream(bundle), true, log);
 	}
-	
-	public static Bundle addBundle(CFMLEngineFactory factory,
-			BundleContext context, Resource bundle, Log log) throws IOException,
-			BundleException {
-		return addBundle(factory, context, bundle.getAbsolutePath(), bundle.getInputStream(), true, log);
+
+	public static Bundle addBundle(final CFMLEngineFactory factory,
+			final BundleContext context, final Resource bundle, final Log log)
+			throws IOException, BundleException {
+		return addBundle(factory, context, bundle.getAbsolutePath(),
+				bundle.getInputStream(), true, log);
 	}
-	
-	public static Bundle addBundle(CFMLEngineFactory factory,
-			BundleContext context, String path, InputStream is, boolean closeIS, Log log) throws IOException,
-			BundleException {
-		
+
+	public static Bundle addBundle(final CFMLEngineFactory factory,
+			final BundleContext context, final String path,
+			final InputStream is, final boolean closeIS, final Log log)
+			throws IOException, BundleException {
+
 		// if possible use that feature from core, it is smarter (can also load relations)
-		ClassUtil cu=null;
-		try{
+		ClassUtil cu = null;
+		try {
 			cu = CFMLEngineFactory.getInstance().getClassUtil();
+		} catch (final Throwable t) {
 		}
-		catch(Throwable t){}
-		if(cu!=null) {
-			return cu.addBundle(context, is, closeIS,true);
-		}
-		
-		
-		if(log!=null)log.info("OSGI", "add bundle:" + path);
+		if (cu != null)
+			return cu.addBundle(context, is, closeIS, true);
+
+		if (log != null)
+			log.info("OSGI", "add bundle:" + path);
 		else {
 			//factory.log(Log.LEVEL_INFO, "add_bundle:" + bundle);
 		}
 		try {
-			return installBundle(context,path, is);
-		}
-		finally {
-			if(closeIS)CFMLEngineFactory.closeEL(is);
+			return installBundle(context, path, is);
+		} finally {
+			if (closeIS)
+				CFMLEngineFactorySupport.closeEL(is);
 		}
 	}
-	
-	public static Bundle installBundle(BundleContext context, String path, InputStream is) throws BundleException {
+
+	public static Bundle installBundle(final BundleContext context,
+			final String path, final InputStream is) throws BundleException {
 		return context.installBundle(path, is);
 	}
 
-	public static void start(CFMLEngineFactory factory, List<Bundle> bundles) throws BundleException {
+	public static void start(final CFMLEngineFactory factory,
+			final List<Bundle> bundles) throws BundleException {
 		if (bundles == null || bundles.isEmpty())
 			return;
 
-		Iterator<Bundle> it = bundles.iterator();
-		while (it.hasNext()) {
+		final Iterator<Bundle> it = bundles.iterator();
+		while (it.hasNext())
 			start(factory, it.next());
-		}
 	}
 
-	public static void start(CFMLEngineFactory factory, Bundle bundle) throws BundleException {
-		ClassUtil cu=null;
-		try{
+	public static void start(final CFMLEngineFactory factory,
+			final Bundle bundle) throws BundleException {
+		ClassUtil cu = null;
+		try {
 			cu = CFMLEngineFactory.getInstance().getClassUtil();
+		} catch (final Throwable t) {
 		}
-		catch(Throwable t){}
-		if(cu!=null) {
+		if (cu != null) {
 			cu.start(bundle);
 			return;
 		}
-		
-		String fh = bundle.getHeaders().get("Fragment-Host");
+
+		final String fh = bundle.getHeaders().get("Fragment-Host");
 		if (!Util.isEmpty(fh)) {
 			factory.log(Logger.LOG_INFO,
 					"do not start [" + bundle.getSymbolicName()
@@ -118,24 +122,22 @@ public class BundleUtil {
 
 		factory.log(Logger.LOG_INFO, "start bundle:" + bundle.getSymbolicName()
 				+ ":" + bundle.getVersion().toString());
-		
+
 		start(bundle);
 	}
-	
 
-
-	public static void start(Bundle bundle) throws BundleException {
+	public static void start(final Bundle bundle) throws BundleException {
 		bundle.start();
 	}
 
-
-
-	public static void startIfNecessary(CFMLEngineFactory factory, Bundle bundle) throws BundleException {
-		if(bundle.getState()==Bundle.ACTIVE) return;
+	public static void startIfNecessary(final CFMLEngineFactory factory,
+			final Bundle bundle) throws BundleException {
+		if (bundle.getState() == Bundle.ACTIVE)
+			return;
 		start(factory, bundle);
 	}
 
-	public static String bundleState(int state, String defaultValue) {
+	public static String bundleState(final int state, final String defaultValue) {
 		switch (state) {
 		case Bundle.UNINSTALLED:
 			return "UNINSTALLED";
@@ -154,10 +156,12 @@ public class BundleUtil {
 		return defaultValue;
 	}
 
-	public static String toFrameworkBundleParent(String str) throws BundleException {
+	public static String toFrameworkBundleParent(String str)
+			throws BundleException {
 		if (str != null) {
 			str = str.trim();
-			if (Constants.FRAMEWORK_BUNDLE_PARENT_FRAMEWORK.equalsIgnoreCase(str))
+			if (Constants.FRAMEWORK_BUNDLE_PARENT_FRAMEWORK
+					.equalsIgnoreCase(str))
 				return Constants.FRAMEWORK_BUNDLE_PARENT_FRAMEWORK;
 			if (Constants.FRAMEWORK_BUNDLE_PARENT_APP.equalsIgnoreCase(str))
 				return Constants.FRAMEWORK_BUNDLE_PARENT_APP;
@@ -175,7 +179,7 @@ public class BundleUtil {
 				+ Constants.FRAMEWORK_BUNDLE_PARENT_FRAMEWORK + "]");
 	}
 
-	public static boolean isSystemBundle(Bundle bundle) {
+	public static boolean isSystemBundle(final Bundle bundle) {
 		// TODO make a better implementation for this, independent of felix
 		return bundle.getSymbolicName().equals("org.apache.felix.framework");
 	}

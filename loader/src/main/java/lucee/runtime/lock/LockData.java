@@ -24,6 +24,7 @@ import lucee.commons.lock.Lock;
  * lock data
  */
 public interface LockData {
+	@Deprecated
 	/**
 	 * is type of token read only
 	 * 

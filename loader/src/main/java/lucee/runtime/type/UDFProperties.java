@@ -46,6 +46,7 @@ public interface UDFProperties extends Serializable, Externalizable {
 	*/
 
 	public int getAccess();
+
 	public int getModifier();
 
 }

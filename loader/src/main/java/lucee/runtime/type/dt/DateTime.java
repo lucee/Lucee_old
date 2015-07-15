@@ -37,7 +37,7 @@ public abstract class DateTime extends Date implements Dumpable, Castable,
 	 * 
 	 * @param time
 	 */
-	public DateTime(long time) {
+	public DateTime(final long time) {
 		super(time);
 	}
 

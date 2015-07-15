@@ -22,7 +22,7 @@ import java.util.Map;
 
 public interface SearchData {
 
-	public Map<String,SuggestionItem> getSuggestion();
+	public Map<String, SuggestionItem> getSuggestion();
 
 	public int getSuggestionMax();
 

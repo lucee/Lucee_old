@@ -18,8 +18,6 @@
  */
 package lucee.runtime.listener;
 
-import javax.servlet.ServletException;
-
 import lucee.runtime.CFMLFactory;
 import lucee.runtime.PageContext;
 import lucee.runtime.PageSource;
@@ -34,13 +32,13 @@ public interface ApplicationListener {
 	public static final int MODE_CURRENT2ROOT = 0;
 	public static final int MODE_CURRENT = 1;
 	public static final int MODE_ROOT = 2;
-	public static final int MODE_CURRENT_OR_ROOT=4;
+	public static final int MODE_CURRENT_OR_ROOT = 4;
 
 	public static final int TYPE_NONE = 0;
 	public static final int TYPE_CLASSIC = 1;
 	public static final int TYPE_MODERN = 2;
-	public static final int TYPE_MIXED=4;
-	
+	public static final int TYPE_MIXED = 4;
+
 	// FUTURE public static final int MODE_CURRENT_OR_ROOT=4;
 	public static final String CFC_EXTENSION = "cfc";
 
@@ -65,7 +63,6 @@ public interface ApplicationListener {
 	 * @param pc
 	 * @param requestedPage
 	 * @throws PageException
-	 * @throws ServletException
 	 */
 	public void onRequest(PageContext pc, PageSource requestedPage,
 			RequestListener rl) throws PageException;

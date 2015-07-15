@@ -28,68 +28,74 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtil {
-	
-	public static void zip(File src, File trgZipFile) throws IOException	{
-		if(trgZipFile.isDirectory()) throw new IllegalArgumentException("argument trgZipFile is the name of a existing directory");
-		
-		
-		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(trgZipFile));
-		try{
-			if(src.isFile())
-				addEntries(zos,src.getParentFile(),src);
-			else if(src.isDirectory())
-				addEntries(zos,src,src.listFiles());
-		}
-		finally {
+
+	public static void zip(final File src, final File trgZipFile)
+			throws IOException {
+		if (trgZipFile.isDirectory())
+			throw new IllegalArgumentException(
+					"argument trgZipFile is the name of a existing directory");
+
+		final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(
+				trgZipFile));
+		try {
+			if (src.isFile())
+				addEntries(zos, src.getParentFile(), src);
+			else if (src.isDirectory())
+				addEntries(zos, src, src.listFiles());
+		} finally {
 			Util.closeEL(zos);
 		}
 	}
 
-	private static void addEntries(ZipOutputStream zos, File root, File... files) throws IOException {
-		if(files!=null)for (File file : files) {
-			
-			// directory
-			if(file.isDirectory()) {
-				addEntries(zos, root, file.listFiles());
-				continue;
+	private static void addEntries(final ZipOutputStream zos, final File root,
+			final File... files) throws IOException {
+		if (files != null)
+			for (final File file : files) {
+
+				// directory
+				if (file.isDirectory()) {
+					addEntries(zos, root, file.listFiles());
+					continue;
+				}
+				if (!file.isFile())
+					continue;
+
+				// file
+				InputStream is = null;
+				final ZipEntry ze = generateZipEntry(root, file);
+
+				try {
+					zos.putNextEntry(ze);
+					copy(is = new FileInputStream(file), zos);
+				} finally {
+					closeEL(is);
+					zos.closeEntry();
+				}
 			}
-			if(!file.isFile()) continue;
-				
-			// file
-			InputStream is=null;
-			ZipEntry ze = generateZipEntry(root,file);
-			
-			try {
-				zos.putNextEntry(ze);
-				copy(is=new FileInputStream(file),zos);
-			}
-			finally {
-				closeEL(is);
-				zos.closeEntry();
-			}
-		}
 	}
 
-	private static ZipEntry generateZipEntry(File root, File file) {
-		String strRoot=root.getAbsolutePath();
-		String strFile=file.getAbsolutePath();
-		return new ZipEntry(strFile.substring(strRoot.length() + 1, strFile.length()));
-		
+	private static ZipEntry generateZipEntry(final File root, final File file) {
+		final String strRoot = root.getAbsolutePath();
+		final String strFile = file.getAbsolutePath();
+		return new ZipEntry(strFile.substring(strRoot.length() + 1,
+				strFile.length()));
+
 	}
-	
 
-    private final static void copy(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[0xffff];
-        int len;
-        while((len = in.read(buffer)) !=-1)
-          out.write(buffer, 0, len);
-    }
+	private final static void copy(final InputStream in, final OutputStream out)
+			throws IOException {
+		final byte[] buffer = new byte[0xffff];
+		int len;
+		while ((len = in.read(buffer)) != -1)
+			out.write(buffer, 0, len);
+	}
 
-	private static void closeEL(InputStream is) {
-		if(is==null) return;
+	private static void closeEL(final InputStream is) {
+		if (is == null)
+			return;
 		try {
 			is.close();
+		} catch (final Throwable t) {
 		}
-		catch (Throwable t) {}
 	}
-}	 
+}

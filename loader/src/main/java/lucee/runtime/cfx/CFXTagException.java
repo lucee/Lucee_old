@@ -30,7 +30,7 @@ public final class CFXTagException extends Exception {
 	 * 
 	 * @param message
 	 */
-	public CFXTagException(String message) {
+	public CFXTagException(final String message) {
 		super(message);
 	}
 
@@ -39,7 +39,7 @@ public final class CFXTagException extends Exception {
 	 * 
 	 * @param e
 	 */
-	public CFXTagException(Throwable e) {
+	public CFXTagException(final Throwable e) {
 		super(e.getClass().getName() + ":" + e.getMessage());
 	}
 }

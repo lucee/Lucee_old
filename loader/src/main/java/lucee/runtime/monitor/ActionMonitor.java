@@ -33,7 +33,10 @@ public interface ActionMonitor extends Monitor {
 	 * logs certain action within a Request
 	 * 
 	 * @param pc
-	 * @param ar
+	 * @param type
+	 * @param label
+	 * @param executionTime
+	 * @param data
 	 * @throws IOException
 	 */
 	public void log(PageContext pc, String type, String label,
@@ -42,8 +45,11 @@ public interface ActionMonitor extends Monitor {
 	/**
 	 * logs certain action outside a Request, like sending mails
 	 * 
-	 * @param pc
-	 * @param ar
+	 * @param config
+	 * @param type
+	 * @param label
+	 * @param executionTime
+	 * @param data
 	 * @throws IOException
 	 */
 	public void log(ConfigWeb config, String type, String label,

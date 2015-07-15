@@ -37,9 +37,9 @@ public abstract class CFMLEngineFactorySupport {
 	 * @param out
 	 * @throws IOException
 	 */
-	public final static void copy(InputStream in, OutputStream out)
+	public final static void copy(final InputStream in, final OutputStream out)
 			throws IOException {
-		byte[] buffer = new byte[0xffff];
+		final byte[] buffer = new byte[0xffff];
 		int len;
 		try {
 			while ((len = in.read(buffer)) != -1)
@@ -55,11 +55,11 @@ public abstract class CFMLEngineFactorySupport {
 	 * 
 	 * @param is
 	 */
-	public final static void closeEL(InputStream is) {
+	public final static void closeEL(final InputStream is) {
 		try {
 			if (is != null)
 				is.close();
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 		}
 	}
 
@@ -68,11 +68,11 @@ public abstract class CFMLEngineFactorySupport {
 	 * 
 	 * @param os
 	 */
-	public final static void closeEL(OutputStream os) {
+	public final static void closeEL(final OutputStream os) {
 		try {
 			if (os != null)
 				os.close();
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 		}
 	}
 
@@ -83,16 +83,15 @@ public abstract class CFMLEngineFactorySupport {
 	 * @return readed data from InputStream
 	 * @throws IOException
 	 */
-	public static String toString(InputStream is) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		StringBuffer content = new StringBuffer();
+	public static String toString(final InputStream is) throws IOException {
+		final BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		final StringBuffer content = new StringBuffer();
 
 		String line = br.readLine();
 		if (line != null) {
 			content.append(line);
-			while ((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null)
 				content.append("\n" + line);
-			}
 		}
 		br.close();
 		return content.toString();
@@ -104,26 +103,26 @@ public abstract class CFMLEngineFactorySupport {
 	 * @param version
 	 * @return int version
 	 */
-	public static Version toVersion(String version, Version defaultValue) {
+	public static Version toVersion(String version, final Version defaultValue) {
 		// remove extension if there is any
-		int rIndex = version.lastIndexOf(".lco");
-		if (rIndex != -1) version = version.substring(0, rIndex);
-		
-		try{
+		final int rIndex = version.lastIndexOf(".lco");
+		if (rIndex != -1)
+			version = version.substring(0, rIndex);
+
+		try {
 			return Version.parseVersion(version);
-		}
-		catch(IllegalArgumentException iae) {
+		} catch (final IllegalArgumentException iae) {
 			return defaultValue;
 		}
 	}
 
 	/**
 	 * @param version
-	 * @return
+	 * @return string representation of the version
 	 */
 	public static String toStringVersion(int version) {
 
-		StringBuffer sb = new StringBuffer();
+		final StringBuffer sb = new StringBuffer();
 
 		// Major
 		int tmp = (version / 10000000); // FUTURE 10000000
@@ -150,13 +149,13 @@ public abstract class CFMLEngineFactorySupport {
 
 	}
 
-	private static Object len(String str, int i) {
+	private static Object len(String str, final int i) {
 		while (str.length() < i)
 			str = "0" + str;
 		return str;
 	}
 
-	public static String removeQuotes(String str, boolean trim) {
+	public static String removeQuotes(String str, final boolean trim) {
 		if (str == null)
 			return str;
 		if (trim)
@@ -164,8 +163,8 @@ public abstract class CFMLEngineFactorySupport {
 		if (str.length() < 2)
 			return str;
 
-		char first = str.charAt(0);
-		char last = str.charAt(str.length() - 1);
+		final char first = str.charAt(0);
+		final char last = str.charAt(str.length() - 1);
 
 		if ((first == '"' || first == '\'') && first == last)
 			return str.substring(1, str.length() - 1);
@@ -208,7 +207,7 @@ public abstract class CFMLEngineFactorySupport {
 						.toString();
 		}
 		// Home
-		else if (path.startsWith("{home")) {
+		else if (path.startsWith("{home"))
 			if (path.startsWith("}", 5))
 				path = new File(getHomeDirectory(), path.substring(6))
 						.toString();
@@ -218,7 +217,6 @@ public abstract class CFMLEngineFactorySupport {
 			else if (path.startsWith("-directory}", 5))
 				path = new File(getHomeDirectory(), path.substring(16))
 						.toString();
-		}
 		return path;
 	}
 
@@ -226,7 +224,7 @@ public abstract class CFMLEngineFactorySupport {
 		if (homeFile != null)
 			return homeFile;
 
-		String homeStr = System.getProperty("user.home");
+		final String homeStr = System.getProperty("user.home");
 		if (homeStr != null) {
 			homeFile = new File(homeStr);
 			homeFile = getCanonicalFileEL(homeFile);
@@ -243,7 +241,7 @@ public abstract class CFMLEngineFactorySupport {
 		if (tempFile != null)
 			return tempFile;
 
-		String tmpStr = System.getProperty("java.io.tmpdir");
+		final String tmpStr = System.getProperty("java.io.tmpdir");
 		if (tmpStr != null) {
 			tempFile = new File(tmpStr);
 			if (tempFile.exists()) {
@@ -252,11 +250,11 @@ public abstract class CFMLEngineFactorySupport {
 			}
 		}
 		try {
-			File tmp = File.createTempFile("a", "a");
+			final File tmp = File.createTempFile("a", "a");
 			tempFile = tmp.getParentFile();
 			tempFile = getCanonicalFileEL(tempFile);
 			tmp.delete();
-		} catch (IOException ioe) {
+		} catch (final IOException ioe) {
 		}
 
 		return tempFile;
@@ -266,44 +264,40 @@ public abstract class CFMLEngineFactorySupport {
 	 * @return return System directory
 	 */
 	private static File getSystemDirectory() {
-		String pathes = System.getProperty("java.library.path");
+		final String pathes = System.getProperty("java.library.path");
 		if (pathes != null) {
-			String[] arr = pathes.split(File.pathSeparator);
+			final String[] arr = pathes.split(File.pathSeparator);
 			//String[] arr=List.toStringArrayEL(List.listToArray(pathes,File.pathSeparatorChar));
-			for (int i = 0; i < arr.length; i++) {
-				if (arr[i].toLowerCase().indexOf("windows\\system") != -1) {
-					File file = new File(arr[i]);
+			for (final String element : arr)
+				if (element.toLowerCase().indexOf("windows\\system") != -1) {
+					final File file = new File(element);
 					if (file.exists() && file.isDirectory() && file.canWrite())
 						return getCanonicalFileEL(file);
 
 				}
-			}
-			for (int i = 0; i < arr.length; i++) {
-				if (arr[i].toLowerCase().indexOf("windows") != -1) {
-					File file = new File(arr[i]);
+			for (final String element : arr)
+				if (element.toLowerCase().indexOf("windows") != -1) {
+					final File file = new File(element);
 					if (file.exists() && file.isDirectory() && file.canWrite())
 						return getCanonicalFileEL(file);
 
 				}
-			}
-			for (int i = 0; i < arr.length; i++) {
-				if (arr[i].toLowerCase().indexOf("winnt") != -1) {
-					File file = new File(arr[i]);
+			for (final String element : arr)
+				if (element.toLowerCase().indexOf("winnt") != -1) {
+					final File file = new File(element);
 					if (file.exists() && file.isDirectory() && file.canWrite())
 						return getCanonicalFileEL(file);
 
 				}
-			}
-			for (int i = 0; i < arr.length; i++) {
-				if (arr[i].toLowerCase().indexOf("win") != -1) {
-					File file = new File(arr[i]);
+			for (final String element : arr)
+				if (element.toLowerCase().indexOf("win") != -1) {
+					final File file = new File(element);
 					if (file.exists() && file.isDirectory() && file.canWrite())
 						return getCanonicalFileEL(file);
 
 				}
-			}
-			for (int i = 0; i < arr.length; i++) {
-				File file = new File(arr[i]);
+			for (final String element : arr) {
+				final File file = new File(element);
 				if (file.exists() && file.isDirectory() && file.canWrite())
 					return getCanonicalFileEL(file);
 			}
@@ -311,10 +305,10 @@ public abstract class CFMLEngineFactorySupport {
 		return null;
 	}
 
-	private static File getCanonicalFileEL(File file) {
+	private static File getCanonicalFileEL(final File file) {
 		try {
 			return file.getCanonicalFile();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			return file;
 		}
 	}

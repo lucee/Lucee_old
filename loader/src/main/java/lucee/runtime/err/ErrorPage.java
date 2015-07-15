@@ -49,6 +49,7 @@ public interface ErrorPage {
 	 * @param exception
 	 * @deprecated use instead <code>setException(String exception);</code>
 	 */
+	@Deprecated
 	public abstract void setTypeAsString(String exception);
 
 	/**
@@ -72,6 +73,7 @@ public interface ErrorPage {
 	 * @return Returns the exception type.
 	 * @deprecated use instead <code>getException();</code>
 	 */
+	@Deprecated
 	public abstract String getTypeAsString();
 
 	/**

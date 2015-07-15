@@ -17,7 +17,6 @@
  */
 package lucee.runtime;
 
-
 public abstract class ComponentPage extends CIPage {
 
 	private static final long serialVersionUID = 7104545473195483433L;

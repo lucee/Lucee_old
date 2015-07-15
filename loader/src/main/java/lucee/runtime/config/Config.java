@@ -138,7 +138,7 @@ public interface Config {
 	public static final int CACHE_TYPE_HTTP = 64;
 	public static final int CACHE_TYPE_FILE = 128;
 	public static final int CACHE_TYPE_WEBSERVICE = 256;
-	
+
 	public static final int CACHEDWITHIN_QUERY = CACHE_TYPE_QUERY;
 	public static final int CACHEDWITHIN_RESOURCE = CACHE_TYPE_RESOURCE;
 	public static final int CACHEDWITHIN_FUNCTION = CACHE_TYPE_FUNCTION;
@@ -146,8 +146,6 @@ public interface Config {
 	public static final int CACHEDWITHIN_HTTP = CACHE_TYPE_HTTP;
 	public static final int CACHEDWITHIN_FILE = CACHE_TYPE_FILE;
 	public static final int CACHEDWITHIN_WEBSERVICE = CACHE_TYPE_WEBSERVICE;
-	
-	
 
 	public short getInspectTemplate();
 
@@ -347,6 +345,7 @@ public interface Config {
 	 * @return Returns the debug Template.
 	 * @deprecated use instead <code>getDebugEntry(ip, defaultValue)</code>
 	 */
+	@Deprecated
 	public abstract String getDebugTemplate();
 
 	/**
@@ -421,9 +420,7 @@ public interface Config {
 	 */
 	@Deprecated
 	public ConfigServer getConfigServer(String password) throws PageException;
-	
-	
-	
+
 	public ConfigServer getConfigServer(String key, long timeNonce)
 			throws PageException;
 
@@ -441,6 +438,7 @@ public interface Config {
 	 * @return return the search Storage
 	 */
 	public ClassDefinition<SearchEngine> getSearchEngineClassDefinition();
+
 	public String getSearchEngineDirectory();
 
 	/**
@@ -563,6 +561,7 @@ public interface Config {
 	 *             <code>getDumpWriter(String key,int defaultType)</code>
 	 * @throws PageException if there is no DumpWriter for this key
 	 */
+	@Deprecated
 	public abstract DumpWriter getDumpWriter(String key) throws PageException;
 
 	/**
@@ -645,7 +644,7 @@ public interface Config {
 
 	public DataSource getDataSource(String datasource, DataSource defaultValue);
 
-	public Map<String,DataSource> getDataSourcesAsMap();
+	public Map<String, DataSource> getDataSourcesAsMap();
 
 	public String getDefaultEncoding();
 
@@ -668,6 +667,7 @@ public interface Config {
 	 * @param onlyTopLevel checks only toplevel mappings
 	 * @deprecated use instead getPageSources or getPageSourceExisting
 	 */
+	@Deprecated
 	public PageSource getPageSource(Mapping[] mappings, String realPath,
 			boolean onlyTopLevel);
 
@@ -708,12 +708,13 @@ public interface Config {
 	 * get Resource of the first Mapping that match the given criteria
 	 * 
 	 * @param mappings per application mappings
-	 * @param realPath path to get PageSource for
-	 * @param onlyTopLevel checks only toplevel mappings
+	 * @param relPath path to get PageSource for
+	 * @param alsoDefaultMapping
 	 * @deprecated use instead getPhysicalResources or
 	 *             getPhysicalResourceExisting
 	 */
-	public Resource getPhysical(Mapping[] mappings, String realPath,
+	@Deprecated
+	public Resource getPhysical(Mapping[] mappings, String relPath,
 			boolean alsoDefaultMapping);
 
 	/**
@@ -793,14 +794,14 @@ public interface Config {
 
 	public IntervallMonitor getIntervallMonitor(String name)
 			throws PageException;
-	
+
 	public ActionMonitor getActionMonitor(String name) throws PageException;
 
 	/**
 	 * if free permspace gen is lower than 10000000 bytes, lucee shrinks all
 	 * classloaders
 	 * 
-	 * @param cs
+	 * @param check
 	 */
 	public void checkPermGenSpace(boolean check);
 
@@ -813,18 +814,19 @@ public interface Config {
 	public Object getCachedWithin(int type);
 
 	public Identification getIdentification();
-	
-    public int getLoginDelay();
 
-    public boolean getLoginCaptcha();
-    public boolean getRememberMe();
+	public int getLoginDelay();
 
-    public boolean getFullNullSupport();
+	public boolean getLoginCaptcha();
+
+	public boolean getRememberMe();
+
+	public boolean getFullNullSupport();
 
 	public ORMEngine getORMEngine(PageContext pc) throws PageException;
 
 	public Resource getLocalExtensionProviderDirectory();
 
-	public Resource getDeployDirectory(); 
-	
+	public Resource getDeployDirectory();
+
 }

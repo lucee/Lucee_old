@@ -34,12 +34,14 @@ public interface Argument extends Scope, Array, BindScope {
 	 * 
 	 * @param bind
 	 */
+	@Override
 	public abstract void setBind(boolean bind);
 
 	/**
 	 * @return returns if scope is binded to a other variable for using outside
 	 *         of a udf
 	 */
+	@Override
 	public abstract boolean isBind();
 
 	/**
@@ -62,7 +64,8 @@ public interface Argument extends Scope, Array, BindScope {
 
 	public Object getFunctionArgument(Collection.Key key, Object defaultValue);
 
-	public void setFunctionArgumentNames(Set<Collection.Key> functionArgumentNames);
+	public void setFunctionArgumentNames(
+			Set<Collection.Key> functionArgumentNames);
 
 	public boolean containsFunctionArgumentKey(Key key);
 

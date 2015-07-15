@@ -43,7 +43,7 @@ public final class QueryBean implements Serializable {
 	/**
 	 * @param columnList The columnList to set.
 	 */
-	public void setColumnList(String[] columnList) {
+	public void setColumnList(final String[] columnList) {
 		this.columnList = columnList;
 	}
 
@@ -57,7 +57,7 @@ public final class QueryBean implements Serializable {
 	/**
 	 * @param data The data to set.
 	 */
-	public void setData(Object[][] data) {
+	public void setData(final Object[][] data) {
 		this.data = data;
 	}
 }

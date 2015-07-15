@@ -20,8 +20,7 @@ package lucee.runtime;
 public abstract class CIPage extends Page {
 
 	private static final long serialVersionUID = -398015716783522906L;
-	
-	
+
 	/*
 	 * executed before the static constructor is executed to set the enviroment right
 	 * @param pc
@@ -35,7 +34,7 @@ public abstract class CIPage extends Page {
 	 * @return
 	
 	public abstract void afterStaticConstructor(PageContext pc, Variables var); */
-	
+
 	public abstract String getComponentName();
 
 }

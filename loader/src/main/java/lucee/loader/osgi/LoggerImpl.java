@@ -31,87 +31,83 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 
-
 public class LoggerImpl extends Logger {
 
-	private File logFile;
+	private final File logFile;
 
-	public LoggerImpl(File logFile) {
-		this.logFile=logFile;
-		if(!logFile.exists()) {
+	public LoggerImpl(final File logFile) {
+		this.logFile = logFile;
+		if (!logFile.exists())
 			try {
 				logFile.createNewFile();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	protected void doLog(
-			Bundle bundle, ServiceReference sr, int level,
-			String msg, Throwable throwable) {
-			String s = "";
-			if (sr != null) {
-				s = s + "SvcRef "  + sr + " ";
-			}
-			else if (bundle != null) {	
-				s = s + "Bundle " + bundle.toString() + " ";
-			}
-			s = s + msg;
-			
-			
-			// level
-			String strLevel;
-			switch (level) {
-				case LOG_DEBUG:strLevel="DEBUG";break;
-				case LOG_ERROR:strLevel="ERROR";break;
-				case LOG_INFO:strLevel="INFO";break;
-				case LOG_WARNING:strLevel="WARNING";break;
-				default:strLevel="UNKNOWNN[" + level + "]";
-			}
-			
-			// throwable
-			if (throwable != null)
-			{
-				if ((throwable instanceof BundleException) &&
-					(((BundleException) throwable).getNestedException() != null))
-				{
-					throwable = ((BundleException) throwable).getNestedException();
-				}
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter(sw);
-				 
-				
-				throwable.printStackTrace(pw);
-				s+="\n"+sw.getBuffer();
-			}
-			
-			
-			_log(strLevel,s);
+	protected void doLog(final Bundle bundle, final ServiceReference sr,
+			final int level, final String msg, Throwable throwable) {
+		String s = "";
+		if (sr != null)
+			s = s + "SvcRef " + sr + " ";
+		else if (bundle != null)
+			s = s + "Bundle " + bundle.toString() + " ";
+		s = s + msg;
+
+		// level
+		String strLevel;
+		switch (level) {
+		case LOG_DEBUG:
+			strLevel = "DEBUG";
+			break;
+		case LOG_ERROR:
+			strLevel = "ERROR";
+			break;
+		case LOG_INFO:
+			strLevel = "INFO";
+			break;
+		case LOG_WARNING:
+			strLevel = "WARNING";
+			break;
+		default:
+			strLevel = "UNKNOWNN[" + level + "]";
 		}
 
-	private void _log(String level, String msg) {
+		// throwable
+		if (throwable != null) {
+			if ((throwable instanceof BundleException)
+					&& (((BundleException) throwable).getNestedException() != null))
+				throwable = ((BundleException) throwable).getNestedException();
+			final StringWriter sw = new StringWriter();
+			final PrintWriter pw = new PrintWriter(sw);
+
+			throwable.printStackTrace(pw);
+			s += "\n" + sw.getBuffer();
+		}
+
+		_log(strLevel, s);
+	}
+
+	private void _log(final String level, final String msg) {
 		// TODO better impl 
-		BufferedWriter bw=null;
-		try{
-			bw=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile,true)));
-			bw.write(level+" ["+new Date()+"]:\n"+msg+"\n");
-		}
-		catch(IOException ioe){
-			System.out.println(level+" ["+new Date()+"]:\n"+msg+"\n");
-		}
-		finally {
-			if(bw!=null) {
+		BufferedWriter bw = null;
+		try {
+			bw = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(logFile, true)));
+			bw.write(level + " [" + new Date() + "]:\n" + msg + "\n");
+		} catch (final IOException ioe) {
+			System.out.println(level + " [" + new Date() + "]:\n" + msg + "\n");
+		} finally {
+			if (bw != null)
 				try {
 					bw.close();
+				} catch (final IOException e) {
 				}
-				catch (IOException e) {}
-			}
 		}
-		
+
 	}
 
 }

@@ -86,6 +86,7 @@ public interface IPageException extends Dumpable {
 	 * @return catch block
 	 * @deprecated use instead <code>getCatchBlock(Config config);</code>
 	 */
+	@Deprecated
 	public Struct getCatchBlock(PageContext pc);
 
 	/**
@@ -111,7 +112,8 @@ public interface IPageException extends Dumpable {
 	 * @param line line of the error
 	 * @param column column of the error
 	 */
-	public void addContext(PageSource pageSource, int line, int column,StackTraceElement element);
+	public void addContext(PageSource pageSource, int line, int column,
+			StackTraceElement element);
 
 	/**
 	 * compare error type as String
@@ -146,6 +148,7 @@ public interface IPageException extends Dumpable {
 	 * @return Returns the additional.
 	 * @deprecated use instead <code>getAdditional();</code>
 	 */
+	@Deprecated
 	public Struct getAddional();
 
 	/**

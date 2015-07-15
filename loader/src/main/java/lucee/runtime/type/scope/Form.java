@@ -63,6 +63,6 @@ public interface Form extends Scope {
 	public FormItem[] getFileItems();
 
 	public ServletInputStream getInputStream();
-	
+
 	public void reinitialize(ApplicationContext ac);
 }
