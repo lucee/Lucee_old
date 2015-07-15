@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import lucee.commons.io.log.Log;
+import lucee.commons.io.log.LogUtil;
 import lucee.commons.lang.ClassException;
 import lucee.commons.lang.StringUtil;
 import lucee.loader.engine.CFMLEngine;
@@ -49,6 +51,7 @@ import lucee.runtime.exp.ApplicationException;
 import lucee.runtime.exp.DatabaseException;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.ext.tag.BodyTagTryCatchFinallyImpl;
+import lucee.runtime.functions.displayFormatting.DecimalFormat;
 import lucee.runtime.listener.AppListenerUtil;
 import lucee.runtime.op.Caster;
 import lucee.runtime.op.Decision;
@@ -480,165 +483,180 @@ public final class Query extends BodyTagTryCatchFinallyImpl {
 		// no SQL String defined
 		if(strSQL.length()==0) 
 			throw new DatabaseException("no sql string defined, inside query tag",null,null,null);
-		strSQL=strSQL.trim();
-		// cannot use attribute params and queryparam tag
-		if(items.size()>0 && params!=null)
-			throw new DatabaseException("you cannot use the attribute params and sub tags queryparam at the same time",null,null,null);
-		// create SQL
-		SQL sql;
-		if(params!=null) {
-			if(Decision.isArray(params))
-				sql=QueryParamConverter.convert(strSQL, Caster.toArray(params));
-			else if(Decision.isStruct(params))
-				sql=QueryParamConverter.convert(strSQL, Caster.toStruct(params));
-			else
-				throw new DatabaseException("value of the attribute [params] has to be a struct or a array",null,null,null);
-		}
-		else sql=items.size()>0?new SQLImpl(strSQL,items.toArray(new SQLItem[items.size()])):new SQLImpl(strSQL);
 		
-		lucee.runtime.type.Query query=null;
-		long exe=0;
-		boolean hasCached=cachedWithin!=null || cachedAfter!=null;
-		String cacheId=null;
-		if(hasCached) {
-			String id = CacheHandlerCollectionImpl.createId(sql,datasource!=null?datasource.getName():null,username,password);
-			CacheHandler ch = pageContext.getConfig().getCacheHandlerCollection(Config.CACHE_TYPE_QUERY,null).getInstanceMatchingObject(cachedWithin,null);
-			if(ch!=null) {
-				cacheId=ch.id();
-				CacheItem ci = ch.get(pageContext, id);
-				if(ci instanceof QueryCacheItem) {
-					QueryCacheItem ce = (QueryCacheItem) ci;
-					if(ce.isCachedAfter(cachedAfter))
-						query= ce.query;
-				}
-			}
-			else {
-				List<String> patterns = pageContext.getConfig().getCacheHandlerCollection(Config.CACHE_TYPE_QUERY,null).getPatterns();
-				throw new ApplicationException("cachedwithin value ["+cachedWithin+"] is invalid, valid values are for example ["+ListUtil.listToList(patterns, ", ")+"]");
-			}
-			//query=pageContext.getQueryCache().getQuery(pageContext,sql,datasource!=null?datasource.getName():null,username,password,cachedafter);
-		}
+		try{
 		
-		
-		if(query==null) {
-			if("query".equals(dbtype)) 		query=executeQoQ(sql);
-			else if("orm".equals(dbtype) || "hql".equals(dbtype)) 	{
-				long start=System.nanoTime();
-				Object obj = executeORM(sql,returntype,ormoptions);
-				
-				if(obj instanceof lucee.runtime.type.Query){
-					query=(lucee.runtime.type.Query) obj;
-				}
-				else {
-					if(!StringUtil.isEmpty(name)) {
-						pageContext.setVariable(name,obj);
-					}
-					if(result!=null){
-						Struct sct=new StructImpl();
-						sct.setEL(KeyConstants._cached, Boolean.FALSE);
-						long time=System.nanoTime()-start;
-						sct.setEL(KeyConstants._executionTime, Caster.toDouble(time/1000000));
-						sct.setEL(KeyConstants._executionTimeNano, Caster.toDouble(time));
-						sct.setEL(KeyConstants._SQL, sql.getSQLString());
-						if(Decision.isArray(obj)){
-							
-						}
-						else sct.setEL(KeyConstants._RECORDCOUNT, Caster.toDouble(1));
-							
-						pageContext.setVariable(result, sct);
-					}
-					else
-						setExecutionTime((System.nanoTime()-start)/1000000);
-					return EVAL_PAGE;
-				}
+			strSQL=strSQL.trim();
+			// cannot use attribute params and queryparam tag
+			if(items.size()>0 && params!=null)
+				throw new DatabaseException("you cannot use the attribute params and sub tags queryparam at the same time",null,null,null);
+			// create SQL
+			SQL sql;
+			if(params!=null) {
+				if(Decision.isArray(params))
+					sql=QueryParamConverter.convert(strSQL, Caster.toArray(params));
+				else if(Decision.isStruct(params))
+					sql=QueryParamConverter.convert(strSQL, Caster.toStruct(params));
+				else
+					throw new DatabaseException("value of the attribute [params] has to be a struct or a array",null,null,null);
 			}
-			else query=executeDatasoure(sql,result!=null,pageContext.getTimeZone());
+			else sql=items.size()>0?new SQLImpl(strSQL,items.toArray(new SQLItem[items.size()])):new SQLImpl(strSQL);
 			
-			if(cachedWithin!=null) {
+			lucee.runtime.type.Query query=null;
+			long exe=0;
+			boolean hasCached=cachedWithin!=null || cachedAfter!=null;
+			String cacheId=null;
+			if(hasCached) {
 				String id = CacheHandlerCollectionImpl.createId(sql,datasource!=null?datasource.getName():null,username,password);
 				CacheHandler ch = pageContext.getConfig().getCacheHandlerCollection(Config.CACHE_TYPE_QUERY,null).getInstanceMatchingObject(cachedWithin,null);
-				if(ch!=null)ch.set(pageContext, id,cachedWithin,new QueryCacheItem(query));
-			}
-			exe=query.getExecutionTime();
-		}
-        else query.setCacheType(cacheId);
-		
-		if(pageContext.getConfig().debug() && debug) {
-			boolean logdb=((ConfigImpl)pageContext.getConfig()).hasDebugOptions(ConfigImpl.DEBUG_DATABASE);
-			if(logdb){
-				boolean debugUsage=DebuggerImpl.debugQueryUsage(pageContext,query);
-				pageContext.getDebugger().addQuery(debugUsage?query:null,datasource!=null?datasource.getName():null,name,sql,query.getRecordcount(),getPageSource(),exe);
-			}
-		}
-		
-		if(!query.isEmpty() && !StringUtil.isEmpty(name)) {
-			pageContext.setVariable(name,query);
-		}
-		
-		// Result
-		if(result!=null) {
-			
-			Struct sct=new StructImpl();
-			sct.setEL(KeyConstants._cached, Caster.toBoolean(query.isCached()));
-			if(!query.isEmpty())sct.setEL(KeyConstants._COLUMNLIST, ListUtil.arrayToList(query.getColumnNamesAsString(),","));
-			int rc=query.getRecordcount();
-			if(rc==0)rc=query.getUpdateCount();
-			sct.setEL(KeyConstants._RECORDCOUNT, Caster.toDouble(rc));
-			sct.setEL(KeyConstants._executionTime, Caster.toDouble(query.getExecutionTime()/1000000));
-			sct.setEL(KeyConstants._executionTimeNano, Caster.toDouble(query.getExecutionTime()));
-			
-			sct.setEL(KeyConstants._SQL, sql.getSQLString());
-			
-			// GENERATED KEYS
-			lucee.runtime.type.Query qi = Caster.toQuery(query,null);
-			if(qi !=null){
-				lucee.runtime.type.Query qryKeys = qi.getGeneratedKeys();
-				if(qryKeys!=null){
-					StringBuilder generatedKey=new StringBuilder(),sb;
-					Collection.Key[] columnNames = qryKeys.getColumnNames();
-					QueryColumn column;
-					for(int c=0;c<columnNames.length;c++){
-						column = qryKeys.getColumn(columnNames[c]);
-						sb=new StringBuilder();
-						int size=column.size();
-						for(int row=1;row<=size;row++) {
-							if(row>1)sb.append(',');
-							sb.append(Caster.toString(column.get(row,null)));
-						}
-						if(sb.length()>0){
-							sct.setEL(columnNames[c], sb.toString());
-							if(generatedKey.length()>0)generatedKey.append(',');
-							generatedKey.append(sb);
-						}
+				if(ch!=null) {
+					cacheId=ch.id();
+					CacheItem ci = ch.get(pageContext, id);
+					if(ci instanceof QueryCacheItem) {
+						QueryCacheItem ce = (QueryCacheItem) ci;
+						if(ce.isCachedAfter(cachedAfter))
+							query= ce.query;
 					}
-					if(generatedKey.length()>0)
-						sct.setEL(GENERATEDKEY, generatedKey.toString());
 				}
+				else {
+					List<String> patterns = pageContext.getConfig().getCacheHandlerCollection(Config.CACHE_TYPE_QUERY,null).getPatterns();
+					throw new ApplicationException("cachedwithin value ["+cachedWithin+"] is invalid, valid values are for example ["+ListUtil.listToList(patterns, ", ")+"]");
+				}
+				//query=pageContext.getQueryCache().getQuery(pageContext,sql,datasource!=null?datasource.getName():null,username,password,cachedafter);
 			}
 			
-			// sqlparameters
-			SQLItem[] params = sql.getItems();
-			if(params!=null && params.length>0) {
-				Array arr=new ArrayImpl();
-				sct.setEL(SQL_PARAMETERS, arr); 
-				for(int i=0;i<params.length;i++) {
-					arr.append(params[i].getValue());
+			
+			if(query==null) {
+				if("query".equals(dbtype)) 		query=executeQoQ(sql);
+				else if("orm".equals(dbtype) || "hql".equals(dbtype)) 	{
+					long start=System.nanoTime();
+					Object obj = executeORM(sql,returntype,ormoptions);
 					
+					if(obj instanceof lucee.runtime.type.Query){
+						query=(lucee.runtime.type.Query) obj;
+					}
+					else {
+						if(!StringUtil.isEmpty(name)) {
+							pageContext.setVariable(name,obj);
+						}
+						if(result!=null){
+							Struct sct=new StructImpl();
+							sct.setEL(KeyConstants._cached, Boolean.FALSE);
+							long time=System.nanoTime()-start;
+							sct.setEL(KeyConstants._executionTime, Caster.toDouble(time/1000000));
+							sct.setEL(KeyConstants._executionTimeNano, Caster.toDouble(time));
+							sct.setEL(KeyConstants._SQL, sql.getSQLString());
+							if(Decision.isArray(obj)){
+								
+							}
+							else sct.setEL(KeyConstants._RECORDCOUNT, Caster.toDouble(1));
+								
+							pageContext.setVariable(result, sct);
+						}
+						else
+							setExecutionTime((System.nanoTime()-start)/1000000);
+						return EVAL_PAGE;
+					}
+				}
+				else query=executeDatasoure(sql,result!=null,pageContext.getTimeZone());
+				
+				if(cachedWithin!=null) {
+					String id = CacheHandlerCollectionImpl.createId(sql,datasource!=null?datasource.getName():null,username,password);
+					CacheHandler ch = pageContext.getConfig().getCacheHandlerCollection(Config.CACHE_TYPE_QUERY,null).getInstanceMatchingObject(cachedWithin,null);
+					if(ch!=null)ch.set(pageContext, id,cachedWithin,new QueryCacheItem(query));
+				}
+				exe=query.getExecutionTime();
+			}
+	        else query.setCacheType(cacheId);
+			
+			if(pageContext.getConfig().debug() && debug) {
+				boolean logdb=((ConfigImpl)pageContext.getConfig()).hasDebugOptions(ConfigImpl.DEBUG_DATABASE);
+				if(logdb){
+					boolean debugUsage=DebuggerImpl.debugQueryUsage(pageContext,query);
+					pageContext.getDebugger().addQuery(debugUsage?query:null,datasource!=null?datasource.getName():null,name,sql,query.getRecordcount(),getPageSource(),exe);
 				}
 			}
-			pageContext.setVariable(result, sct);
-		}
-		// cfquery.executiontime
-		else {
-			setExecutionTime(exe/1000000);
 			
+			if(!query.isEmpty() && !StringUtil.isEmpty(name)) {
+				pageContext.setVariable(name,query);
+			}
+			
+			// Result
+			if(result!=null) {
+				
+				Struct sct=new StructImpl();
+				sct.setEL(KeyConstants._cached, Caster.toBoolean(query.isCached()));
+				if(!query.isEmpty())sct.setEL(KeyConstants._COLUMNLIST, ListUtil.arrayToList(query.getColumnNamesAsString(),","));
+				int rc=query.getRecordcount();
+				if(rc==0)rc=query.getUpdateCount();
+				sct.setEL(KeyConstants._RECORDCOUNT, Caster.toDouble(rc));
+				sct.setEL(KeyConstants._executionTime, Caster.toDouble(query.getExecutionTime()/1000000));
+				sct.setEL(KeyConstants._executionTimeNano, Caster.toDouble(query.getExecutionTime()));
+				
+				sct.setEL(KeyConstants._SQL, sql.getSQLString());
+				
+				// GENERATED KEYS
+				lucee.runtime.type.Query qi = Caster.toQuery(query,null);
+				if(qi !=null){
+					lucee.runtime.type.Query qryKeys = qi.getGeneratedKeys();
+					if(qryKeys!=null){
+						StringBuilder generatedKey=new StringBuilder(),sb;
+						Collection.Key[] columnNames = qryKeys.getColumnNames();
+						QueryColumn column;
+						for(int c=0;c<columnNames.length;c++){
+							column = qryKeys.getColumn(columnNames[c]);
+							sb=new StringBuilder();
+							int size=column.size();
+							for(int row=1;row<=size;row++) {
+								if(row>1)sb.append(',');
+								sb.append(Caster.toString(column.get(row,null)));
+							}
+							if(sb.length()>0){
+								sct.setEL(columnNames[c], sb.toString());
+								if(generatedKey.length()>0)generatedKey.append(',');
+								generatedKey.append(sb);
+							}
+						}
+						if(generatedKey.length()>0)
+							sct.setEL(GENERATEDKEY, generatedKey.toString());
+					}
+				}
+				
+				// sqlparameters
+				SQLItem[] params = sql.getItems();
+				if(params!=null && params.length>0) {
+					Array arr=new ArrayImpl();
+					sct.setEL(SQL_PARAMETERS, arr); 
+					for(int i=0;i<params.length;i++) {
+						arr.append(params[i].getValue());
+						
+					}
+				}
+				pageContext.setVariable(result, sct);
+			}
+			// cfquery.executiontime
+			else {
+				setExecutionTime(exe/1000000);
+				
+			}
+			
+			
+			// listener
+			((ConfigWebImpl)pageContext.getConfig()).getActionMonitorCollector()
+				.log(pageContext, "query", "Query", exe, query);
+			
+
+			// log
+			Log log = pageContext.getConfig().getLog("datasource");
+			if(log.getLogLevel()>=Log.LEVEL_INFO) {
+				log.info("query tag", "executed ["+sql.toString().trim()+"] in "+DecimalFormat.call(pageContext, exe/1000000D)+" ms");
+			}
 		}
-		
-		
-		// listener
-		((ConfigWebImpl)pageContext.getConfig()).getActionMonitorCollector()
-			.log(pageContext, "query", "Query", exe, query);
-		
+		catch (PageException pe) {
+			// log
+			pageContext.getConfig().getLog("datasource").error("query tag", pe);
+			throw pe;
+		}
 		return EVAL_PAGE;
 	}
 

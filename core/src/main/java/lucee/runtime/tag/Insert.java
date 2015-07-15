@@ -24,8 +24,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import lucee.commons.db.DBUtil;
+import lucee.commons.io.log.Log;
+import lucee.commons.io.log.LogUtil;
 import lucee.commons.lang.StringUtil;
 import lucee.runtime.config.ConfigImpl;
+import lucee.runtime.config.ConfigWebImpl;
 import lucee.runtime.db.DataSource;
 import lucee.runtime.db.DataSourceManager;
 import lucee.runtime.db.DatasourceConnection;
@@ -36,6 +39,7 @@ import lucee.runtime.db.SQLItemImpl;
 import lucee.runtime.debug.DebuggerImpl;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.ext.tag.TagImpl;
+import lucee.runtime.functions.displayFormatting.DecimalFormat;
 import lucee.runtime.op.Caster;
 import lucee.runtime.type.QueryImpl;
 import lucee.runtime.type.Struct;
@@ -189,9 +193,19 @@ public final class Insert extends TagImpl {
 						pageContext.getDebugger().addQuery(debugUsage?query:null,dsn,"",sql,query.getRecordcount(),pageContext.getCurrentPageSource(),query.getExecutionTime());
 					}
 				}
+
+				// log
+				Log log = pageContext.getConfig().getLog("datasource");
+				if(log.getLogLevel()>=Log.LEVEL_INFO) {
+					log.info("insert tag", "executed ["+sql.toString().trim()+"] in "+DecimalFormat.call(pageContext, query.getExecutionTime()/1000000D)+" ms");
+				}
 			}
 			return EVAL_PAGE;
-	    } 
+	    }
+		catch (PageException pe) {
+			pageContext.getConfig().getLog("datasource").error("insert tag", pe);		
+			throw pe;
+		}
 	    finally {
 	    	manager.releaseConnection(pageContext,dc);
 	    }

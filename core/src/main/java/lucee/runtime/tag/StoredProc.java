@@ -33,6 +33,8 @@ import java.util.Map.Entry;
 import javax.servlet.jsp.JspException;
 
 import lucee.commons.io.IOUtil;
+import lucee.commons.io.log.Log;
+import lucee.commons.io.log.LogUtil;
 import lucee.commons.lang.StringUtil;
 import lucee.commons.sql.SQLUtil;
 import lucee.loader.engine.CFMLEngine;
@@ -44,6 +46,7 @@ import lucee.runtime.cache.tag.query.StoredProcCacheItem;
 import lucee.runtime.config.Config;
 import lucee.runtime.config.ConfigImpl;
 import lucee.runtime.config.ConfigWeb;
+import lucee.runtime.config.ConfigWebImpl;
 import lucee.runtime.config.Constants;
 import lucee.runtime.db.CFTypes;
 import lucee.runtime.db.DataSource;
@@ -59,6 +62,7 @@ import lucee.runtime.exp.ApplicationException;
 import lucee.runtime.exp.DatabaseException;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.ext.tag.BodyTagTryCatchFinallySupport;
+import lucee.runtime.functions.displayFormatting.DecimalFormat;
 import lucee.runtime.op.Caster;
 import lucee.runtime.tag.util.DeprecatedUtil;
 import lucee.runtime.type.Array;
@@ -427,7 +431,7 @@ public class StoredProc extends BodyTagTryCatchFinallySupport {
 	}
 
 	@Override
-	public int doEndTag() throws JspException {
+	public int doEndTag() throws PageException {
 		long startNS=System.nanoTime();
 		
 		Object ds=datasource;
@@ -595,12 +599,25 @@ public class StoredProc extends BodyTagTryCatchFinallySupport {
 				if(logdb)
 					pageContext.getDebugger().addQuery(null,dsn,procedure,_sql,count,pageContext.getCurrentPageSource(),(int)exe);
 			}
-		    
+
+			// log
+			Log log = pageContext.getConfig().getLog("datasource");
+			if(log.getLogLevel()>=Log.LEVEL_INFO) {
+				log.info("storedproc tag", "executed ["+sql.toString().trim()+"] in "+DecimalFormat.call(pageContext, exe/1000000D)+" ms");
+			}
 		    
 		}
-		catch (SQLException e) {
-		    throw new DatabaseException(e,new SQLImpl(sql.toString()),dc);
+ 		catch (SQLException e) {
+		    // log
+			pageContext.getConfig().getLog("datasource").error( "storedproc tag", e);
+			throw new DatabaseException(e,new SQLImpl(sql.toString()),dc);
 		}
+		catch (PageException pe) {
+			// log
+			pageContext.getConfig().getLog("datasource").error("storedproc tag", pe);		
+			throw pe;
+ 		}
+
 		finally {
 		    if(callStat!=null){
 			    try {

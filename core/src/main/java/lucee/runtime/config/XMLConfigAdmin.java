@@ -1329,20 +1329,32 @@ public final class XMLConfigAdmin {
      */
     public static boolean fixLogging(ConfigServerImpl cs,ConfigImpl config,Document doc) {
 
-    	{// if version is bigger than 4.2 there is nothig to do
-    		Element luceeConfiguration = doc.getDocumentElement();
-    		String strVersion = luceeConfiguration.getAttribute("version");
-    		double version=Caster.toDoubleValue(strVersion, 1.0d);
-    		config.setVersion(version);
-    		if(version>=4.2D) return false;
-    	}
+    	// if version is bigger than 4.2 there is nothig to do
+		Element luceeConfiguration = doc.getDocumentElement();
+		String strVersion = luceeConfiguration.getAttribute("version");
+		double version=Caster.toDoubleValue(strVersion, 1.0d);
+		config.setVersion(version);
+		
+		if(version>=4.3D) return false;
+		
+    	// datasource
+    	Element src = XMLConfigWebFactory.getChildByName(doc.getDocumentElement(), "datasource");
+    	fixLogging(cs,doc,src, "datasource",false,"{lucee-config}/logs/datasource.log");
+    	
+    	
+    	setVersion(doc,ConfigWebUtil.getEngine(config).getInfo().getVersion());
+    	
+    	if(version>=4.2D) return true;
+		
+    	
+    	
     	
     		
     	//setVersion(Caster.toDoubleValue(Info.getVersionAsString().substring(0,3),1.0D));
         
     	
     	// mapping
-    	Element src = XMLConfigWebFactory.getChildByName(doc.getDocumentElement(), "mappings");
+    	src = XMLConfigWebFactory.getChildByName(doc.getDocumentElement(), "mappings");
     	fixLogging(cs,doc,src, "mapping",false,"{lucee-config}/logs/mapping.log");
     	
     	// rest
