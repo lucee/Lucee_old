@@ -587,12 +587,12 @@
          <type>jar</type>
          <version>1.0.20</version>
       </dependency>
-<!-- apache.http.components.client - 4.4.1 -->
+<!-- apache.http.components.client -->
       <dependency>
          <groupId>apache.http.components</groupId>
          <artifactId>client</artifactId>
          <type>jar</type>
-         <version>4.4.1</version>
+         <version>4.5.0</version>
       </dependency>
 <!-- apache.http.components.core - 4.4.1 -->
       <dependency>
@@ -601,12 +601,12 @@
          <type>jar</type>
          <version>4.4.1</version>
       </dependency>
-<!-- apache.http.components.mime - 4.4.1 -->
+<!-- apache.http.components.mime -->
       <dependency>
          <groupId>apache.http.components</groupId>
          <artifactId>mime</artifactId>
          <type>jar</type>
-         <version>4.4.1</version>
+         <version>4.5.0</version>
       </dependency>
 <!-- hsqldb - 1.8.0 -->
       <dependency>
