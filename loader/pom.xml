@@ -1021,9 +1021,9 @@
 
   <scm>
     <url>https://github.com/lucee/Lucee</url>
-    <connection>scm:git:git://github.com/lucee/Lucee.git</connection>
+             <connection>scm:git:git://github.com/lucee/Lucee.git</connection>
     <developerConnection>scm:git:git@github.com:lucee/Lucee.git</developerConnection>
-    <tag>Plugin to create Lucee Loader files.</tag>
+    <tag>${project.version}</tag>
   </scm>
 
   <distributionManagement>
