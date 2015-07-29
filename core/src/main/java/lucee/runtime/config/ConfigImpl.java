@@ -659,12 +659,20 @@ public abstract class ConfigImpl implements Config {
 
     @Override
     public ClassLoader getClassLoader() {
-    	return getResourceClassLoader();   
+    	ResourceClassLoader rcl = getResourceClassLoader(null);
+    	if(rcl!=null) return rcl;
+    	return new lucee.commons.lang.ClassLoaderHelper().getClass().getClassLoader();
+
     }
     public ResourceClassLoader getResourceClassLoader() {
     	if(resourceCL==null) throw new RuntimeException("no RCL defined yet!");
     	return resourceCL;   
     }
+    public ResourceClassLoader getResourceClassLoader(ResourceClassLoader defaultValue) {
+    	if(resourceCL==null) return defaultValue;
+    	return resourceCL;   
+    }
+
 
     protected void setResourceClassLoader(ResourceClassLoader resourceCL) {
     	this.resourceCL=resourceCL;
