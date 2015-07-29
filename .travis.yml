@@ -1,3 +1,2 @@
 language: java
-
-mvn -f loader/pom.xml clean install
+script: mvn -f loader/pom.xml clean install
