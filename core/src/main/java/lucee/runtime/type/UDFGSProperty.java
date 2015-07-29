@@ -74,7 +74,7 @@ public abstract class UDFGSProperty extends MemberSupport implements UDFPlus {
 				Boolean.FALSE,
 				0L,
 				null,
-				new StructImpl()
+				null
 				
 		);
 		
