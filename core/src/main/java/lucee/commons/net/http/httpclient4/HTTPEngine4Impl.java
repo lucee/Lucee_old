@@ -47,6 +47,8 @@ import lucee.runtime.net.proxy.ProxyData;
 import lucee.runtime.net.proxy.ProxyDataImpl;
 import lucee.runtime.op.Caster;
 import lucee.runtime.op.Decision;
+import lucee.runtime.tag.Http;
+import lucee.runtime.type.dt.TimeSpanImpl;
 import lucee.runtime.type.util.CollectionUtil;
 
 import org.apache.http.Header;
@@ -243,7 +245,7 @@ public class HTTPEngine4Impl {
     	if(CollectionUtil.isEmpty(formfields))setContentType(request,charset);
     	setFormFields(request,formfields,charset);
     	setUserAgent(request,useragent);
-    	if(timeout>0)builder.setConnectionTimeToLive(timeout, TimeUnit.MILLISECONDS);
+    	if(timeout>0)Http.setTimeout(builder,TimeSpanImpl.fromMillis(timeout));
     	HttpContext context=setCredentials(builder,hh, username, password,false);  
     	setProxy(builder,request,proxy);
     	CloseableHttpClient client = builder.build();
