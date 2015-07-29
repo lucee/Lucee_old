@@ -1,2 +1,7 @@
 language: java
-script: mvn -f loader/pom.xml clean deploy
+
+notifications:
+  email:
+    - info@lucee.org
+
+script: mvn -f loader/pom.xml clean install
