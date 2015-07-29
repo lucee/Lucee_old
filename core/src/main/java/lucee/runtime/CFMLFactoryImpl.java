@@ -270,6 +270,9 @@ public final class CFMLFactoryImpl extends CFMLFactory {
 			if(base.equals(current)) return "path: "+base;
 			return "path: "+base+" ("+current+")";
 		}
+		catch(NullPointerException npe) {
+			return "(no path available)";
+		}
 		catch(Throwable t) {
 			return "(fail to retrieve path:"+t.getClass().getName()+":"+t.getMessage()+")";
 		}
