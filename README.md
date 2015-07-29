@@ -1,4 +1,10 @@
+
+
+
 ![Lucee](https://bitbucket.org/repo/rX87Rq/images/3392835614-logo-1-color-black-small.png)
+
+![travis](https://travis-ci.org/lucee/Lucee.svg?branch=master)
+
 
 Welcome to the Lucee Server source code repository.
 
