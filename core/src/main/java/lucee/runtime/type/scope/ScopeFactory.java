@@ -69,18 +69,8 @@ public final class ScopeFactory {
             new LocalImpl(),
             new LocalImpl(),
             new LocalImpl(),
-            new LocalImpl(),
-            new LocalImpl(),
-            new LocalImpl(),
-            new LocalImpl(),
-            new LocalImpl(),
-            new LocalImpl(),
-            new LocalImpl(),
-            new LocalImpl(),
-            new LocalImpl(),
             new LocalImpl()
     };
-	private static int count=0;
     
     /**
      * @return returns a Argument scope
@@ -145,25 +135,8 @@ public final class ScopeFactory {
         case Scope.SCOPE_CLUSTER:     return "cluster";
         }
         
-        
-        
         return defaultValue;
     }
     
-    /* *
-     * return a string list of all scope names
-     * @param orderAsInvoked when true the order of the list is the same as they are invoked by the Undefined Scope, when the value is false the list is returned in a alphabetic order 
-     * @return
-     * /
-    public static String[] getAllScopes(boolean orderAsInvoked) {
-    	if(!orderAsInvoked){
-    		return new String[]{
-        			"application","arguments","caller","cgi","client","cluster","cookie","form","local","request","server","session","url","variables"
-            };
-    	}
-    	return new String[]{
-    			"local","arguments","variables","cgi","url","form","cookie","client","application","caller","cluster","request","server","session"
-        };
-    }*/
 
 }
