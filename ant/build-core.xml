@@ -6,27 +6,9 @@
   
 
   <property name="build.compiler" value="extJavac"/>
-
   <property name="agent" value="lucee.runtime.instrumentation.ExternalAgent"/>
-
-  <property name="srcLoader" location="${rootDir}/loader/src/main/java"/>
-  <property name="srcCore" location="${rootDir}/core/src/main/java"/>
-  <property name="trgLoader" location="${rootDir}/loader/target"/>
-  <property name="trgCore" location="${rootDir}/core/target"/>
-  <property name="srcCFML" location="${rootDir}/core/src/main/cfml"/>
-  <property name="srcInst" location="${rootDir}/instrumentation/src/main/java"/> 
-
-  
-  <!-- <property name="srcDebug" location="../debug/src/main/java"/> -->
-
-  <property name="ant" location="${rootDir}/ant"/>
-  <property name="temp" location="${rootDir}/temp"/>
-  <property name="loader" location="${temp}/loader"/>
-  <property name="core" location="${temp}/core"/>
-  
   <property name="bundleName" value="Lucee Core"/>
   <property name="bundleSymbolicName" value="lucee.core"/>
-  <property file="${rootDir}/build.properties"/>
 
 
   
@@ -76,6 +58,19 @@
 
 
   <target name="init">
+
+    <property name="srcLoader" location="${rootDir}/loader/src/main/java"/>
+    <property name="srcCore" location="${rootDir}/core/src/main/java"/>
+    <property name="trgLoader" location="${rootDir}/loader/target"/>
+    <property name="trgCore" location="${rootDir}/core/target"/>
+    <property name="srcCFML" location="${rootDir}/core/src/main/cfml"/>
+    <property name="srcInst" location="${rootDir}/instrumentation/src/main/java"/> 
+    <property name="ant" location="${rootDir}/ant"/>
+    <property name="temp" location="${rootDir}/temp"/>
+    <property name="loader" location="${temp}/loader"/>
+    <property name="core" location="${temp}/core"/>
+    <property file="${rootDir}/build.properties"/>
+
     <echo message="${version}"/>
     <echo message="${name}"/>
     <echo message="${name.explanation}"/>
@@ -181,7 +176,7 @@
 
     <!-- set lucee/version file -->
     <currentTime property="ct" />
-    <echo file="${temp}/loader/output/lucee/version" message="${version}:${ct}" encoding="UTF-8"/>
+    <echo file="${temp}/loader/lucee/version" message="${version}:${ct}" encoding="UTF-8"/>
 
 
   </target>
@@ -307,25 +302,47 @@
     <!-- create the luce core -->
     <jar 
         basedir="${core}" 
-        jarfile="${trgLoader}/lucee-${version}.lco" 
+        jarfile="${trgLoader}/${version}.lco" 
         manifest="${core}/META-INF/MANIFEST.MF"/>
 
     <!-- copy to core to the classes folder -->
     <copy 
-        file="${trgLoader}/lucee-${version}.lco" 
+        file="${trgLoader}/${version}.lco" 
         tofile="${outputDir}/core/core.lco"/>
 
     <!-- version -->
     <currentTime property="ct" />
     <echo file="${outputDir}/lucee/version" message="${version}:${ct}" encoding="UTF-8"/>
 
+    
+    <delete dir="${temp}"/>
   </target>
-  <target name="buildOld" depends="buildCore" description="generate the loader jar" >  
-
+  <target name="buildLoaderAnt" depends="__build" description="generate the loader jar" >  
+    
+    <!-- create core -->
     <jar 
         basedir="${core}" 
-        jarfile="${dist}/lucee-${version}.lco" 
-        manifest="${core}/META-INF/MANIFEST.MF"/>
+        jarfile="${temp}/loader/core/core.lco" 
+        manifest="${core}/META-INF/MANIFEST.MF"/> 
+
+    <!-- copy to core to the target folder -->
+    <copy 
+        file="${temp}/loader/core/core.lco" 
+        tofile="${trgLoader}/${version}.lco"/>
+
+    <!-- version -->
+    <currentTime property="ct" />
+    <echo file="${temp}/loader/lucee/version" message="${version}:${ct}" encoding="UTF-8"/>
+
+
+    <!-- genrates the jar from the loader -->
+    <jar 
+      basedir="${temp}/loader" 
+      jarfile="${trgLoader}/lucee-${version}.jar" 
+      manifest="${srcLoader}/META-INF/MANIFEST.MF"/>
+
+
+    <delete dir="${temp}"/>
 
   </target>
 
