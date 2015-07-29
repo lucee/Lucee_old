@@ -47,13 +47,13 @@ import lucee.runtime.reflection.Reflector;
 import lucee.transformer.library.ClassDefinitionImpl;
 
 import org.apache.log4j.Appender;
+import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.apache.log4j.net.SyslogAppender;
 import org.apache.log4j.xml.XMLLayout;
 
 public class Log4jUtil {
@@ -189,10 +189,26 @@ public class Log4jUtil {
 				Object obj = ClassUtil.loadInstance(cd.getClazz(null),null,null);
 				if(obj instanceof Appender) {
 					appender=(Appender) obj;
+					AppenderSkeleton as=obj instanceof AppenderSkeleton?(AppenderSkeleton)obj:null;
+					
 					Iterator<Entry<String, String>> it = appenderArgs.entrySet().iterator();
 					Entry<String, String> e;
+					String n;
 					while(it.hasNext()){
 						e = it.next();
+						n=e.getKey();
+						if(as!=null) {
+							if("threshold".equalsIgnoreCase(n)) {
+								Level level = Level.toLevel(e.getValue(),null);
+								if(level!=null) {
+									as.setThreshold(level);
+									continue;
+								}
+							}
+						}
+
+						
+						
 						try {
 							Reflector.callSetter(obj, e.getKey(), e.getValue());
 						}
@@ -200,7 +216,6 @@ public class Log4jUtil {
 							e1.printStackTrace(); // TODO log
 						}
 					}
-					org.apache.log4j.net.SyslogAppender s=(SyslogAppender) appender;
 				}
 			}
 		}
