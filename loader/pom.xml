@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
 
@@ -13,7 +11,7 @@
 
   <groupId>org.lucee</groupId>
   <artifactId>lucee</artifactId>
-  <version>5.0.0.52-SNAPSHOT</version>
+  <version>5.0.0.56-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Lucee Loader Build</name>
@@ -175,23 +173,23 @@
                 <configuration>
                   <tasks>
                     <!-- get dependencies -->
-                    <dependencyfilesets prefix="mydeps."/>
-                    <path id="maven-ant-tasks.classpath" >
-                      <fileset refid="mydeps.org.apache.maven:maven-ant-tasks:jar"/>
+                    <dependencyfilesets prefix="mydeps." />
+                    <path id="maven-ant-tasks.classpath">
+                      <fileset refid="mydeps.org.apache.maven:maven-ant-tasks:jar" />
                     </path>
-                    <pathconvert property="dependencies" refid="mydeps.maven.project.dependencies"/>
+                    <pathconvert property="dependencies" refid="mydeps.maven.project.dependencies" />
                     
-                    <property name="version" value="${project.version}"/>
+                    <property name="version" value="${project.version}" />
                         
-                    <!-- <property name="compile_classpath" refid="maven.compile.classpath"/> -->
-                    <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                    <!-- <property name="compile_classpath" refid="maven.compile.classpath" /> -->
+                    <property name="runtime_classpath" refid="maven.runtime.classpath" />
                         
-                    <property name="outputDir" value="${project.build.outputDirectory}"/>
-                    <!-- <property name="sourceDir" value="${project.build.sourceDirectory}"/> -->
-                    <property name="baseDir" value="${basedir}"/>
+                    <property name="outputDir" value="${project.build.outputDirectory}" />
+                    <!-- <property name="sourceDir" value="${project.build.sourceDirectory}" /> -->
+                    <property name="baseDir" value="${basedir}" />
                     <dirname file="${baseDir}" property="rootDir" />
 
-                    <ant antfile="../ant/build-core.xml" target="buildLoader"/>                    
+                    <ant antfile="../ant/build-core.xml" target="buildLoader" />                    
 
 
                   </tasks>
@@ -264,7 +262,7 @@
       								</goals>
       							</pluginExecutionFilter>
       							<action>
-      								<ignore></ignore>
+      								<ignore />
       							</action>
       						</pluginExecution>
       					</pluginExecutions>
