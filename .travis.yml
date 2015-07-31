@@ -20,10 +20,10 @@ branches:
 #	skip_cleanup: true
 
 after_success:
-- git add -f .
+- git add -f . 
 - git commit -m "commit from travis" 
-#- git remote -v
-#- git remote set-url origin https://github.com/$TRAVIS_REPO_SLUG.git 
+- git remote -v
+- git remote set-url origin `git config --get remote.origin.url`
 - git push
 
 notifications:
