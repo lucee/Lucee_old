@@ -25,10 +25,12 @@ after_success:
 
 - git config --global user.email "${GIT_EMAIL}"
 - git config --global user.name "${GIT_USERNAME}"
+- git config --global user.password "${GIT_PASSWORD}"
 - git add -f . 
 - git commit -m "commit from travis" 
 - git remote -v
-- "git remote set-url origin `git config --get remote.origin.url`"
+#- "git remote set-url origin `git config --get remote.origin.url`"
+- git remote set-url origin https://github.com/lucee/Lucee.git
 - git push
 
 notifications:
