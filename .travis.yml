@@ -16,8 +16,8 @@ branches:
   only:
     - master
 
-deploy:
-	skip_cleanup: true
+#deploy:
+#	skip_cleanup: true
 
 after_success:
 - git commit -m "commit from travis" 
