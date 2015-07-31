@@ -446,19 +446,19 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			Element defaultProvider = defaultProviders[defaultProviders.length - 1];
 			ClassDefinition defProv=getClassDefinition(defaultProvider,"",config.getIdentification());
 			
-			String strDefaultProviderComponent = defaultProvider.getAttribute("component");
+			String strDefaultProviderComponent = getAttr(defaultProvider,"component");
 			if (StringUtil.isEmpty(strDefaultProviderComponent))
-				strDefaultProviderComponent = defaultProvider.getAttribute("class");
+				strDefaultProviderComponent = getAttr(defaultProvider,"class");
 			
 			// class
 			if (defProv.hasClass()) {
-				config.setDefaultResourceProvider(defProv.getClazz(), toArguments(defaultProvider.getAttribute("arguments"), true));
+				config.setDefaultResourceProvider(defProv.getClazz(), toArguments(getAttr(defaultProvider,"arguments"), true));
 			}
 
 			// component
 			else if (!StringUtil.isEmpty(strDefaultProviderComponent)) {
 				strDefaultProviderComponent = strDefaultProviderComponent.trim();
-				Map<String, String> args = toArguments(defaultProvider.getAttribute("arguments"), true);
+				Map<String, String> args = toArguments(getAttr(defaultProvider,"arguments"), true);
 				args.put("component", strDefaultProviderComponent);
 				config.setDefaultResourceProvider(CFMLResourceProvider.class, args);
 			}
@@ -477,24 +477,24 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			ClassDefinition s3Class = new ClassDefinitionImpl(S3ResourceProvider.class);;
 			for (int i = 0; i < providers.length; i++) {
 				prov=getClassDefinition(providers[i], "",config.getIdentification());
-				strProviderCFC = providers[i].getAttribute("component");
+				strProviderCFC = getAttr(providers[i],"component");
 				if(StringUtil.isEmpty(strProviderCFC))
-					strProviderCFC = providers[i].getAttribute("class");
+					strProviderCFC = getAttr(providers[i],"class");
 				
 				// ignore S3 extension
 				if ("lucee.extension.io.resource.type.s3.S3ResourceProvider".equals(prov.getClassName()))
 					prov=new ClassDefinitionImpl(S3ResourceProvider.class);
 
-				strProviderScheme = providers[i].getAttribute("scheme");
+				strProviderScheme = getAttr(providers[i],"scheme");
 				// class
 				if (prov.hasClass() && !StringUtil.isEmpty(strProviderScheme)) {
 					strProviderScheme = strProviderScheme.trim().toLowerCase();
-					config.addResourceProvider(strProviderScheme, prov, toArguments(providers[i].getAttribute("arguments"), true));
+					config.addResourceProvider(strProviderScheme, prov, toArguments(getAttr(providers[i],"arguments"), true));
 
 					// patch for user not having
 					if (strProviderScheme.equalsIgnoreCase("http")) {
 						httpClass = prov;
-						httpArgs = toArguments(providers[i].getAttribute("arguments"), true);
+						httpArgs = toArguments(getAttr(providers[i],"arguments"), true);
 					}
 					else if (strProviderScheme.equalsIgnoreCase("https"))
 						hasHTTPs = true;
@@ -506,7 +506,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				else if (!StringUtil.isEmpty(strProviderCFC) && !StringUtil.isEmpty(strProviderScheme)) {
 					strProviderCFC = strProviderCFC.trim();
 					strProviderScheme = strProviderScheme.trim().toLowerCase();
-					Map<String, String> args = toArguments(providers[i].getAttribute("arguments"), true);
+					Map<String, String> args = toArguments(getAttr(providers[i],"arguments"), true);
 					args.put("component", strProviderCFC);
 					config.addResourceProvider(strProviderScheme, CFMLResourceProvider.class, args);
 				}
@@ -525,9 +525,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 	
 	
 	private static ClassDefinition getClassDefinition(Element el, String prefix, Identification id) {
-		String cn = el.getAttribute(prefix+"class");
-		String bn = el.getAttribute(prefix+"bundle-name");
-		String bv = el.getAttribute(prefix+"bundle-version");
+		String cn = getAttr(el,prefix+"class");
+		String bn = getAttr(el,prefix+"bundle-name");
+		String bv = getAttr(el,prefix+"bundle-version");
 
 		// proxy jar libary no longer provided, so if still this class name is used ....
 		if("com.microsoft.jdbc.sqlserver.SQLServerDriver".equals(cn)) {
@@ -571,7 +571,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			String strId;
 			for (int i = 0; i < handlers.length; i++) {
 				cd=getClassDefinition(handlers[i], "",config.getIdentification());
-				strId = handlers[i].getAttribute("id");
+				strId = getAttr(handlers[i],"id");
 				
 				if (cd.hasClass() && !StringUtil.isEmpty(strId)) {
 					strId = strId.trim().toLowerCase();
@@ -618,8 +618,8 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			int def = HTMLDumpWriter.DEFAULT_NONE;
 			for (int i = 0; i < writers.length; i++) {
 				cd=getClassDefinition(writers[i], "", config.getIdentification());
-				strName = writers[i].getAttribute("name");
-				strDefault = writers[i].getAttribute("default");
+				strName = getAttr(writers[i],"name");
+				strDefault = getAttr(writers[i],"default");
 				clazz = cd.getClazz(null);
 				if (clazz != null && !StringUtil.isEmpty(strName)) {
 					if (StringUtil.isEmpty(strDefault))
@@ -690,7 +690,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			ConfigServer cs = (ConfigServer) config;
 			Element listener = getChildByName(doc.getDocumentElement(), "listener");
 			ClassDefinition cd = getClassDefinition(listener, "",config.getIdentification());
-			String strArguments = listener.getAttribute("arguments");
+			String strArguments = getAttr(listener,"arguments");
 			if (strArguments == null)
 				strArguments = "";
 
@@ -723,7 +723,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 	private static void loadVersion(ConfigImpl config, Document doc) {
 		Element luceeConfiguration = doc.getDocumentElement();
-		String strVersion = luceeConfiguration.getAttribute("version");
+		String strVersion = getAttr(luceeConfiguration,"version");
 		config.setVersion(Caster.toDoubleValue(strVersion, 1.0d));
 	}
 
@@ -749,7 +749,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		
 		// API Key
 		String apiKey=null;
-		String str = doc.getDocumentElement().getAttribute("api-key");
+		String str = getAttr(doc.getDocumentElement(),"api-key");
 		if(!StringUtil.isEmpty(str,true)) apiKey=str.trim();
 		else if(configServer != null)
 			apiKey=configServer.getIdentification().getApiKey(); // if there is no web api key the server api key is used
@@ -800,7 +800,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// Serial Number
 		if (config instanceof ConfigServer) {
 			Element luceeConfiguration = doc.getDocumentElement();
-			String serial = luceeConfiguration.getAttribute("serial-number");
+			String serial = getAttr(luceeConfiguration,"serial-number");
 			if (!StringUtil.isEmpty(serial))
 				config.setSerialNumber(serial);
 		}
@@ -826,7 +826,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			// Web SecurityManager
 			Element[] accessors = getChildren(security, "accessor");
 			for (int i = 0; i < accessors.length; i++) {
-				String id = accessors[i].getAttribute("id");
+				String id = getAttr(accessors[i],"id");
 				if (id != null) {
 					sm = _toSecurityManager(accessors[i]);
 					elFileAccesses = getChildren(accessors[i], "file-access");
@@ -855,7 +855,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		String path;
 		Resource res;
 		for (int i = 0; i < fileAccesses.length; i++) {
-			path = fileAccesses[i].getAttribute("path");
+			path = getAttr(fileAccesses[i],"path");
 			if (!StringUtil.isEmpty(path)) {
 				res = config.getResource(path);
 				if (res.isDirectory())
@@ -878,11 +878,11 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 	}
 
 	private static short _attr(Element el, String attr, short _default) {
-		return SecurityManagerImpl.toShortAccessValue(el.getAttribute(attr), _default);
+		return SecurityManagerImpl.toShortAccessValue(getAttr(el,attr), _default);
 	}
 
 	private static short _attr2(Element el, String attr, short _default) {
-		String strAccess = el.getAttribute(attr);
+		String strAccess = getAttr(el,attr);
 		if (StringUtil.isEmpty(strAccess))
 			return _default;
 		strAccess = strAccess.trim().toLowerCase();
@@ -1472,22 +1472,16 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			for (int i = 0; i < _mappings.length; i++) {
 				el = _mappings[i];
 
-				// File
-				// physical=getDir(sc,el.getAttribute("physical"),null,configDir);
-				// File
-				// archive=getFile(sc,el.getAttribute("archive"),null,configDir);
-
 				String physical = el.getAttribute("physical");
 				String archive = el.getAttribute("archive");
-				String virtual = el.getAttribute("virtual");
-				String listType = el.getAttribute("listener-type");
-				String listMode = el.getAttribute("listener-mode");
+				String virtual = getAttr(el,"virtual");
+				String listType = getAttr(el,"listener-type");
+				String listMode = getAttr(el,"listener-mode");
 				
-				boolean readonly = toBoolean(el.getAttribute("readonly"), false);
-				boolean hidden = toBoolean(el.getAttribute("hidden"), false);
-				boolean toplevel = toBoolean(el.getAttribute("toplevel"), true);
-				//int clMaxEl = toInt(el.getAttribute("classloader-max-elements"), 100);
-
+				boolean readonly = toBoolean(getAttr(el,"readonly"), false);
+				boolean hidden = toBoolean(getAttr(el,"hidden"), false);
+				boolean toplevel = toBoolean(getAttr(el,"toplevel"), true);
+				
 				if(config instanceof ConfigServer && (virtual.equalsIgnoreCase("/lucee-server/") || virtual.equalsIgnoreCase("/lucee-server-context/"))) {
 					hasServerContext=true;
 				}
@@ -1528,10 +1522,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 					if("/lucee/".equalsIgnoreCase(virtual) || "/lucee".equalsIgnoreCase(virtual) ||
 						"/lucee-server/".equalsIgnoreCase(virtual) || "/lucee-server-context".equalsIgnoreCase(virtual))
 						insTemp=ConfigImpl.INSPECT_ONCE;
-					//boolean trusted = toBoolean(el.getAttribute("trusted"), false);
 					
 					
-					String primary = el.getAttribute("primary");
+					String primary = getAttr(el,"primary");
 					boolean physicalFirst = primary == null || !primary.equalsIgnoreCase("archive");
 
 					tmp = new MappingImpl(config, virtual, physical, archive, insTemp, physicalFirst, hidden, readonly, toplevel, false, false, listener,listenerMode,listenerType);
@@ -1579,10 +1572,10 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 	}
 
 	private static short inspectTemplate(Element el) {
-		String strInsTemp = el.getAttribute("inspect-template");
-		if(StringUtil.isEmpty(strInsTemp)) strInsTemp = el.getAttribute("inspect");
+		String strInsTemp = getAttr(el,"inspect-template");
+		if(StringUtil.isEmpty(strInsTemp)) strInsTemp = getAttr(el,"inspect");
 		if(StringUtil.isEmpty(strInsTemp)) {
-			Boolean trusted=Caster.toBoolean(el.getAttribute("trusted"),null);
+			Boolean trusted=Caster.toBoolean(getAttr(el,"trusted"),null);
 			if(trusted!=null) {
 				if(trusted.booleanValue()) return ConfigImpl.INSPECT_NEVER;
 				return ConfigImpl.INSPECT_ALWAYS;
@@ -1599,7 +1592,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		Element el = getChildByName(doc.getDocumentElement(), "rest");
 
 		// list
-		Boolean list = Caster.toBoolean(el.getAttribute("list"), null);
+		Boolean list = Caster.toBoolean(getAttr(el,"list"), null);
 		if (list != null) {
 			config.setRestList(list.booleanValue());
 		}
@@ -1628,10 +1621,10 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			for (int i = 0; i < _mappings.length; i++) {
 				el = _mappings[i];
 				String physical = el.getAttribute("physical");
-				String virtual = el.getAttribute("virtual");
-				boolean readonly = toBoolean(el.getAttribute("readonly"), false);
-				boolean hidden = toBoolean(el.getAttribute("hidden"), false);
-				boolean _default = toBoolean(el.getAttribute("default"), false);
+				String virtual = getAttr(el,"virtual");
+				boolean readonly = toBoolean(getAttr(el,"readonly"), false);
+				boolean hidden = toBoolean(getAttr(el,"hidden"), false);
+				boolean _default = toBoolean(getAttr(el,"default"), false);
 				if (physical != null) {
 					tmp = new lucee.runtime.rest.Mapping(config, virtual, physical, hidden, readonly, _default);
 					mappings.put(tmp.getVirtual(), tmp);
@@ -1649,7 +1642,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			;
 
 		// deploy
-		String strConfig = el.getAttribute("configuration");
+		String strConfig = getAttr(el,"configuration");
 		if (!StringUtil.isEmpty(strConfig))
 			config.setAMFConfigType(strConfig);
 		else if (configServer != null)
@@ -1657,15 +1650,15 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// caster we do not update this, because this only exists for backward compatibility
 		// ClassDefinition cdCaster = getClassDefinition(el, "caster-", config.getIdentification());
-		String strCaster = el.getAttribute("caster");
+		String strCaster = getAttr(el,"caster");
 		if (StringUtil.isEmpty(strCaster)) {
-			strCaster = el.getAttribute("caster-class");
+			strCaster = getAttr(el,"caster-class");
 		}
 		
 		// arguments
-		String strArgs = el.getAttribute("caster-arguments");
+		String strArgs = getAttr(el,"caster-arguments");
 		if (StringUtil.isEmpty(strArgs))
-			strArgs = el.getAttribute("caster-class-arguments");
+			strArgs = getAttr(el,"caster-class-arguments");
 		toArguments(strArgs, false);
 
 		if (!StringUtil.isEmpty(strCaster))
@@ -1686,27 +1679,27 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		boolean readOnly=false;
 		for(int i=0;i<children.length;i++){
 			child=children[i];
-			name=StringUtil.trim(child.getAttribute("name"),"");
+			name=StringUtil.trim(getAttr(child,"name"),"");
 			
 			// appender
 			cdAppender = getClassDefinition(child, "appender-", config.getIdentification());
 			if(!cdAppender.hasClass()) {
-				tmp=StringUtil.trim(child.getAttribute("appender"),"");
+				tmp=StringUtil.trim(getAttr(child,"appender"),"");
 				cdAppender=Log4jUtil.appenderClassDefintion(tmp);
 			}
-			appenderArgs=StringUtil.trim(child.getAttribute("appender-arguments"),"");
+			appenderArgs=StringUtil.trim(getAttr(child,"appender-arguments"),"");
 			
 			// layout
 			cdLayout = getClassDefinition(child, "layout-", config.getIdentification());
 			if(!cdLayout.hasClass()) {
-				tmp=StringUtil.trim(child.getAttribute("layout"),"");
+				tmp=StringUtil.trim(getAttr(child,"layout"),"");
 				cdLayout=Log4jUtil.layoutClassDefintion(tmp);
 			}
-			layoutArgs=StringUtil.trim(child.getAttribute("layout-arguments"),"");
+			layoutArgs=StringUtil.trim(getAttr(child,"layout-arguments"),"");
 			
 			
-			level=Log4jUtil.toLevel(StringUtil.trim(child.getAttribute("level"),""),Level.ERROR);
-			readOnly=Caster.toBooleanValue(child.getAttribute("read-only"),false);
+			level=Log4jUtil.toLevel(StringUtil.trim(getAttr(child,"level"),""),Level.ERROR);
+			readOnly=Caster.toBooleanValue(getAttr(child,"read-only"),false);
 			// ignore when no appender/name is defined
 			if(cdAppender.hasClass() && !StringUtil.isEmpty(name)) {
 				Map<String, String> appArgs = cssStringToMap(appenderArgs, true,true);
@@ -1746,7 +1739,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		Element el = getChildByName(doc.getDocumentElement(), "execution-log");
 
 		// enabled
-		Boolean bEnabled = Caster.toBoolean(el.getAttribute("enabled"), null);
+		Boolean bEnabled = Caster.toBoolean(getAttr(el,"enabled"), null);
 		if (bEnabled == null) {
 			if (hasServer)
 				config.setExecutionLogEnabled(configServer.getExecutionLogEnabled());
@@ -1785,7 +1778,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 
 		// class
-		String strClass = el.getAttribute("class");
+		String strClass = getAttr(el,"class");
 		Class clazz;
 		if (!StringUtil.isEmpty(strClass)) {
 			try {
@@ -1812,9 +1805,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				SystemOut.printDate(config.getOutWriter(), "loaded ExecutionLog class " + clazz.getName());
 
 			// arguments
-			String strArgs = el.getAttribute("arguments");
+			String strArgs = getAttr(el,"arguments");
 			if (StringUtil.isEmpty(strArgs))
-				strArgs = el.getAttribute("class-arguments");
+				strArgs = getAttr(el,"class-arguments");
 			Map<String, String> args = toArguments(strArgs, true);
 
 			config.setExecutionLogFactory(new ExecutionLogFactory(clazz, args));
@@ -1869,7 +1862,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			String label;
 			for(Element driver:drivers){
 				cd=getClassDefinition(driver, "", config.getIdentification());
-				label=driver.getAttribute("label");
+				label=getAttr(driver,"label");
 				// check if label exists
 				if(StringUtil.isEmpty(label)) {
 					log.error("Datasource", "missing label for jdbc driver ["+cd.getClassName()+"]");
@@ -1937,10 +1930,10 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// if(databases==null)databases=doc.createElement("data-sources");
 
 		// PSQ
-		String strPSQ = databases.getAttribute("psq");
+		String strPSQ = getAttr(databases,"psq");
 		if (StringUtil.isEmpty(strPSQ)) {
 			// prior version was buggy, was the opposite
-			strPSQ = databases.getAttribute("preserve-single-quote");
+			strPSQ = getAttr(databases,"preserve-single-quote");
 			if (!StringUtil.isEmpty(strPSQ)) {
 				Boolean b = Caster.toBoolean(strPSQ, null);
 				if (b != null)
@@ -1967,15 +1960,26 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			if (dataSource.hasAttribute("database")) {
 				
 				try {
-					setDatasource(config, datasources, dataSource.getAttribute("name")
+					setDatasource(config, datasources
+						,getAttr(dataSource,"name")
 						,getClassDefinition(dataSource, "", config.getIdentification())
-						, dataSource.getAttribute("host"),
-						dataSource.getAttribute("database"), Caster.toIntValue(dataSource.getAttribute("port"), -1), dataSource.getAttribute("dsn"), dataSource.getAttribute("username"),
-						ConfigWebUtil.decrypt(dataSource.getAttribute("password")), Caster.toIntValue(dataSource.getAttribute("connectionLimit"), -1),
-						Caster.toIntValue(dataSource.getAttribute("connectionTimeout"), -1), Caster.toLongValue(dataSource.getAttribute("metaCacheTimeout"), 60000),
-						toBoolean(dataSource.getAttribute("blob"), true), toBoolean(dataSource.getAttribute("clob"), true),
-						Caster.toIntValue(dataSource.getAttribute("allow"), DataSource.ALLOW_ALL), toBoolean(dataSource.getAttribute("validate"), false),
-						toBoolean(dataSource.getAttribute("storage"), false), dataSource.getAttribute("timezone"), toStruct(dataSource.getAttribute("custom")), dataSource.getAttribute("dbdriver"));
+						,getAttr(dataSource,"host")
+						,getAttr(dataSource,"database")
+						,Caster.toIntValue(getAttr(dataSource,"port"), -1)
+						,getAttr(dataSource,"dsn")
+						,getAttr(dataSource,"username")
+						,ConfigWebUtil.decrypt(getAttr(dataSource,"password"))
+						,Caster.toIntValue(getAttr(dataSource,"connectionLimit"), -1)
+						,Caster.toIntValue(getAttr(dataSource,"connectionTimeout"), -1)
+						,Caster.toLongValue(getAttr(dataSource,"metaCacheTimeout"), 60000)
+						,toBoolean(getAttr(dataSource,"blob"), true)
+						,toBoolean(getAttr(dataSource,"clob"), true)
+						,Caster.toIntValue(getAttr(dataSource,"allow"), DataSource.ALLOW_ALL)
+						,toBoolean(getAttr(dataSource,"validate"), false)
+						,toBoolean(getAttr(dataSource,"storage"), false)
+						,getAttr(dataSource,"timezone")
+						,toStruct(getAttr(dataSource,"custom"))
+						,getAttr(dataSource,"dbdriver"));
 				} catch (Exception e) {
 					log.error("Datasource", e);
 				}
@@ -2038,7 +2042,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// default cache
 		for(int i=0;i<types.length;i++){
-			String def = eCache.getAttribute("default-"+typeNames[i]);
+			String def = getAttr(eCache,"default-"+typeNames[i]);
 			if (hasAccess && !StringUtil.isEmpty(def)) {
 				config.setCacheDefaultConnectionName(types[i], def);
 			}
@@ -2065,11 +2069,11 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		if (hasAccess)
 			for (int i = 0; i < eConnections.length; i++) {
 				Element eConnection = eConnections[i];
-				name = eConnection.getAttribute("name");
+				name = getAttr(eConnection,"name");
 				cd = getClassDefinition(eConnection, "", config.getIdentification());
 				
 				try {
-					Struct custom = toStruct(eConnection.getAttribute("custom"));
+					Struct custom = toStruct(getAttr(eConnection,"custom"));
 					
 					// Workaround for old EHCache class defintions
 					if (cd.getClassName()!=null && cd.getClassName().endsWith(".EHCacheLite")) {
@@ -2087,8 +2091,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 						cd=new ClassDefinitionImpl(EHCache.class);
 					// else cacheClazz = cd.getClazz();
 
-					cc = new CacheConnectionImpl(config, name, cd, custom, Caster.toBooleanValue(
-							eConnection.getAttribute("read-only"), false), Caster.toBooleanValue(eConnection.getAttribute("storage"), false));
+					cc = new CacheConnectionImpl(config, name, cd, custom, 
+							Caster.toBooleanValue(getAttr(eConnection,"read-only"), false), 
+							Caster.toBooleanValue(getAttr(eConnection,"storage"), false));
 					if (!StringUtil.isEmpty(name)) {
 						caches.put(name.toLowerCase(), cc);
 					}
@@ -2226,10 +2231,14 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		if (hasAccess) {
 			for (int i = 0; i < gateways.length; i++) {
 				Element eConnection = gateways[i];
-				id = eConnection.getAttribute("id").trim().toLowerCase();
+				id = getAttr(eConnection,"id").trim().toLowerCase();
 
-				ge = new GatewayEntryImpl(engine, id, getClassDefinition(eConnection, "", config.getIdentification()), eConnection.getAttribute("cfc-path"), eConnection.getAttribute("listener-cfc-path"),
-						eConnection.getAttribute("startup-mode"), toStruct(eConnection.getAttribute("custom")), Caster.toBooleanValue(eConnection.getAttribute("read-only"), false));
+				ge = new GatewayEntryImpl(engine, id, getClassDefinition(eConnection, "", config.getIdentification()), 
+						eConnection.getAttribute("cfc-path"), 
+						eConnection.getAttribute("listener-cfc-path"),
+						getAttr(eConnection,"startup-mode"), 
+						toStruct(getAttr(eConnection,"custom")), 
+						Caster.toBooleanValue(getAttr(eConnection,"read-only"), false));
 
 				if (!StringUtil.isEmpty(id)) {
 					mapGateways.put(id.toLowerCase(), ge);
@@ -2322,7 +2331,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// String virtualx="/custom-tag/";
 
 		// do patch cache
-		String strDoPathcache = customTag.getAttribute("use-cache-path");
+		String strDoPathcache = getAttr(customTag,"use-cache-path");
 		if (hasAccess && !StringUtil.isEmpty(strDoPathcache, true)) {
 			config.setUseCTPathCache(Caster.toBooleanValue(strDoPathcache.trim(), true));
 		}
@@ -2335,7 +2344,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setDoLocalCustomTag(false);
 		}
 		else {
-			String strDoCTLocalSearch = customTag.getAttribute("custom-tag-local-search");
+			String strDoCTLocalSearch = getAttr(customTag,"custom-tag-local-search");
 			if (hasAccess && !StringUtil.isEmpty(strDoCTLocalSearch)) {
 				config.setDoLocalCustomTag(Caster.toBooleanValue(strDoCTLocalSearch.trim(), true));
 			}
@@ -2349,7 +2358,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setDoCustomTagDeepSearch(false);
 		}
 		else {
-			String strDoCTDeepSearch = customTag.getAttribute("custom-tag-deep-search");
+			String strDoCTDeepSearch = getAttr(customTag,"custom-tag-deep-search");
 			if (hasAccess && !StringUtil.isEmpty(strDoCTDeepSearch)) {
 				config.setDoCustomTagDeepSearch(Caster.toBooleanValue(strDoCTDeepSearch.trim(), false));
 			}
@@ -2363,7 +2372,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setCustomTagExtensions(Constants.getComponentExtensions());
 		}
 		else {
-			String strExtensions = customTag.getAttribute("extensions");
+			String strExtensions = getAttr(customTag,"extensions");
 			if (hasAccess && !StringUtil.isEmpty(strExtensions)) {
 				try {
 					String[] arr = ListUtil.toStringArray(ListUtil.listToArrayRemoveEmpty(strExtensions, ","));
@@ -2386,13 +2395,13 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				Element ctMapping = ctMappings[i];
 				String physical = ctMapping.getAttribute("physical");
 				String archive = ctMapping.getAttribute("archive");
-				boolean readonly = toBoolean(ctMapping.getAttribute("readonly"), false);
-				boolean hidden = toBoolean(ctMapping.getAttribute("hidden"), false);
-				//boolean trusted = toBoolean(ctMapping.getAttribute("trusted"), false);
+				boolean readonly = toBoolean(getAttr(ctMapping,"readonly"), false);
+				boolean hidden = toBoolean(getAttr(ctMapping,"hidden"), false);
+				//boolean trusted = toBoolean(getAttr(ctMapping,"trusted"), false);
 				short inspTemp=inspectTemplate(ctMapping);
-				//int clMaxEl = toInt(ctMapping.getAttribute("classloader-max-elements"), 100);
+				//int clMaxEl = toInt(getAttr(ctMapping,"classloader-max-elements"), 100);
 
-				String primary = ctMapping.getAttribute("primary");
+				String primary = getAttr(ctMapping,"primary");
 
 				boolean physicalFirst = archive == null || !primary.equalsIgnoreCase("archive");
 				hasSet = true;
@@ -2466,7 +2475,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		Element luceeConfiguration = doc.getDocumentElement();
 		
 		// salt (every context need to have a salt)
-		String salt=luceeConfiguration.getAttribute("salt");
+		String salt=getAttr(luceeConfiguration,"salt");
 		if(StringUtil.isEmpty(salt,true)) throw new RuntimeException("context is invalid, there is no salt!");
 		config.setSalt(salt=salt.trim());
 				
@@ -2480,7 +2489,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		
 		if(config instanceof ConfigServerImpl) {
 			ConfigServerImpl csi=(ConfigServerImpl)config;
-			String keyList=luceeConfiguration.getAttribute("auth-keys");
+			String keyList=getAttr(luceeConfiguration,"auth-keys");
 			if(!StringUtil.isEmpty(keyList)) {
 				String[] keys = ListUtil.trimItems(ListUtil.toStringArray(ListUtil.toListRemoveEmpty(keyList, ',')));
 				for(int i=0;i<keys.length;i++){
@@ -2500,7 +2509,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 
 		// mode
-		String mode = luceeConfiguration.getAttribute("mode");
+		String mode = getAttr(luceeConfiguration,"mode");
 		if (!StringUtil.isEmpty(mode, true)) {
 			mode = mode.trim();
 			if ("custom".equalsIgnoreCase(mode))
@@ -2513,7 +2522,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 
 		// check config file for changes
-		String cFc = luceeConfiguration.getAttribute("check-for-changes");
+		String cFc = getAttr(luceeConfiguration,"check-for-changes");
 		if (!StringUtil.isEmpty(cFc, true)) {
 			config.setCheckForChangesInConfigFile(Caster.toBooleanValue(cFc.trim(), false));
 		}
@@ -2547,9 +2556,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			if (tags != null) {
 				for (int i = 0; i < tags.length; i++) {
 					tag = tags[i];
-					ns = tag.getAttribute("namespace");
-					nss = tag.getAttribute("namespace-seperator");
-					n = tag.getAttribute("name");
+					ns = getAttr(tag,"namespace");
+					nss = getAttr(tag,"namespace-seperator");
+					n = getAttr(tag,"name");
 					cd=getClassDefinition(tag, "", config.getIdentification());
 					config.addTag(ns, nss, n,CFMLEngine.DIALECT_BOTH, cd);
 				}
@@ -2565,9 +2574,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			Map<Key, Map<Key, Object>> trg=new HashMap<Key, Map<Key,Object>>();
 			for (int i = 0; i < defaults.length; i++) {
 				def = defaults[i];
-				tagName = def.getAttribute("tag");
-				attrName = def.getAttribute("attribute-name");
-				attrValue = def.getAttribute("attribute-value");
+				tagName = getAttr(def,"tag");
+				attrName = getAttr(def,"attribute-name");
+				attrValue = getAttr(def,"attribute-value");
 				if(StringUtil.isEmpty(tagName) || StringUtil.isEmpty(attrName) || StringUtil.isEmpty(attrValue)) continue;
 				
 				tag=(Struct) tags.get(tagName,null);
@@ -2650,7 +2659,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// get library directories
 		if (fileSystem != null) {
-			strAllowRealPath = ConfigWebUtil.translateOldPath(fileSystem.getAttribute("allow-realpath"));
+			strAllowRealPath = getAttr(fileSystem,"allow-realpath");
 			strDeployDirectory = ConfigWebUtil.translateOldPath(fileSystem.getAttribute("deploy-directory"));
 			// strTempDirectory=ConfigWebUtil.translateOldPath(fileSystem.getAttribute("temp-directory"));
 			strTLDDirectory = ConfigWebUtil.translateOldPath(fileSystem.getAttribute("tld-directory"));
@@ -2887,8 +2896,8 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			Element update = getChildByName(doc.getDocumentElement(), "update");
 
 			if (update != null) {
-				cs.setUpdateType(update.getAttribute("type"));
-				cs.setUpdateLocation(update.getAttribute("location"), null);
+				cs.setUpdateType(getAttr(update,"type"));
+				cs.setUpdateLocation(getAttr(update,"location"), null);
 			}
 		}
 	}
@@ -2937,7 +2946,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// suppress whitespace
 		str = null;
 		if (setting != null) {
-			str = setting.getAttribute("suppress-content");
+			str = getAttr(setting,"suppress-content");
 		}
 		if (!StringUtil.isEmpty(str) && hasAccess) {
 			config.setSuppressContent(toBoolean(str, false));
@@ -2947,7 +2956,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// CFML Writer
 		if (setting != null) {
-			str = setting.getAttribute("cfml-writer");
+			str = getAttr(setting,"cfml-writer");
 		}
 		if (!StringUtil.isEmpty(str) && hasAccess) {
 			if ("white-space".equalsIgnoreCase(str))
@@ -2961,25 +2970,14 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		else if (hasCS)
 			config.setCFMLWriterType(configServer.getCFMLWriterType());
 
-		// No longer supported, replaced with code above
-		// suppress whitespace
-		/*
-		 * str=null; if(setting!=null){
-		 * str=setting.getAttribute("suppress-whitespace");
-		 * if(StringUtil.isEmpty
-		 * (str))str=setting.getAttribute("suppresswhitespace"); }
-		 * if(!StringUtil.isEmpty(str) && hasAccess) {
-		 * config.setSuppressWhitespace(toBoolean(str,false)); } else
-		 * if(hasCS)config
-		 * .setSuppressWhitespace(configServer.isSuppressWhitespace());
-		 */
+		
 
 		// show version
 		str = null;
 		if (setting != null) {
-			str = setting.getAttribute("show-version");
+			str = getAttr(setting,"show-version");
 			if (StringUtil.isEmpty(str))
-				str = setting.getAttribute("showversion");
+				str = getAttr(setting,"showversion");
 		}
 		if (!StringUtil.isEmpty(str) && hasAccess) {
 			config.setShowVersion(toBoolean(str, true));
@@ -2990,9 +2988,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// close connection
 		str = null;
 		if (setting != null) {
-			str = setting.getAttribute("close-connection");
+			str = getAttr(setting,"close-connection");
 			if (StringUtil.isEmpty(str))
-				str = setting.getAttribute("closeconnection");
+				str = getAttr(setting,"closeconnection");
 		}
 		if (!StringUtil.isEmpty(str) && hasAccess) {
 			config.setCloseConnection(toBoolean(str, false));
@@ -3003,9 +3001,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// content-length
 		str = null;
 		if (setting != null) {
-			str = setting.getAttribute("content-length");
+			str = getAttr(setting,"content-length");
 			if (StringUtil.isEmpty(str))
-				str = setting.getAttribute("contentlength");
+				str = getAttr(setting,"contentlength");
 		}
 		if (!StringUtil.isEmpty(str) && hasAccess) {
 			config.setContentLength(toBoolean(str, true));
@@ -3016,9 +3014,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// buffer-output
 		str = null;
 		if (setting != null) {
-			str = setting.getAttribute("buffer-output");
+			str = getAttr(setting,"buffer-output");
 			if (StringUtil.isEmpty(str))
-				str = setting.getAttribute("bufferoutput");
+				str = getAttr(setting,"bufferoutput");
 		}
 		Boolean b = Caster.toBoolean(str, null);
 		if (b != null && hasAccess) {
@@ -3030,9 +3028,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// allow-compression
 		str = null;
 		if (setting != null) {
-			str = setting.getAttribute("allow-compression");
+			str = getAttr(setting,"allow-compression");
 			if (StringUtil.isEmpty(str))
-				str = setting.getAttribute("allowcompression");
+				str = getAttr(setting,"allowcompression");
 		}
 		if (!StringUtil.isEmpty(str) && hasAccess) {
 			config.setAllowCompression(toBoolean(str, true));
@@ -3052,7 +3050,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		Element _clients = getChildByName(doc.getDocumentElement(), "remote-clients");
 
 		// usage
-		String strUsage = _clients.getAttribute("usage");
+		String strUsage = getAttr(_clients,"usage");
 		Struct sct;
 		if (!StringUtil.isEmpty(strUsage))
 			sct = toStruct(strUsage);// config.setRemoteClientUsage(toStruct(strUsage));
@@ -3068,7 +3066,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		config.setRemoteClientUsage(sct);
 
 		// max-threads
-		int maxThreads = Caster.toIntValue(_clients.getAttribute("max-threads"), -1);
+		int maxThreads = Caster.toIntValue(getAttr(_clients,"max-threads"), -1);
 		if(maxThreads<1 && configServer!=null) {
 			SpoolerEngineImpl engine = (SpoolerEngineImpl) configServer.getSpoolerEngine();
 			if(engine!=null) maxThreads=engine.getMaxThreads();
@@ -3090,27 +3088,27 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		for (int i = 0; i < clients.length; i++) {
 			client = clients[i];
 			// type
-			String type = client.getAttribute("type");
+			String type = getAttr(client,"type");
 			if (StringUtil.isEmpty(type))
 				type = "web";
 			// url
-			String url = client.getAttribute("url");
-			String label = client.getAttribute("label");
+			String url = getAttr(client,"url");
+			String label = getAttr(client,"label");
 			if (StringUtil.isEmpty(label))
 				label = url;
-			String sUser = client.getAttribute("server-username");
-			String sPass = ConfigWebUtil.decrypt(client.getAttribute("server-password"));
-			String aPass = ConfigWebUtil.decrypt(client.getAttribute("admin-password"));
-			String aCode = ConfigWebUtil.decrypt(client.getAttribute("security-key"));
+			String sUser = getAttr(client,"server-username");
+			String sPass = ConfigWebUtil.decrypt(getAttr(client,"server-password"));
+			String aPass = ConfigWebUtil.decrypt(getAttr(client,"admin-password"));
+			String aCode = ConfigWebUtil.decrypt(getAttr(client,"security-key"));
 			// if(aCode!=null && aCode.indexOf('-')!=-1)continue;
-			String usage = client.getAttribute("usage");
+			String usage = getAttr(client,"usage");
 			if (usage == null)
 				usage = "";
 
-			String pUrl = client.getAttribute("proxy-server");
-			int pPort = Caster.toIntValue(client.getAttribute("proxy-port"), -1);
-			String pUser = client.getAttribute("proxy-username");
-			String pPass = ConfigWebUtil.decrypt(client.getAttribute("proxy-password"));
+			String pUrl = getAttr(client,"proxy-server");
+			int pPort = Caster.toIntValue(getAttr(client,"proxy-port"), -1);
+			String pUser = getAttr(client,"proxy-username");
+			String pPass = ConfigWebUtil.decrypt(getAttr(client,"proxy-password"));
 
 			ProxyData pd = null;
 			if (!StringUtil.isEmpty(pUrl, true)) {
@@ -3155,8 +3153,8 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		String out = null, err = null;
 		if (sys != null) {
-			out = sys.getAttribute("out");
-			err = sys.getAttribute("err");
+			out = getAttr(sys,"out");
+			err = getAttr(sys,"err");
 		}
 		if (!StringUtil.isEmpty(out) && hasAccess) {
 			config.setOut(toPrintwriter(config, out, false));
@@ -3224,12 +3222,12 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// template
 		String template = null, fsCharset = null, fsEncoding = null;
 		if (charset != null)
-			template = charset.getAttribute("template-charset");
+			template = getAttr(charset,"template-charset");
 		if (fileSystem != null)
-			fsCharset = fileSystem.getAttribute("charset"); // deprecated but
+			fsCharset = getAttr(fileSystem,"charset"); // deprecated but
 															// still supported
 		if (fileSystem != null)
-			fsEncoding = fileSystem.getAttribute("encoding"); // deprecated but
+			fsEncoding = getAttr(fileSystem,"encoding"); // deprecated but
 																// still
 																// supported
 
@@ -3245,9 +3243,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// web
 		String web = null, defaultEncoding = null;
 		if (charset != null)
-			web = charset.getAttribute("web-charset");
+			web = getAttr(charset,"web-charset");
 		if (regional != null)
-			defaultEncoding = regional.getAttribute("default-encoding"); // deprecated
+			defaultEncoding = getAttr(regional,"default-encoding"); // deprecated
 																			// but
 																			// still
 																			// supported
@@ -3261,7 +3259,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// resource
 		String resource = null;
 		if (charset != null)
-			resource = charset.getAttribute("resource-charset");
+			resource = getAttr(charset,"resource-charset");
 		if (!StringUtil.isEmpty(resource))
 			config.setResourceCharset(resource);
 		else if (hasCS)
@@ -3274,9 +3272,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// Server
 		if (config instanceof ConfigServerImpl) {
-			config.setQueueMax(Caster.toIntValue(queue.getAttribute("max"), 100));
-			config.setQueueTimeout(Caster.toLongValue(queue.getAttribute("timeout"), 0L));
-			config.setQueueEnable(Caster.toBooleanValue(queue.getAttribute("enable"), false));
+			config.setQueueMax(Caster.toIntValue(getAttr(queue,"max"), 100));
+			config.setQueueTimeout(Caster.toLongValue(getAttr(queue,"timeout"), 0L));
+			config.setQueueEnable(Caster.toBooleanValue(getAttr(queue,"enable"), false));
 			((ConfigServerImpl)config).setThreadQueue(config.getQueueEnable()?new ThreadQueueImpl():new ThreadQueueNone());
 
 		}
@@ -3305,7 +3303,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// timeZone
 		String strTimeZone = null;
 		if (regional != null)
-			strTimeZone = regional.getAttribute("timezone");
+			strTimeZone = getAttr(regional,"timezone");
 
 		if (!StringUtil.isEmpty(strTimeZone))
 			config.setTimeZone(TimeZone.getTimeZone(strTimeZone));
@@ -3318,8 +3316,8 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		String strTimeServer = null;
 		Boolean useTimeServer = null;
 		if (regional != null) {
-			strTimeServer = regional.getAttribute("timeserver");
-			useTimeServer = Caster.toBoolean(regional.getAttribute("use-timeserver"), null);// 31
+			strTimeServer = getAttr(regional,"timeserver");
+			useTimeServer = Caster.toBoolean(getAttr(regional,"use-timeserver"), null);// 31
 		}
 
 		if (!StringUtil.isEmpty(strTimeServer))
@@ -3335,7 +3333,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// locale
 		String strLocale = null;
 		if (regional != null)
-			strLocale = regional.getAttribute("locale");
+			strLocale = getAttr(regional,"locale");
 
 		if (!StringUtil.isEmpty(strLocale))
 			config.setLocale(strLocale);
@@ -3361,7 +3359,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		if (orm != null) {
 			
 			// in the beginning we had attr class but only as default with dummy
-			String cls=orm.getAttribute("class");
+			String cls=getAttr(orm,"class");
 			if(DummyORMEngine.class.getName().equals(cls))
 				orm.removeAttribute(cls);
 			
@@ -3434,7 +3432,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setLocalMode(Undefined.MODE_LOCAL_OR_ARGUMENTS_ALWAYS);
 		}
 		else {
-			String strLocalMode = scope.getAttribute("local-mode");
+			String strLocalMode = getAttr(scope,"local-mode");
 			if (hasAccess && !StringUtil.isEmpty(strLocalMode)) {
 				config.setLocalMode(strLocalMode);
 			}
@@ -3444,7 +3442,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		
 
 		// CGI readonly
-		String strCGIReadonly = scope.getAttribute("cgi-readonly");
+		String strCGIReadonly = getAttr(scope,"cgi-readonly");
 		if (hasAccess && !StringUtil.isEmpty(strCGIReadonly)) {
 			config.setCGIScopeReadonly(Caster.toBooleanValue(strCGIReadonly,true));
 		}
@@ -3452,7 +3450,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setCGIScopeReadonly(configServer.getCGIScopeReadonly());
 
 		// Session-Type
-		String strSessionType = scope.getAttribute("session-type");
+		String strSessionType = getAttr(scope,"session-type");
 		if (hasAccess && !StringUtil.isEmpty(strSessionType)) {
 			config.setSessionType(strSessionType);
 		}
@@ -3464,7 +3462,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setScopeCascadingType(Config.SCOPE_STRICT);
 		}
 		else {
-			String strScopeCascadingType = scope.getAttribute("cascading");
+			String strScopeCascadingType = getAttr(scope,"cascading");
 			if (hasAccess && !StringUtil.isEmpty(strScopeCascadingType)) {
 				config.setScopeCascadingType(ConfigWebUtil.toScopeCascading(strScopeCascadingType,Config.SCOPE_STANDARD));
 			}
@@ -3477,7 +3475,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setAllowImplicidQueryCall(false);
 		}
 		else {
-			String strAllowImplicidQueryCall = scope.getAttribute("cascade-to-resultset");
+			String strAllowImplicidQueryCall = getAttr(scope,"cascade-to-resultset");
 			if (hasAccess && !StringUtil.isEmpty(strAllowImplicidQueryCall)) {
 				config.setAllowImplicidQueryCall(toBoolean(strAllowImplicidQueryCall, true));
 			}
@@ -3486,7 +3484,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 
 		// Merge url and Form
-		String strMergeFormAndURL = scope.getAttribute("merge-url-form");
+		String strMergeFormAndURL = getAttr(scope,"merge-url-form");
 		if (hasAccess && !StringUtil.isEmpty(strMergeFormAndURL)) {
 			config.setMergeFormAndURL(toBoolean(strMergeFormAndURL, false));
 		}
@@ -3495,9 +3493,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// Client-Storage
 		{
-			String clientStorage = scope.getAttribute("clientstorage");
+			String clientStorage = getAttr(scope,"clientstorage");
 			if (StringUtil.isEmpty(clientStorage, true)) 
-				clientStorage = scope.getAttribute("client-storage");
+				clientStorage = getAttr(scope,"client-storage");
 			
 			if (hasAccess && !StringUtil.isEmpty(clientStorage)) {
 				config.setClientStorage(clientStorage);
@@ -3508,9 +3506,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		
 		// Session-Storage
 		{
-			String sessionStorage = scope.getAttribute("sessionstorage");
+			String sessionStorage = getAttr(scope,"sessionstorage");
 			if (StringUtil.isEmpty(sessionStorage, true)) 
-				sessionStorage = scope.getAttribute("session-storage");
+				sessionStorage = getAttr(scope,"session-storage");
 			
 			if (hasAccess && !StringUtil.isEmpty(sessionStorage)) {
 				config.setSessionStorage(sessionStorage);
@@ -3520,11 +3518,11 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 		
 		// Client Timeout
-		String clientTimeout = scope.getAttribute("clienttimeout");
-		if(StringUtil.isEmpty(clientTimeout, true)) clientTimeout = scope.getAttribute("client-timeout");
+		String clientTimeout = getAttr(scope,"clienttimeout");
+		if(StringUtil.isEmpty(clientTimeout, true)) clientTimeout = getAttr(scope,"client-timeout");
 		if (StringUtil.isEmpty(clientTimeout, true)) {
 			// deprecated
-			clientTimeout = scope.getAttribute("client-max-age");
+			clientTimeout = getAttr(scope,"client-max-age");
 			int days = Caster.toIntValue(clientTimeout, -1);
 			if (days > 0)
 				clientTimeout = days + ",0,0,0";
@@ -3538,7 +3536,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setClientTimeout(configServer.getClientTimeout());
 
 		// Session Timeout
-		String sessionTimeout = scope.getAttribute("sessiontimeout");
+		String sessionTimeout = getAttr(scope,"sessiontimeout");
 		if (hasAccess && !StringUtil.isEmpty(sessionTimeout)) {
 			config.setSessionTimeout(sessionTimeout);
 		}
@@ -3546,7 +3544,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setSessionTimeout(configServer.getSessionTimeout());
 
 		// App Timeout
-		String appTimeout = scope.getAttribute("applicationtimeout");
+		String appTimeout = getAttr(scope,"applicationtimeout");
 		if (hasAccess && !StringUtil.isEmpty(appTimeout)) {
 			config.setApplicationTimeout(appTimeout);
 		}
@@ -3554,7 +3552,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setApplicationTimeout(configServer.getApplicationTimeout());
 
 		// Client Type
-		String strClientType = scope.getAttribute("clienttype");
+		String strClientType = getAttr(scope,"clienttype");
 		if (hasAccess && !StringUtil.isEmpty(strClientType)) {
 			config.setClientType(strClientType);
 		}
@@ -3563,7 +3561,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// Client
 		Resource configDir = config.getConfigDir();
-		String strClientDirectory = scope.getAttribute("client-directory");
+		String strClientDirectory = getAttr(scope,"client-directory");
 		if (hasAccess && !StringUtil.isEmpty(strClientDirectory)) {
 			strClientDirectory = ConfigWebUtil.translateOldPath(strClientDirectory);
 			Resource res = ConfigWebUtil.getFile(configDir, strClientDirectory, "client-scope", configDir, FileUtil.TYPE_DIR, config);
@@ -3573,7 +3571,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setClientScopeDir(configDir.getRealResource("client-scope"));
 		}
 
-		String strMax = scope.getAttribute("client-directory-max-size");
+		String strMax = getAttr(scope,"client-directory-max-size");
 		if (hasAccess && !StringUtil.isEmpty(strMax)) {
 			config.setClientScopeDirSize(ByteSizeParser.parseByteSizeDefinition(strMax, config.getClientScopeDirSize()));
 		}
@@ -3581,7 +3579,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setClientScopeDirSize(configServer.getClientScopeDirSize());
 
 		// Session Management
-		String strSessionManagement = scope.getAttribute("sessionmanagement");
+		String strSessionManagement = getAttr(scope,"sessionmanagement");
 		if (hasAccess && !StringUtil.isEmpty(strSessionManagement)) {
 			config.setSessionManagement(toBoolean(strSessionManagement, true));
 		}
@@ -3589,7 +3587,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setSessionManagement(configServer.isSessionManagement());
 
 		// Client Management
-		String strClientManagement = scope.getAttribute("clientmanagement");
+		String strClientManagement = getAttr(scope,"clientmanagement");
 		if (hasAccess && !StringUtil.isEmpty(strClientManagement)) {
 			config.setClientManagement(toBoolean(strClientManagement, false));
 		}
@@ -3597,7 +3595,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setClientManagement(configServer.isClientManagement());
 
 		// Client Cookies
-		String strClientCookies = scope.getAttribute("setclientcookies");
+		String strClientCookies = getAttr(scope,"setclientcookies");
 		if (hasAccess && !StringUtil.isEmpty(strClientCookies)) {
 			config.setClientCookies(toBoolean(strClientCookies, true));
 		}
@@ -3605,7 +3603,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setClientCookies(configServer.isClientCookies());
 
 		// Domain Cookies
-		String strDomainCookies = scope.getAttribute("setdomaincookies");
+		String strDomainCookies = getAttr(scope,"setdomaincookies");
 		if (hasAccess && !StringUtil.isEmpty(strDomainCookies)) {
 			config.setDomainCookies(toBoolean(strDomainCookies, false));
 		}
@@ -3618,7 +3616,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		Element java = getChildByName(doc.getDocumentElement(), "java");
 
 		//
-		String strInspectTemplate = java.getAttribute("inspect-template");
+		String strInspectTemplate = getAttr(java,"inspect-template");
 		if (!StringUtil.isEmpty(strInspectTemplate, true)) {
 			config.setInspectTemplate(ConfigWebUtil.inspectTemplate(strInspectTemplate, ConfigImpl.INSPECT_ONCE));
 		}
@@ -3627,7 +3625,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 
 		//
-		String strCompileType = java.getAttribute("compile-type");
+		String strCompileType = getAttr(java,"compile-type");
 		if (!StringUtil.isEmpty(strCompileType)) {
 			strCompileType = strCompileType.trim().toLowerCase();
 			if (strCompileType.equals("after-startup")) {
@@ -3660,10 +3658,10 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			sct = new StructImpl();
 		String name;
 		for (int i = 0; i < elConstants.length; i++) {
-			name = elConstants[i].getAttribute("name");
+			name = getAttr(elConstants[i],"name");
 			if (StringUtil.isEmpty(name))
 				continue;
-			sct.setEL(KeyImpl.getInstance(name.trim()), elConstants[i].getAttribute("value"));
+			sct.setEL(KeyImpl.getInstance(name.trim()), getAttr(elConstants[i],"value"));
 		}
 		config.setConstants(sct);
 	}
@@ -3672,10 +3670,10 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// server context
 		if (config instanceof ConfigServer) {
 			Element login = getChildByName(doc.getDocumentElement(), "login");
-			boolean captcha = Caster.toBooleanValue(login.getAttribute("captcha"), false);
-			boolean rememberme = Caster.toBooleanValue(login.getAttribute("rememberme"), true);
+			boolean captcha = Caster.toBooleanValue(getAttr(login,"captcha"), false);
+			boolean rememberme = Caster.toBooleanValue(getAttr(login,"rememberme"), true);
 			
-			int delay = Caster.toIntValue(login.getAttribute("delay"), 1);
+			int delay = Caster.toIntValue(getAttr(login,"delay"), 1);
 			ConfigServerImpl cs = (ConfigServerImpl) config;
 			cs.setLoginDelay(delay);
 			cs.setLoginCaptcha(captcha);
@@ -3697,21 +3695,21 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		Element mail = getChildByName(doc.getDocumentElement(), "mail");
 
 		// Spool Interval
-		String strSpoolInterval = mail.getAttribute("spool-interval");
+		String strSpoolInterval = getAttr(mail,"spool-interval");
 		if (!StringUtil.isEmpty(strSpoolInterval) && hasAccess) {
 			config.setMailSpoolInterval(Caster.toIntValue(strSpoolInterval, 30));
 		}
 		else if (hasCS)
 			config.setMailSpoolInterval(configServer.getMailSpoolInterval());
 
-		String strEncoding = mail.getAttribute("default-encoding");
+		String strEncoding = getAttr(mail,"default-encoding");
 		if (!StringUtil.isEmpty(strEncoding) && hasAccess)
 			config.setMailDefaultEncoding(strEncoding);
 		else if (hasCS)
 			config.setMailDefaultEncoding(configServer.getMailDefaultCharset());
 
 		// Spool Enable
-		String strSpoolEnable = mail.getAttribute("spool-enable");
+		String strSpoolEnable = getAttr(mail,"spool-enable");
 		if (!StringUtil.isEmpty(strSpoolEnable) && hasAccess) {
 			config.setMailSpoolEnable(toBoolean(strSpoolEnable, false));
 		}
@@ -3719,7 +3717,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setMailSpoolEnable(configServer.isMailSpoolEnable());
 
 		// Timeout
-		String strTimeout = mail.getAttribute("timeout");
+		String strTimeout = getAttr(mail,"timeout");
 		if (!StringUtil.isEmpty(strTimeout) && hasAccess) {
 			config.setMailTimeout(Caster.toIntValue(strTimeout, 60));
 		}
@@ -3745,13 +3743,13 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				Element el = elServers[i];
 				if (el.getNodeName().equals("server"))
 					servers[index++] = new ServerImpl(
-							el.getAttribute("smtp"), 
-							Caster.toIntValue(el.getAttribute("port"), 25), 
-							el.getAttribute("username"),
-							ConfigWebUtil.decrypt(el.getAttribute("password")), 
-							toBoolean(el.getAttribute("tls"), false), 
-							toBoolean(el.getAttribute("ssl"), false), 
-							toBoolean(el.getAttribute("reuse-connection"), true));
+							getAttr(el,"smtp"), 
+							Caster.toIntValue(getAttr(el,"port"), 25), 
+							getAttr(el,"username"),
+							ConfigWebUtil.decrypt(getAttr(el,"password")), 
+							toBoolean(getAttr(el,"tls"), false), 
+							toBoolean(getAttr(el,"ssl"), false), 
+							toBoolean(getAttr(el,"reuse-connection"), true));
 
 			}
 		}
@@ -3765,7 +3763,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		configServer = (ConfigServerImpl) config;
 
 		Element parent = getChildByName(doc.getDocumentElement(), "monitoring");
-		boolean enabled = Caster.toBooleanValue(parent.getAttribute("enabled"), false);
+		boolean enabled = Caster.toBooleanValue(getAttr(parent,"enabled"), false);
 		configServer.setMonitoringEnabled(enabled);
 		SystemOut.printDate(config.getOutWriter(), "monitoring is "+(enabled?"enabled":"disabled"));
 		
@@ -3781,10 +3779,10 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		for (int i = 0; i < children.length; i++) {
 			Element el = children[i];
 			cd=getClassDefinition(el, "", config.getIdentification());
-			strType = el.getAttribute("type");
-			name = el.getAttribute("name");
-			async = Caster.toBooleanValue(el.getAttribute("async"),false);
-			log = Caster.toBooleanValue(el.getAttribute("log"), true);
+			strType = getAttr(el,"type");
+			name = getAttr(el,"name");
+			async = Caster.toBooleanValue(getAttr(el,"async"),false);
+			log = Caster.toBooleanValue(getAttr(el,"log"), true);
 			
 			if ("request".equalsIgnoreCase(strType))
 				type = IntervallMonitor.TYPE_REQUEST;
@@ -3915,10 +3913,11 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		String id;
 		for (int i = 0; i < entries.length; i++) {
 			e = entries[i];
-			id = e.getAttribute("id");
+			id = getAttr(e,"id");
 			try {
-				list.put(id, new DebugEntry(id, e.getAttribute("type"), e.getAttribute("iprange"), e.getAttribute("label"), e.getAttribute("path"), e.getAttribute("fullname"),
-						toStruct(e.getAttribute("custom"))));
+				list.put(id, new DebugEntry(id, 
+						getAttr(e,"type"), getAttr(e,"iprange"), getAttr(e,"label"), e.getAttribute("path"), 
+						getAttr(e,"fullname"),toStruct(getAttr(e,"custom"))));
 			}
 			catch (IOException ioe) {
 			}
@@ -3926,7 +3925,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		config.setDebugEntries(list.values().toArray(new DebugEntry[list.size()]));
 
 		// debug
-		String strDebug = debugging.getAttribute("debug");
+		String strDebug = getAttr(debugging,"debug");
 		if (hasAccess && !StringUtil.isEmpty(strDebug)) {
 			config.setDebug(toBoolean(strDebug, false) ? ConfigImpl.CLIENT_BOOLEAN_TRUE : ConfigImpl.CLIENT_BOOLEAN_FALSE);
 		}
@@ -3934,7 +3933,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setDebug(configServer.debug() ? ConfigImpl.SERVER_BOOLEAN_TRUE : ConfigImpl.SERVER_BOOLEAN_FALSE);
 
 		// debug-log-output
-		String strDLO = debugging.getAttribute("debug-log-output");
+		String strDLO = getAttr(debugging,"debug-log-output");
 		if (hasAccess && !StringUtil.isEmpty(strDLO)) {
 			config.setDebugLogOutput(toBoolean(strDLO, false) ? ConfigImpl.CLIENT_BOOLEAN_TRUE : ConfigImpl.CLIENT_BOOLEAN_FALSE);
 		}
@@ -3943,7 +3942,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// debug options
 		int options = 0;
-		String str = debugging.getAttribute("database");
+		String str = getAttr(debugging,"database");
 		if (hasAccess && !StringUtil.isEmpty(str)) {
 			if (toBoolean(str, false))
 				options += ConfigImpl.DEBUG_DATABASE;
@@ -3951,7 +3950,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		else if (hasCS && configServer.hasDebugOptions(ConfigImpl.DEBUG_DATABASE))
 			options += ConfigImpl.DEBUG_DATABASE;
 
-		str = debugging.getAttribute("exception");
+		str = getAttr(debugging,"exception");
 		if (hasAccess && !StringUtil.isEmpty(str)) {
 			if (toBoolean(str, false))
 				options += ConfigImpl.DEBUG_EXCEPTION;
@@ -3960,7 +3959,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			options += ConfigImpl.DEBUG_EXCEPTION;
 
 		
-		str = debugging.getAttribute("dump");
+		str = getAttr(debugging,"dump");
 		if (hasAccess && !StringUtil.isEmpty(str)) {
 			if (toBoolean(str, false))
 				options += ConfigImpl.DEBUG_DUMP;
@@ -3970,7 +3969,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		
 		
-		str = debugging.getAttribute("tracing");
+		str = getAttr(debugging,"tracing");
 		if (hasAccess && !StringUtil.isEmpty(str)) {
 			if (toBoolean(str, false))
 				options += ConfigImpl.DEBUG_TRACING;
@@ -3978,7 +3977,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		else if (hasCS && configServer.hasDebugOptions(ConfigImpl.DEBUG_TRACING))
 			options += ConfigImpl.DEBUG_TRACING;
 
-		str = debugging.getAttribute("timer");
+		str = getAttr(debugging,"timer");
 		if (hasAccess && !StringUtil.isEmpty(str)) {
 			if (toBoolean(str, false))
 				options += ConfigImpl.DEBUG_TIMER;
@@ -3986,7 +3985,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		else if (hasCS && configServer.hasDebugOptions(ConfigImpl.DEBUG_TIMER))
 			options += ConfigImpl.DEBUG_TIMER;
 
-		str = debugging.getAttribute("implicit-access");
+		str = getAttr(debugging,"implicit-access");
 		if (hasAccess && !StringUtil.isEmpty(str)) {
 			if (toBoolean(str, false))
 				options += ConfigImpl.DEBUG_IMPLICIT_ACCESS;
@@ -3994,9 +3993,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		else if (hasCS && configServer.hasDebugOptions(ConfigImpl.DEBUG_IMPLICIT_ACCESS))
 			options += ConfigImpl.DEBUG_IMPLICIT_ACCESS;
 
-		str = debugging.getAttribute("query-usage");
+		str = getAttr(debugging,"query-usage");
 		if (StringUtil.isEmpty(str))
-			str = debugging.getAttribute("show-query-usage");
+			str = getAttr(debugging,"show-query-usage");
 		if (hasAccess && !StringUtil.isEmpty(str)) {
 			if (toBoolean(str, false))
 				options += ConfigImpl.DEBUG_QUERY_USAGE;
@@ -4005,7 +4004,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			options += ConfigImpl.DEBUG_QUERY_USAGE;
 
 		// max records logged
-		String strMax = debugging.getAttribute("max-records-logged");
+		String strMax = getAttr(debugging,"max-records-logged");
 		if (hasAccess && !StringUtil.isEmpty(strMax)) {
 			config.setDebugMaxRecordsLogged(Caster.toIntValue(strMax, 10));
 		}
@@ -4057,11 +4056,11 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 			Element[] cfxTags = oldStyle ? getChildren(cfxTagsParent, "cfx-tag") : getChildren(cfxTagsParent, "ext-tag");
 			for (int i = 0; i < cfxTags.length; i++) {
-				String type = cfxTags[i].getAttribute("type");
+				String type = getAttr(cfxTags[i],"type");
 				if (type != null) {
 					// Java CFX Tags
 					if (type.equalsIgnoreCase("java")) {
-						String name = cfxTags[i].getAttribute("name");
+						String name = getAttr(cfxTags[i],"name");
 						ClassDefinition cd = getClassDefinition(cfxTags[i], "", config.getIdentification());
 						if (!StringUtil.isEmpty(name) && cd.hasClass()) {
 							map.put(name.toLowerCase(), new JavaCFXTagClass(name, cd));
@@ -4069,10 +4068,10 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 					}
 					// C++ CFX Tags
 					else if (type.equalsIgnoreCase("cpp")) {
-						String name = cfxTags[i].getAttribute("name");
-						String serverLibrary = cfxTags[i].getAttribute("server-library");
-						String procedure = cfxTags[i].getAttribute("procedure");
-						boolean keepAlive = Caster.toBooleanValue(cfxTags[i].getAttribute("keep-alive"), false);
+						String name = getAttr(cfxTags[i],"name");
+						String serverLibrary = getAttr(cfxTags[i],"server-library");
+						String procedure = getAttr(cfxTags[i],"procedure");
+						boolean keepAlive = Caster.toBooleanValue(getAttr(cfxTags[i],"keep-alive"), false);
 
 						if (!StringUtil.isEmpty(name) && !StringUtil.isEmpty(serverLibrary) && !StringUtil.isEmpty(procedure)) {
 							map.put(name.toLowerCase(), new CPPCFXTagClass(name, serverLibrary, procedure, keepAlive));
@@ -4099,7 +4098,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 	
 		Map<String, BundleDefinition> extensionBundles=new HashMap<String,BundleDefinition>();
 		for(Element child:children){
-			str=child.getAttribute("bundles");
+			str=getAttr(child,"bundles");
 			if(StringUtil.isEmpty(str)) continue;
 			RHExtension rhe;
 			try {
@@ -4132,7 +4131,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		Element xmlExtParent = getChildByName(doc.getDocumentElement(), "extensions");
 
-		String strEnabled = xmlExtParent.getAttribute("enabled");
+		String strEnabled = getAttr(xmlExtParent,"enabled");
 		if (!StringUtil.isEmpty(strEnabled)) {
 			config.setExtensionEnabled(Caster.toBooleanValue(strEnabled, false));
 		}
@@ -4148,7 +4147,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				providers.put(Constants.RH_EXTENSION_PROVIDERS[i], "");
 			}
 			for (int i = 0; i < xmlProviders.length; i++) {
-				strProvider = xmlProviders[i].getAttribute("url");
+				strProvider = getAttr(xmlProviders[i],"url");
 				if (!StringUtil.isEmpty(strProvider, true)) {
 					try {
 						providers.put(new RHExtensionProvider(strProvider.trim(),false), "");
@@ -4174,7 +4173,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			}
 	
 			for (int i = 0; i < xmlProviders.length; i++) {
-				provider = xmlProviders[i].getAttribute("url");
+				provider = getAttr(xmlProviders[i],"url");
 				if (!StringUtil.isEmpty(provider, true)) {
 					list.put(new ExtensionProviderImpl(provider.trim(), false), "");
 				}
@@ -4188,13 +4187,26 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		Element xmlExtension;
 		for (int i = 0; i < xmlExtensions.length; i++) {
 			xmlExtension = xmlExtensions[i];
-			extensions[i] = new ExtensionImpl(xmlExtension.getAttribute("config"), xmlExtension.getAttribute("id"), xmlExtension.getAttribute("provider"),
-					xmlExtension.getAttribute("version"),
-
-					xmlExtension.getAttribute("name"), xmlExtension.getAttribute("label"), xmlExtension.getAttribute("description"), xmlExtension.getAttribute("category"),
-					xmlExtension.getAttribute("image"), xmlExtension.getAttribute("author"), xmlExtension.getAttribute("codename"), xmlExtension.getAttribute("video"),
-					xmlExtension.getAttribute("support"), xmlExtension.getAttribute("documentation"), xmlExtension.getAttribute("forum"), xmlExtension.getAttribute("mailinglist"),
-					xmlExtension.getAttribute("network"), DateCaster.toDateAdvanced(xmlExtension.getAttribute("created"), null, null), xmlExtension.getAttribute("type"));
+			extensions[i] = new ExtensionImpl(
+					getAttr(xmlExtension,"config"), 
+					getAttr(xmlExtension,"id"), 
+					getAttr(xmlExtension,"provider"),
+					getAttr(xmlExtension,"version"),
+					getAttr(xmlExtension,"name"), 
+					getAttr(xmlExtension,"label"), 
+					getAttr(xmlExtension,"description"), 
+					getAttr(xmlExtension,"category"),
+					getAttr(xmlExtension,"image"), 
+					getAttr(xmlExtension,"author"), 
+					getAttr(xmlExtension,"codename"), 
+					getAttr(xmlExtension,"video"),
+					getAttr(xmlExtension,"support"), 
+					getAttr(xmlExtension,"documentation"), 
+					getAttr(xmlExtension,"forum"), 
+					getAttr(xmlExtension,"mailinglist"),
+					getAttr(xmlExtension,"network"), 
+					DateCaster.toDateAdvanced(getAttr(xmlExtension,"created"), null, null), 
+					getAttr(xmlExtension,"type"));
 		}
 		config.setExtensions(extensions);
 
@@ -4217,7 +4229,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		if (component != null && hasAccess) {
 
 			// component-default-import
-			String strCDI = component.getAttribute("component-default-import");
+			String strCDI = getAttr(component,"component-default-import");
 			if (StringUtil.isEmpty(strCDI, true) && configServer != null) {
 				strCDI = ((ConfigServerImpl) configServer).getComponentDefaultImport().toString();
 			}
@@ -4225,15 +4237,15 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				config.setComponentDefaultImport(strCDI);
 
 			// Base CFML
-			String strBase = component.getAttribute("base-cfml");
-			if(StringUtil.isEmpty(strBase,true))strBase = component.getAttribute("base");
+			String strBase = getAttr(component,"base-cfml");
+			if(StringUtil.isEmpty(strBase,true))strBase = getAttr(component,"base");
 			if (StringUtil.isEmpty(strBase, true) && configServer != null) {
 				strBase = configServer.getBaseComponentTemplate(CFMLEngine.DIALECT_CFML);
 			}
 			config.setBaseComponentTemplate(CFMLEngine.DIALECT_CFML,strBase);
 			
 			// Base Lucee
-			strBase = component.getAttribute("base-lucee");
+			strBase = getAttr(component,"base-lucee");
 			if (StringUtil.isEmpty(strBase, true)) {
 				if(configServer != null)strBase = configServer.getBaseComponentTemplate(CFMLEngine.DIALECT_LUCEE);
 				else strBase = "/lucee/Component.lucee";
@@ -4249,7 +4261,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				config.setDoComponentDeepSearch(false);
 			}
 			else {
-				String strDeepSearch = component.getAttribute("deep-search");
+				String strDeepSearch = getAttr(component,"deep-search");
 				if (!StringUtil.isEmpty(strDeepSearch)) {
 					config.setDoComponentDeepSearch(Caster.toBooleanValue(strDeepSearch.trim(), false));
 				}
@@ -4270,7 +4282,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				config.setComponentDataMemberDefaultAccess(Component.ACCESS_PRIVATE);
 			}
 			else {
-				String strDmda = component.getAttribute("data-member-default-access");
+				String strDmda = getAttr(component,"data-member-default-access");
 				if (strDmda != null && strDmda.trim().length() > 0) {
 					strDmda = strDmda.toLowerCase().trim();
 					if (strDmda.equals("remote"))
@@ -4292,7 +4304,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				config.setTriggerComponentDataMember(true);
 			}
 			else {
-				Boolean tp = Caster.toBoolean(component.getAttribute("trigger-data-member"), null);
+				Boolean tp = Caster.toBoolean(getAttr(component,"trigger-data-member"), null);
 				if (tp != null)
 					config.setTriggerComponentDataMember(tp.booleanValue());
 				else if (configServer != null) {
@@ -4305,7 +4317,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				config.setComponentLocalSearch(false);
 			}
 			else {
-				Boolean ls = Caster.toBoolean(component.getAttribute("local-search"), null);
+				Boolean ls = Caster.toBoolean(getAttr(component,"local-search"), null);
 				if (ls != null)
 					config.setComponentLocalSearch(ls.booleanValue());
 				else if (configServer != null) {
@@ -4314,7 +4326,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			}
 
 			// use cache path
-			Boolean ucp = Caster.toBoolean(component.getAttribute("use-cache-path"), null);
+			Boolean ucp = Caster.toBoolean(getAttr(component,"use-cache-path"), null);
 			if (ucp != null)
 				config.setUseComponentPathCache(ucp.booleanValue());
 			else if (configServer != null) {
@@ -4326,7 +4338,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				config.setUseComponentShadow(false);
 			}
 			else {
-				Boolean ucs = Caster.toBoolean(component.getAttribute("use-shadow"), null);
+				Boolean ucs = Caster.toBoolean(getAttr(component,"use-shadow"), null);
 				if (ucs != null)
 					config.setUseComponentShadow(ucs.booleanValue());
 				else if (configServer != null) {
@@ -4369,18 +4381,15 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				Element cMapping = cMappings[i];
 				String physical = cMapping.getAttribute("physical");
 				String archive = cMapping.getAttribute("archive");
-				boolean readonly = toBoolean(cMapping.getAttribute("readonly"), false);
-				boolean hidden = toBoolean(cMapping.getAttribute("hidden"), false);
-				//boolean trusted = toBoolean(cMapping.getAttribute("trusted"), false);
+				boolean readonly = toBoolean(getAttr(cMapping,"readonly"), false);
+				boolean hidden = toBoolean(getAttr(cMapping,"hidden"), false);
 
-				int listMode=ConfigWebUtil.toListenerMode(cMapping.getAttribute("listener-mode"), -1);
-				int listType=ConfigWebUtil.toListenerType(cMapping.getAttribute("listener-type"), -1);
+				int listMode=ConfigWebUtil.toListenerMode(getAttr(cMapping,"listener-mode"), -1);
+				int listType=ConfigWebUtil.toListenerType(getAttr(cMapping,"listener-type"), -1);
 				short inspTemp = inspectTemplate(cMapping);
 				String virtual = XMLConfigAdmin.createVirtual(cMapping);
 
-				//int clMaxEl = toInt(cMapping.getAttribute("classloader-max-elements"), 100);
-
-				String primary = cMapping.getAttribute("primary");
+				String primary = getAttr(cMapping,"primary");
 
 				boolean physicalFirst = archive == null || !primary.equalsIgnoreCase("archive");
 				hasSet = true;
@@ -4439,19 +4448,11 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		boolean hasAccess = ConfigWebUtil.hasAccess(config, SecurityManager.TYPE_SETTING);
 		Element proxy = getChildByName(doc.getDocumentElement(), "proxy");
 
-		// server
-
-		// proxy enabled
-		// String enabled=proxy.getAttribute("enabled");
-		// if(hasAccess && !StringUtil.isEmpty(enabled))
-		// config.setProxyEnable(toBoolean(enabled, false));
-		// else if(hasCS) config.setProxyEnable(configServer.isProxyEnable());
-
 		// proxy server
-		String server = proxy.getAttribute("server");
-		String username = proxy.getAttribute("username");
-		String password = proxy.getAttribute("password");
-		int port = Caster.toIntValue(proxy.getAttribute("port"), -1);
+		String server = getAttr(proxy,"server");
+		String username = getAttr(proxy,"username");
+		String password = getAttr(proxy,"password");
+		int port = Caster.toIntValue(getAttr(proxy,"port"), -1);
 
 		if (hasAccess && !StringUtil.isEmpty(server)) {
 			config.setProxyData(ProxyDataImpl.getInstance(server, port, username, password));
@@ -4501,11 +4502,11 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setErrorTemplate(404, "/lucee/templates/error/error."+TEMPLATE_EXTENSION);
 
 		// status code
-		String strStausCode = error.getAttribute("status-code");
+		String strStausCode = getAttr(error,"status-code");
 		if (StringUtil.isEmpty(strStausCode))
-			strStausCode = error.getAttribute("statusCode");
+			strStausCode = getAttr(error,"statusCode");
 		if (StringUtil.isEmpty(strStausCode))
-			strStausCode = error.getAttribute("status");
+			strStausCode = getAttr(error,"status");
 
 		if (!StringUtil.isEmpty(strStausCode) && hasAccess) {
 			config.setErrorStatusCode(toBoolean(strStausCode, true));
@@ -4525,9 +4526,9 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setSuppressWSBeforeArg(true);
 		}
 		else {
-			String suppress = compiler.getAttribute("suppress-ws-before-arg");
+			String suppress = getAttr(compiler,"suppress-ws-before-arg");
 			if(StringUtil.isEmpty(suppress, true)) 
-				suppress = compiler.getAttribute("supress-ws-before-arg");
+				suppress = getAttr(compiler,"supress-ws-before-arg");
 			if(!StringUtil.isEmpty(suppress, true)) {
 				config.setSuppressWSBeforeArg(Caster.toBooleanValue(suppress, true));
 			}
@@ -4541,7 +4542,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setDotNotationUpperCase(false);
 		}
 		else {
-			String _case = compiler.getAttribute("dot-notation-upper-case");
+			String _case = getAttr(compiler,"dot-notation-upper-case");
 			if (!StringUtil.isEmpty(_case, true)) {
 				config.setDotNotationUpperCase(Caster.toBooleanValue(_case, true));
 			}
@@ -4557,7 +4558,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				fns = true;
 			}
 			else {
-				String str = compiler.getAttribute("full-null-support");
+				String str = getAttr(compiler,"full-null-support");
 
 				if (!StringUtil.isEmpty(str, true)) {
 					fns = Caster.toBooleanValue(str, false);
@@ -4568,7 +4569,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 		
 		// default output setting
-		String output = compiler.getAttribute("default-function-output");
+		String output = getAttr(compiler,"default-function-output");
 		if (!StringUtil.isEmpty(output, true)) {
 			config.setDefaultFunctionOutput(Caster.toBooleanValue(output, true));
 		}
@@ -4577,7 +4578,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 		
 		// suppress WS between cffunction and cfargument
-		String str = compiler.getAttribute("externalize-string-gte");
+		String str = getAttr(compiler,"externalize-string-gte");
 		if (Decision.isNumber(str)) {
 			config.setExternalizeStringGTE(Caster.toIntValue(str,-1));
 		}
@@ -4590,7 +4591,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setHandleUnQuotedAttrValueAsString(false);
 		}
 		else {
-			str = compiler.getAttribute("handle-unquoted-attribute-value-as-string");
+			str = getAttr(compiler,"handle-unquoted-attribute-value-as-string");
 			if (Decision.isBoolean(str)) {
 				config.setHandleUnQuotedAttrValueAsString(Caster.toBooleanValue(str,true));
 			}
@@ -4622,7 +4623,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 		else {
 
-			listener = ConfigWebUtil.loadListener(application.getAttribute("listener-type"), null);
+			listener = ConfigWebUtil.loadListener(getAttr(application,"listener-type"), null);
 
 			if (listener == null) {
 				if (hasCS && configServer.getApplicationListener() != null)
@@ -4638,19 +4639,19 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 
 		// cachedwithin 
 		for(int i=0;i<types.length;i++){
-			String cw = application.getAttribute("cached-within-"+strTypes[i]);
+			String cw = getAttr(application,"cached-within-"+strTypes[i]);
 			if (!StringUtil.isEmpty(cw,true)) config.setCachedWithin(types[i], cw);
 			else if(hasCS) config.setCachedWithin(types[i],configServer.getCachedWithin(types[i]));
 		}
 		
 		// Type Checking
-		Boolean typeChecking = Caster.toBoolean(application.getAttribute("type-checking"),null);
+		Boolean typeChecking = Caster.toBoolean(getAttr(application,"type-checking"),null);
 		if (typeChecking !=null) config.setTypeChecking(typeChecking.booleanValue());
 		else if(hasCS) config.setTypeChecking(configServer.getTypeChecking());
 		
 		
 		// Listener Mode
-		int listenerMode = ConfigWebUtil.toListenerMode(application.getAttribute("listener-mode"), -1);
+		int listenerMode = ConfigWebUtil.toListenerMode(getAttr(application,"listener-mode"), -1);
 		if (listenerMode == -1) {
 			if (hasCS)
 				listenerMode = 
@@ -4669,7 +4670,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setAllowURLRequestTimeout(false);
 		}
 		else {
-			String allowURLReqTimeout = application.getAttribute("allow-url-requesttimeout");
+			String allowURLReqTimeout = getAttr(application,"allow-url-requesttimeout");
 			if (hasAccess && !StringUtil.isEmpty(allowURLReqTimeout)) {
 				config.setAllowURLRequestTimeout(Caster.toBooleanValue(allowURLReqTimeout, false));
 			}
@@ -4680,8 +4681,8 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		// Req Timeout
 		TimeSpan ts=null;
 		if(hasAccess) {
-			String reqTimeoutApplication = application.getAttribute("requesttimeout");
-			String reqTimeoutScope = scope.getAttribute("requesttimeout"); // deprecated
+			String reqTimeoutApplication = getAttr(application,"requesttimeout");
+			String reqTimeoutScope = getAttr(scope,"requesttimeout"); // deprecated
 			
 			if (!StringUtil.isEmpty(reqTimeoutApplication)) ts=Caster.toTimespan(reqTimeoutApplication);
 			if (ts==null && !StringUtil.isEmpty(reqTimeoutScope))  ts=Caster.toTimespan(reqTimeoutScope);
@@ -4691,7 +4692,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		else if (hasCS) config.setRequestTimeout(configServer.getRequestTimeout());
 
 		// script-protect
-		String strScriptProtect = application.getAttribute("script-protect");
+		String strScriptProtect = getAttr(application,"script-protect");
 
 		if (hasAccess && !StringUtil.isEmpty(strScriptProtect)) {
 			// print.err("sp:"+strScriptProtect);
@@ -4706,7 +4707,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 				DateCaster.classicStyle = true;
 			}
 			else {
-				String strClassicDateParsing = application.getAttribute("classic-date-parsing");
+				String strClassicDateParsing = getAttr(application,"classic-date-parsing");
 
 				if (!StringUtil.isEmpty(strClassicDateParsing)) {
 					DateCaster.classicStyle = Caster.toBooleanValue(strClassicDateParsing, false);
@@ -4726,7 +4727,7 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 			config.setCacheDir(configDir.getRealResource("cache"));
 		}
 
-		String strMax = application.getAttribute("cache-directory-max-size");
+		String strMax = getAttr(application,"cache-directory-max-size");
 		if (hasAccess && !StringUtil.isEmpty(strMax)) {
 			config.setCacheDirSize(ByteSizeParser.parseByteSizeDefinition(strMax, config.getCacheDirSize()));
 		}
@@ -4777,30 +4778,62 @@ public final class XMLConfigWebFactory extends XMLConfigFactory {
 		}
 	}
 
-	/* *
-	 * return first direct child Elements of a Element with given Name and
-	 * matching attribute
-	 * 
-	 * @param parent
-	 * 
-	 * @param nodeName
-	 * 
-	 * @param attributeName
-	 * 
-	 * @param attributeValue
-	 * 
-	 * @return matching children / private static Element getChildByName(Node
-	 * parent, String nodeName, String attributeName, String attributeValue) {
-	 * if(parent==null) return null; NodeList list=parent.getChildNodes(); int
-	 * len=list.getLength();
-	 * 
-	 * for(int i=0;i<len;i++) { Node node=list.item(i);
-	 * if(node.getNodeType()==Node.ELEMENT_NODE &&
-	 * node.getNodeName().equalsIgnoreCase(nodeName)) { Element el=(Element)
-	 * node; if(el.getAttribute(attributeName).equalsIgnoreCase(attributeValue))
-	 * return el; } } return null; }
+	/**
+	 * reads an attribute from a xml Element and parses placeholders
+	 * @param el
+	 * @param name
+	 * @return
 	 */
+	public static String getAttr(Element el, String name) {
+		String v=el.getAttribute(name);
+		return replaceConfigPlaceHolder(v);
+	}
 
+	public static String replaceConfigPlaceHolder(String v) {
+		if(StringUtil.isEmpty(v) || v.indexOf('{')==-1) return v;
+		
+		int s=-1,e=-1;
+		int prefixLen,start=-1,end;
+		String _name,_prop;
+		while((s=v.indexOf("{system:",start))!=-1 |/*don't change*/ (e=v.indexOf("{env:",start))!=-1) {
+			boolean isSystem=false;
+			// system
+			if(s!=-1 && (e==-1 || e>s)) {
+				start=s;
+				prefixLen=8;
+				isSystem=true;
+			}
+			// env
+			else {
+				start=e;
+				prefixLen=5;
+				
+			}
+			
+			end=v.indexOf('}',start);
+			/*print.e("----------------");
+			print.e(s+"-"+e);
+			print.e(v);
+			print.e(start);
+			print.e(end);*/
+			if(end>prefixLen) {
+        		_name=v.substring(start+prefixLen,end);
+        		//print.e(_name);
+        		_prop=isSystem?System.getProperty(_name):System.getenv(_name);
+        		if(_prop!=null) {
+        			v=new StringBuilder()
+        			.append(v.substring(0,start))
+    				.append(_prop)
+        			.append(v.substring(end+1)).toString();
+        			start+=_prop.length();
+        		}
+        		else start=end;
+        	}
+			else start=end; // set start to end for the next round
+			s=-1;e=-1; // reset index
+		}
+		return v;
+	}
 
 
 	public static class MonitorTemp {

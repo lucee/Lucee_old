@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
+import lucee.loader.TP;
+
 import org.osgi.framework.Version;
 
 public abstract class CFMLEngineFactorySupport {
@@ -196,7 +198,16 @@ public abstract class CFMLEngineFactorySupport {
 		}
 		// System
 		else if (path.startsWith("{system")) {
-			if (path.startsWith("}", 7))
+			if(path.charAt(7)==':') {
+            	// now we read the properties name
+            	int end=path.indexOf('}',8);
+            	if(end>8) {
+            		String name=path.substring(8,end);
+            		String prop=System.getProperty(name);
+            		if(prop!=null)return new File(new File(prop),path.substring(end+1)).getAbsolutePath();
+            	}
+            }
+			else if (path.startsWith("}", 7))
 				path = new File(getSystemDirectory(), path.substring(8))
 						.toString();
 			else if (path.startsWith("-dir}", 7))
@@ -206,8 +217,21 @@ public abstract class CFMLEngineFactorySupport {
 				path = new File(getSystemDirectory(), path.substring(18))
 						.toString();
 		}
+		
+
+		// env
+		else if (path.startsWith("{env:")) {
+            	// now we read the properties name
+            	int end=path.indexOf('}',5);
+            	if(end>5) {
+            		String name=path.substring(5,end);
+            		String env=System.getenv(name);
+            		if(env!=null)return new File(new File(env),path.substring(end+1)).getAbsolutePath();
+            	}
+		}
+		
 		// Home
-		else if (path.startsWith("{home"))
+		else if (path.startsWith("{home")) {
 			if (path.startsWith("}", 5))
 				path = new File(getHomeDirectory(), path.substring(6))
 						.toString();
@@ -217,6 +241,14 @@ public abstract class CFMLEngineFactorySupport {
 			else if (path.startsWith("-directory}", 5))
 				path = new File(getHomeDirectory(), path.substring(16))
 						.toString();
+		}
+		// ClassLoaderDir
+        if(path.startsWith("{classloader")) {
+            if(path.startsWith("}",12)) path=new File(getClassLoadeDirectory(),path.substring(13)).toString();
+            else if(path.startsWith("-dir}",12)) path=new File(getClassLoadeDirectory(),path.substring(17)).toString();
+            else if(path.startsWith("-directory}",12)) path=new File(getClassLoadeDirectory(),path.substring(23)).toString();
+        }
+        
 		return path;
 	}
 
@@ -232,12 +264,17 @@ public abstract class CFMLEngineFactorySupport {
 		return homeFile;
 	}
 
+    public static File getClassLoadeDirectory(){
+    	return CFMLEngineFactory.getClassLoaderRoot(TP.class.getClassLoader());
+    }
+
+
 	/**
 	 * returns the Temp Directory of the System
 	 * 
 	 * @return temp directory
 	 */
-	protected static File getTempDirectory() {
+	public static File getTempDirectory() {
 		if (tempFile != null)
 			return tempFile;
 
@@ -259,11 +296,13 @@ public abstract class CFMLEngineFactorySupport {
 
 		return tempFile;
 	}
+	
+	
 
 	/**
 	 * @return return System directory
 	 */
-	private static File getSystemDirectory() {
+	public static File getSystemDirectory() {
 		final String pathes = System.getProperty("java.library.path");
 		if (pathes != null) {
 			final String[] arr = pathes.split(File.pathSeparator);

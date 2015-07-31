@@ -234,8 +234,6 @@ public final class SystemUtil {
 				return bean;
 			}
 		}
-		
-		
 		return null;
 	}
 	
@@ -323,12 +321,64 @@ public final class SystemUtil {
     public static boolean isUnix() {
         return isUnix;
     }
+    
 
+    /**
+     * returns the Temp Directory of the System
+     * @return temp directory
+     * @throws IOException 
+     */
+    public static Resource getTempDirectory() {
+    	return ResourcesImpl.getFileResourceProvider().getResource(CFMLEngineFactory.getTempDirectory().getAbsolutePath());
+    	
+    	/*if(tempFile!=null) return tempFile;
+        ResourceProvider fr = ResourcesImpl.getFileResourceProvider();
+        String tmpStr = System.getProperty("java.io.tmpdir");
+        if(tmpStr!=null) {
+            tempFile=fr.getResource(tmpStr);
+            if(tempFile.exists()) {
+                tempFile=ResourceUtil.getCanonicalResourceEL(tempFile);
+                return tempFile;
+            }
+        }
+        File tmp =null;
+        try {
+        	tmp = File.createTempFile("a","a");
+            tempFile=fr.getResource(tmp.getParent());
+            tempFile=ResourceUtil.getCanonicalResourceEL(tempFile);   
+        }
+        catch(IOException ioe) {}
+        finally {
+        	if(tmp!=null)tmp.delete();
+        }
+        return tempFile;*/
+    }
+    
+    /**
+     * returns the a unique temp file (with no auto delete)
+     * @param extension 
+     * @return temp directory
+     * @throws IOException 
+     */
+    public static Resource getTempFile(String extension, boolean touch) throws IOException {
+    	String filename=CreateUniqueId.invoke();
+    	if(!StringUtil.isEmpty(extension,true)){
+    		if(extension.startsWith("."))filename+=extension;
+    		else filename+="."+extension;
+    	}
+		Resource file = getTempDirectory().getRealResource(filename);
+		if(touch)ResourceUtil.touch(file);
+		return file;
+	}
+    
+    
     /**
      * @return return System directory
      */
     public static Resource getSystemDirectory() {
-        String pathes=System.getProperty("java.library.path");
+    	return ResourcesImpl.getFileResourceProvider().getResource(CFMLEngineFactory.getSystemDirectory().getAbsolutePath());
+    	
+        /*String pathes=System.getProperty("java.library.path");
         ResourceProvider fr = ResourcesImpl.getFileResourceProvider();
         if(pathes!=null) {
             String[] arr=ListUtil.toStringArrayEL(ListUtil.listToArray(pathes,File.pathSeparatorChar));
@@ -365,7 +415,7 @@ public final class SystemUtil {
                 if(file.exists() && file.isDirectory() && file.isWriteable()) return ResourceUtil.getCanonicalResourceEL(file);
             }
         }
-        return null;
+        return null;*/
     }
     
     /**
@@ -384,54 +434,7 @@ public final class SystemUtil {
             return null;
         }
     }
-    
-    /**
-     * returns the Temp Directory of the System
-     * @return temp directory
-     * @throws IOException 
-     */
-    public static Resource getTempDirectory() {
-        if(tempFile!=null) return tempFile;
-        ResourceProvider fr = ResourcesImpl.getFileResourceProvider();
-        String tmpStr = System.getProperty("java.io.tmpdir");
-        if(tmpStr!=null) {
-            tempFile=fr.getResource(tmpStr);
-            if(tempFile.exists()) {
-                tempFile=ResourceUtil.getCanonicalResourceEL(tempFile);
-                return tempFile;
-            }
-        }
-        File tmp =null;
-        try {
-        	tmp = File.createTempFile("a","a");
-            tempFile=fr.getResource(tmp.getParent());
-            tempFile=ResourceUtil.getCanonicalResourceEL(tempFile);   
-        }
-        catch(IOException ioe) {}
-        finally {
-        	if(tmp!=null)tmp.delete();
-        }
-        return tempFile;
-    }
-    
-
-    /**
-     * returns the a unique temp file (with no auto delete)
-     * @param extension 
-     * @return temp directory
-     * @throws IOException 
-     */
-    public static Resource getTempFile(String extension, boolean touch) throws IOException {
-    	String filename=CreateUniqueId.invoke();
-    	if(!StringUtil.isEmpty(extension,true)){
-    		if(extension.startsWith("."))filename+=extension;
-    		else filename+="."+extension;
-    	}
-		Resource file = getTempDirectory().getRealResource(filename);
-		if(touch)ResourceUtil.touch(file);
-		return file;
-	}
-    
+        
     /**
      * returns the Hoome Directory of the System
      * @return home directory
@@ -448,6 +451,7 @@ public final class SystemUtil {
         }
         return homeFile;
     }
+    
     
     public static Resource getClassLoadeDirectory(){
     	return ResourceUtil.toResource(CFMLEngineFactory.getClassLoaderRoot(TP.class.getClassLoader()));
@@ -528,32 +532,7 @@ public final class SystemUtil {
      * @return updated path
      */
     public static String parsePlaceHolder(String path) {
-        if(path==null) return path;
-        // Temp
-        if(path.startsWith("{temp")) {
-            if(path.startsWith("}",5)) path=getTempDirectory().getRealResource(path.substring(6)).toString();
-            else if(path.startsWith("-dir}",5)) path=getTempDirectory().getRealResource(path.substring(10)).toString();
-            else if(path.startsWith("-directory}",5)) path=getTempDirectory().getRealResource(path.substring(16)).toString();
-        }
-        // System
-        else if(path.startsWith("{system")) {
-            if(path.startsWith("}",7)) path=getSystemDirectory().getRealResource(path.substring(8)).toString();
-            else if(path.startsWith("-dir}",7)) path=getSystemDirectory().getRealResource(path.substring(12)).toString();
-            else if(path.startsWith("-directory}",7)) path=getSystemDirectory().getRealResource(path.substring(18)).toString();
-        }
-        // Home
-        else if(path.startsWith("{home")) {
-            if(path.startsWith("}",5)) path=getHomeDirectory().getRealResource(path.substring(6)).toString();
-            else if(path.startsWith("-dir}",5)) path=getHomeDirectory().getRealResource(path.substring(10)).toString();
-            else if(path.startsWith("-directory}",5)) path=getHomeDirectory().getRealResource(path.substring(16)).toString();
-        }
-        // ClassLoaderDir
-        else if(path.startsWith("{classloader")) {
-            if(path.startsWith("}",12)) path=getClassLoadeDirectory().getRealResource(path.substring(13)).toString();
-            else if(path.startsWith("-dir}",12)) path=getClassLoadeDirectory().getRealResource(path.substring(17)).toString();
-            else if(path.startsWith("-directory}",12)) path=getClassLoadeDirectory().getRealResource(path.substring(23)).toString();
-        }
-        return path;
+        return CFMLEngineFactory.parsePlaceHolder(path);
     }
     
     public static String addPlaceHolder(Resource file, String defaultValue) {
@@ -1184,8 +1163,9 @@ class StopThread extends Thread {
 		int count=0;
 		if(thread.isAlive()) {
 			do{
-				if(count>0 && log!=null) LogUtil.log(log, Log.LEVEL_ERROR, "", "could not stop the thread on the first approach", thread.getStackTrace());
-				if(count++>10) break; // should never happen
+				if(count>10) break; // should never happen
+				if(count>0 && log!=null) LogUtil.log(log, Log.LEVEL_ERROR, "", "could not stop the thread, trying again", thread.getStackTrace());
+				
 				try{
 					thread.stop(t);
 				}
@@ -1194,10 +1174,11 @@ class StopThread extends Thread {
 					thread.stop();
 				}
 				SystemUtil.sleep(1000);
+				count++;
 			}
 			while(thread.isAlive() && pci.isInitialized());
 		}
 		
-		if(count>10 && log!=null) LogUtil.log(log, Log.LEVEL_ERROR, "", "could not stop the thread", thread.getStackTrace());
+		if(count>10 && log!=null) LogUtil.log(log, Log.LEVEL_ERROR, "", "could not stop the thread, giving up", thread.getStackTrace());
 	}
 }
