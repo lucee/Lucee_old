@@ -22,6 +22,9 @@ branches:
 #	skip_cleanup: true
 
 after_success:
+
+- git config --global user.email "${GIT_EMAIL}"
+- git config --global user.name "${GIT_USERNAME}"
 - git add -f . 
 - git commit -m "commit from travis" 
 - git remote -v
