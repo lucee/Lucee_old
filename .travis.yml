@@ -1,0 +1,9 @@
+language: java
+
+notifications:
+  slack: luceeserver:ZTfbu4bVSLFmakRcLInrNZIT
+  email:
+    - info@lucee.org
+    - michael@lucee.org
+
+script: mvn -f loader/pom.xml clean deploy
