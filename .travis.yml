@@ -2,8 +2,8 @@ language: java
 
 # copy the settings.xml for maven from the "travis" branch
 before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
-###script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
-script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
+script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
+###script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
 
 #script: "mvn --batch-mode -f loader/pom.xml release:update-versions --settings target/travis/settings.xml"
 #script: git commit -m "commit from travis"
@@ -25,7 +25,7 @@ after_success:
 - git add -f . 
 - git commit -m "commit from travis" 
 - git remote -v
-- git remote set-url origin `git config --get remote.origin.url`
+- "git remote set-url origin `git config --get remote.origin.url`"
 - git push
 
 notifications:
