@@ -6,4 +6,4 @@ notifications:
     - info@lucee.org
     - michael@lucee.org
 
-script: mvn -f loader/pom.xml clean install
+script: mvn -f loader/pom.xml clean deploy
