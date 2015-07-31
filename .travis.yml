@@ -2,10 +2,10 @@ language: java
 
 # copy the settings.xml for maven from the "travis" branch
 before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
-#script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
+###script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
 script: "mvn --batch-mode -f loader/pom.xml release:update-versions --settings target/travis/settings.xml"
-script: git commit -m "commit from travis"
-script: $ git push -u origin master
+#script: git commit -m "commit from travis"
+#script: $ git push -u origin master
 
 #script: "[ ${TRAVIS_PULL_REQUEST} = 'false' ] && mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml || mvn -f loader/pom.xml clean install"
 
@@ -15,6 +15,12 @@ script: $ git push -u origin master
 branches:
   only:
     - master
+
+after_success:
+- git commit -m "commit from travis" 
+#- git remote -v
+#- git remote set-url origin https://github.com/$TRAVIS_REPO_SLUG.git 
+- git push
 
 notifications:
   slack: luceeserver:ZTfbu4bVSLFmakRcLInrNZIT
