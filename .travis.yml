@@ -46,7 +46,9 @@ branches:
 #	skip_cleanup: true
 deploy:
   provider: releases
-  api_key: "GITHUB OAUTH TOKEN"
+  user: "${GIT_USERNAME}"
+  password: "${GIT_PASSWORD}"
+  #api_key: "GITHUB OAUTH TOKEN"
   file: loader/pom.xml
   skip_cleanup: true
   on:
