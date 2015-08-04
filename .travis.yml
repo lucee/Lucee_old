@@ -1,5 +1,9 @@
 language: java
 
+#os:
+#  - linux
+#  - osx
+
 # copy the settings.xml for maven from the "travis" branch
 before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
 
@@ -60,8 +64,8 @@ notifications:
   email:
     - michael@lucee.org
 
-after_success:
-  - git commit -a -m "Committed by Travis-CI build number: $TRAVIS_JOB_ID"
+#after_success:
+#  - git commit -a -m "Committed by Travis-CI build number: $TRAVIS_JOB_ID"
 
 
 
