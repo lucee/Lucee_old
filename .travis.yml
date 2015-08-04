@@ -7,9 +7,9 @@ before_install: "git clone -b travis `git config --get remote.origin.url` target
 script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
 
 script: mvn --batch-mode -f loader/pom.xml release:update-versions
-#script: git config --global user.email "${GIT_EMAIL}"
-#script: git config --global user.name "${GIT_USERNAME}"
-#script: git config --global user.password "${GIT_PASSWORD}"
+script: git config --global user.email "${GIT_EMAIL}"
+script: git config --global user.name "${GIT_USERNAME}"
+script: git config --global user.password "${GIT_PASSWORD}"
 script: git add -f loader/pom.xml 
 script: git commit -m "update maven version" 
 #script: git remote -v
