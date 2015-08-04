@@ -190,7 +190,6 @@ public class Log4jUtil {
 				if(obj instanceof Appender) {
 					appender=(Appender) obj;
 					AppenderSkeleton as=obj instanceof AppenderSkeleton?(AppenderSkeleton)obj:null;
-					
 					Iterator<Entry<String, String>> it = appenderArgs.entrySet().iterator();
 					Entry<String, String> e;
 					String n;
@@ -206,8 +205,6 @@ public class Log4jUtil {
 								}
 							}
 						}
-
-						
 						
 						try {
 							Reflector.callSetter(obj, e.getKey(), e.getValue());
@@ -220,7 +217,10 @@ public class Log4jUtil {
 			}
 		}
 		
-		if(appender==null) {
+		if(appender instanceof AppenderSkeleton) {
+			((AppenderSkeleton)appender).activateOptions();
+		}
+		else if(appender==null) {
 			PrintWriter pw;
 			if(config.getOutWriter()==null)pw=new PrintWriter(System.out);
 			else pw=config.getOutWriter();
