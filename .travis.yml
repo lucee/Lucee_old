@@ -60,3 +60,8 @@ notifications:
   email:
     - michael@lucee.org
 
+after_success:
+  - git commit -a -m "Committed by Travis-CI build number: $TRAVIS_JOB_ID"
+
+
+
