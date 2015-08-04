@@ -49,7 +49,8 @@ deploy:
   user: "${GIT_USERNAME}"
   password: "${GIT_PASSWORD}"
   #api_key: "GITHUB OAUTH TOKEN"
-  file: loader/pom.xml
+  #file: loader/pom.xml
+  file: loader/target/lucee-5.0.0.59-SNAPSHOT.jar
   skip_cleanup: true
   on:
     tags: true
