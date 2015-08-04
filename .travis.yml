@@ -38,9 +38,9 @@ script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy
 # oldscript: mvn -f loader/pom.xml clean deploy
 
 # whitelist
-branches:
-  only:
-    - master
+#branches:
+#  only:
+#    - master
 
 #deploy:
 #	skip_cleanup: true
