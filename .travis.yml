@@ -13,8 +13,8 @@ script: mvn --batch-mode -f loader/pom.xml release:update-versions
 script: git add -f loader/pom.xml 
 script: git commit -m "update maven version" 
 #script: git remote -v
-script: git remote set-url origin https://github.com/lucee/Lucee.git
-script: git push
+#script: git remote set-url origin https://github.com/lucee/Lucee.git
+script: git push origin master
 
 #script: "mvn --batch-mode -f loader/pom.xml release:update-versions --settings target/travis/settings.xml"
 #script: git commit -m "commit from travis"
