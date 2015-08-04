@@ -7,7 +7,8 @@ before_install: "git clone -b travis `git config --get remote.origin.url` target
 
 
 ### script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
-script: git config --get remote.origin.url 
+echo: $TRAVIS_JOB_ID
+#script: git config --get remote.origin.url 
 ###script: mvn --batch-mode -f loader/pom.xml release:update-versions
 #script: git config --global user.email "${GIT_EMAIL}"
 #script: git config --global user.name "${GIT_USERNAME}"
