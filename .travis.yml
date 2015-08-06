@@ -5,12 +5,18 @@ language: java
 #  - osx
 
 # copy the settings.xml for maven from the "travis" branch
-before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
+before_install: 
+ - "git clone -b travis `git config --get remote.origin.url` target/travis"
 
 #script: mvn versions:set -DnewVersion="5.0.0.travis-${TRAVIS_JOB_ID}-SNAPSHOT"
 script: 
-  - mvn -f loader/pom.xml versions:set -DnewVersion="5.0.0.travis-${TRAVIS_JOB_ID}-SNAPSHOT"
-  - mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml
+#  - mvn -f loader/pom.xml versions:set -DnewVersion="5.0.0.travis-${TRAVIS_JOB_ID}-SNAPSHOT"
+ - mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml
+# - git config --global user.email "${GIT_EMAIL}"
+# - git config --global user.name "${GIT_USERNAME}"
+ - git add -f loader/pom.xml # add the updated pom
+ - git commit -m "update maven version" 
+ - git push origin master
 
 #script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
 ### script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
