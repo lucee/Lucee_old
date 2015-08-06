@@ -13,11 +13,13 @@ script:
 #  - mvn -f loader/pom.xml versions:set -DnewVersion="5.0.0.travis-${TRAVIS_JOB_ID}-SNAPSHOT"
  - mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml
  - mvn --batch-mode -f loader/pom.xml release:update-versions
+ - echo "abc:${GIT_EMAIL}"
  - git config --global user.email "${GIT_EMAIL}"
  - git config --global user.name "${GIT_USERNAME}"
  - git config --global user.password "${GIT_PASSWORD}"
  - git add -f loader/pom.xml # add the updated pom
- - git commit -m "update maven version" 
+ - git commit -m "update maven version"
+ - git remote -v
  - git remote set-url origin https://github.com/lucee/Lucee.git
  - git push origin master
 
