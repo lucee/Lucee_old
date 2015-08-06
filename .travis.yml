@@ -1,24 +1,5 @@
 language: java
 
-# adding something
-before_install: "git clone -b travis `git config --get remote.origin.url` loader/travis"
-
-
-
-#script: git commit -m "commit from travis"
-#script: $ git push -u origin master
-deploy:
-  provider: releases
-  user: "${GIT_USERNAME}"
-  password: "${GIT_PASSWORD}"
-  #api_key: "GITHUB OAUTH TOKEN"
-  #file: loader/pom.xml
-  file: loader/travis/settings.xml
-  skip_cleanup: true
-  on:
-    tags: true
-    all_branches: true
-
 notifications:
   slack: luceeserver:ZTfbu4bVSLFmakRcLInrNZIT
   email:
