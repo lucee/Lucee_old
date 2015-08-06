@@ -289,13 +289,6 @@ public class HTTPEngine4Impl {
         }
 	}
 
-	/*public static void setTimeout(HttpParams params, long timeout) {
-        if(timeout>0){
-        	HttpConnectionParams.setConnectionTimeout(params, (int)timeout);
-        	HttpConnectionParams.setSoTimeout(params, (int)timeout);
-        }
-	}*/
-
 	public static BasicHttpContext setCredentials(HttpClientBuilder builder, HttpHost httpHost, String username,String password, boolean preAuth) {
         // set Username and Password
         if(!StringUtil.isEmpty(username,true)) {

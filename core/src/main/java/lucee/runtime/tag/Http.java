@@ -967,7 +967,7 @@ public final class Http extends BodyTagImpl {
     				req.setHeader("User-Agent",this.useragent);
     		
     	// set timeout
-    			if(this.timeout==null) { // not set
+    			if(this.timeout==null || this.timeout.getSeconds()<=0) { // not set
     				this.timeout=TimeSpanImpl.fromMillis(pageContext.getRequestTimeout());
         		}
     			setTimeout(builder,this.timeout);
@@ -1958,6 +1958,8 @@ public final class Http extends BodyTagImpl {
 	}
 
 	public static void setTimeout(HttpClientBuilder builder, TimeSpan timeout) {
+		if(timeout==null || timeout.getMillis()<=0) return;
+		 
 		builder.setConnectionTimeToLive(timeout.getMillis(), TimeUnit.MILLISECONDS);
     	SocketConfig sc=SocketConfig.custom()
     			.setSoTimeout((int)timeout.getMillis())
