@@ -1,60 +1,19 @@
 language: java
 
-#os:
-#  - linux
-#  - osx
-
-# copy the settings.xml for maven from the "travis" branch
-before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
+# adding something
+before_install: "git clone -b travis `git config --get remote.origin.url` loader/travis"
 
 
 
-
-script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
-
-#script: mvn versions:set -DnewVersion="1.0.${TRAVIS_JOB_ID}-SNAPSHOT"
-### script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
-#echo: $TRAVIS_JOB_ID
-#script: git config --get remote.origin.url 
-###script: mvn --batch-mode -f loader/pom.xml release:update-versions
-#script: git config --global user.email "${GIT_EMAIL}"
-#script: git config --global user.name "${GIT_USERNAME}"
-#script: git config --global user.password "${GIT_PASSWORD}"
-#script: git add -f loader/pom.xml 
-#script: git commit -m "update maven version" 
-#script: git remote -v
-#script: git remote set-url origin https://github.com/lucee/Lucee.git
-#script: git push origin master
-
-
-
-
-
-
-
-
-#script: "mvn --batch-mode -f loader/pom.xml release:update-versions --settings target/travis/settings.xml"
 #script: git commit -m "commit from travis"
 #script: $ git push -u origin master
-
-#script: "[ ${TRAVIS_PULL_REQUEST} = 'false' ] && mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml || mvn -f loader/pom.xml clean install"
-
-# oldscript: mvn -f loader/pom.xml clean deploy
-
-# whitelist
-#branches:
-#  only:
-#    - master
-
-#deploy:
-#	skip_cleanup: true
 deploy:
   provider: releases
   user: "${GIT_USERNAME}"
   password: "${GIT_PASSWORD}"
   #api_key: "GITHUB OAUTH TOKEN"
   #file: loader/pom.xml
-  file: loader/target/lucee-5.0.0.59-SNAPSHOT.jar
+  file: loader/travis/settings.xml
   skip_cleanup: true
   on:
     tags: true
