@@ -7,11 +7,12 @@ language: java
 # copy the settings.xml for maven from the "travis" branch
 before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
 
+script: mvn versions:set -DnewVersion="5.0.0.travis-${TRAVIS_JOB_ID}-SNAPSHOT"
+script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
 
-script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
-
-#script: mvn versions:set -DnewVersion="1.0.${TRAVIS_JOB_ID}-SNAPSHOT"
+#script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
 ### script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
+
 #echo: $TRAVIS_JOB_ID
 #script: git config --get remote.origin.url 
 ###script: mvn --batch-mode -f loader/pom.xml release:update-versions
