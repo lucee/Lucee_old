@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -1019,21 +1020,21 @@ public final class Http extends BodyTagImpl {
 		client = builder.build();
 		Executor4 e = new Executor4(this,client,httpContext,req,redirect);
 		HTTPResponse4Impl rsp=null;
-		if(timeout==null){
+		//if(timeout==null){
 			try{
 				rsp = e.execute(httpContext);
 			}
 			
 			catch(Throwable t){
 				if(!throwonerror){
-					setUnknownHost(cfhttp, t);
+					if(t instanceof SocketTimeoutException)setRequestTimeout(cfhttp);
+					else setUnknownHost(cfhttp, t);
 					return;
 				}
 				throw toPageException(t);
 				
 			}
-		}
-		else {
+		/*} else {
 			e.start();
 			try {
 				synchronized(this){//print.err(timeout);
@@ -1061,7 +1062,7 @@ public final class Http extends BodyTagImpl {
 				return;
 				//throw new ApplicationException("timeout");	
 			}
-		}
+		}*/
 		
 /////////////////////////////////////////// EXECUTE /////////////////////////////////////////////////
 		Charset responseCharset=CharsetUtil.toCharset(rsp.getCharset());
