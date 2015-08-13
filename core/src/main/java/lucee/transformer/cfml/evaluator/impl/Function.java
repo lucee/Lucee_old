@@ -56,15 +56,15 @@ public final class Function extends EvaluatorSupport {
 		//Body p=(Body) tag.getParent();
 		//Statement pp = p.getParent();
 		
-		boolean isCFC=true;
+		boolean isCI=true;
         try {
-			isCFC = ASMUtil.getAncestorPage(tag).isComponent();
+			isCI = ASMUtil.getAncestorPage(tag).isComponent() || ASMUtil.getAncestorPage(tag).isInterface();
 		} catch (TransformerException e) {}
 
 		Attribute attrName = tag.getAttribute("name");
 		if(attrName!=null) {
 			Expression expr = attrName.getValue();
-			if(expr instanceof LitString && !isCFC){
+			if(expr instanceof LitString && !isCI){
 				checkFunctionName(((LitString)expr).getString(),flibs);
 			}
 				
