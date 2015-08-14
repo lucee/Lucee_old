@@ -21,7 +21,7 @@ script:
  - git commit -m "update maven version"
  - git remote -v
  - git remote set-url origin https://github.com/lucee/Lucee.git
- - git push origin master
+ ## - git push origin master
 
 #script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
 ### script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
