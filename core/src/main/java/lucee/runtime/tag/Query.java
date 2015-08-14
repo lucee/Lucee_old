@@ -72,6 +72,7 @@ import lucee.runtime.type.dt.DateTime;
 import lucee.runtime.type.dt.TimeSpan;
 import lucee.runtime.type.dt.TimeSpanImpl;
 import lucee.runtime.type.query.SimpleQuery;
+import lucee.runtime.type.scope.Argument;
 import lucee.runtime.type.util.KeyConstants;
 import lucee.runtime.type.util.ListUtil;
 import lucee.runtime.util.PageContextUtil;
@@ -515,7 +516,9 @@ public final class Query extends BodyTagTryCatchFinallyImpl {
 			// create SQL
 			SQL sql;
 			if(params!=null) {
-				if(Decision.isArray(params))
+				if(params instanceof Argument)
+					sql=QueryParamConverter.convert(strSQL, (Argument) params);
+				else if(Decision.isArray(params))
 					sql=QueryParamConverter.convert(strSQL, Caster.toArray(params));
 				else if(Decision.isStruct(params))
 					sql=QueryParamConverter.convert(strSQL, Caster.toStruct(params));
