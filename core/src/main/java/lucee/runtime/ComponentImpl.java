@@ -26,6 +26,7 @@ import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -148,7 +149,7 @@ public final class ComponentImpl extends StructSupport implements Externalizable
 	private boolean useShadow;
 	private boolean entity;
 	boolean afterConstructor;
-	//private Map<Key,UDF> constructorUDFs;
+	private Map<Key,UDF> constructorUDFs;
 	private boolean loaded;
 	private boolean hasInjectedFunctions;
 	private boolean isExtended; // is this component extended by a other component?
@@ -250,6 +251,12 @@ public final class ComponentImpl extends StructSupport implements Externalizable
 	    			ComponentScopeShadow css = (ComponentScopeShadow)scope;
 	    			trg.scope=new ComponentScopeShadow(trg,duplicateDataMember(trg,css.getShadow(),MapFactory.getConcurrentMap(),deepCopy));
 	    		}
+	    	}
+
+	    	// at the moment this makes no sense, becuae this map is no more used after constructor has runned and for a clone the constructo is not executed, but perhaps this is used in future
+	    	if(constructorUDFs!=null){
+	    		trg.constructorUDFs=new HashMap<Collection.Key, UDF>();
+	    		addUDFS(trg, constructorUDFs, trg.constructorUDFs);
 	    	}
 	    	
 	    	if(isTop) {
@@ -723,12 +730,12 @@ public final class ComponentImpl extends StructSupport implements Externalizable
      * will be called after invoking constructor, only invoked by constructor (component body execution)
 	 * @param pc
 	 * @param parent
+	 * @throws ApplicationException 
 	 */
-    public void afterConstructor(PageContext pc, Variables parent) {
+    public void afterConstructor(PageContext pc, Variables parent) throws ApplicationException {
     	pc.setVariablesScope(parent);
     	this.afterConstructor=true;
     	
-    	/* constructor udfs
     	if(constructorUDFs!=null){
     		Iterator<Entry<Key, UDF>> it = constructorUDFs.entrySet().iterator();
     		Map.Entry<Key, UDF> entry;
@@ -740,7 +747,7 @@ public final class ComponentImpl extends StructSupport implements Externalizable
     			udf=(UDFPlus) entry.getValue();
     			registerUDF(key, udf,false,true);
     		}
-    	}*/
+    	}
 	}
     
     /**
@@ -748,8 +755,9 @@ public final class ComponentImpl extends StructSupport implements Externalizable
      * @deprecated replaced with <code>afterConstructor(PageContext pc, Variables parent)</code>
      * @param pc
      * @param parent
+     * @throws ApplicationException 
      */
-    public void afterCall(PageContext pc, Variables parent) {
+    public void afterCall(PageContext pc, Variables parent) throws ApplicationException {
     	afterConstructor(pc, parent);
 	}
 	
@@ -2086,11 +2094,11 @@ public final class ComponentImpl extends StructSupport implements Externalizable
 		return Operator.compare(castToString(), str);
 	}
 
-	/*public void addConstructorUDF(Key key, UDF value) {
+	public void addConstructorUDF(Key key, UDF value) {
 		if(constructorUDFs==null)
 			constructorUDFs=new HashMap<Key,UDF>();
 		constructorUDFs.put(key, value);
-	}*/
+	}
 
 // MUST more native impl
 	public void readExternal(ObjectInput in) throws IOException,ClassNotFoundException {
@@ -2148,7 +2156,7 @@ public final class ComponentImpl extends StructSupport implements Externalizable
 		this.base=other.base;
 		//this.componentPage=other.componentPage;
 		this.pageSource=other.pageSource;
-		//this.constructorUDFs=other.constructorUDFs;
+		this.constructorUDFs=other.constructorUDFs;
 		this.dataMemberDefaultAccess=other.dataMemberDefaultAccess;
 		this.absFin=other.absFin;
 		this.isInit=other.isInit;

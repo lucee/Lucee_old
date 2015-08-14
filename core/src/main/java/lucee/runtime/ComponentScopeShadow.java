@@ -35,6 +35,7 @@ import lucee.runtime.op.Duplicator;
 import lucee.runtime.type.Collection;
 import lucee.runtime.type.Struct;
 import lucee.runtime.type.StructImpl;
+import lucee.runtime.type.UDF;
 import lucee.runtime.type.UDFPlus;
 import lucee.runtime.type.dt.DateTime;
 import lucee.runtime.type.it.EntryIterator;
@@ -205,9 +206,9 @@ public class ComponentScopeShadow extends StructSupport implements ComponentScop
 			|| key.equalsIgnoreCase(KeyConstants._super) 
 			|| key.equalsIgnoreCase(KeyConstants._static)) return value;
 		
-		/*if(!component.afterConstructor && value instanceof UDF) {
+		if(!component.afterConstructor && value instanceof UDF) {
 			component.addConstructorUDF(key,(UDF)value);
-		}*/
+		}
 		shadow.put(key, value);
 		return value;
 	}
