@@ -306,7 +306,7 @@ public final class Http extends BodyTagImpl {
 	/** The full path to a PKCS12 format file that contains the client certificate for the request. */
 	private String clientCert;
 	/** Password used to decrypt the client certificate. */
-	private String clientCertPassowrd;
+	private String clientCertPassword;
 
 	@Override
 	public void release()	{
