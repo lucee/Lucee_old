@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import lucee.runtime.op.Operator;
+import lucee.runtime.spooler.Task;
 import lucee.runtime.type.Collection;
 import lucee.runtime.type.Collection.Key;
 import lucee.runtime.type.KeyImpl;
@@ -139,5 +140,14 @@ public class CollectionUtil {
 			keyArr[index++]=KeyImpl.init(it.next());
 		}
 		return keyArr;
+	}
+
+	public static <T> T remove(List<T> list,int index, T defaultValue) {
+		try{
+			return list.remove(index);
+		}
+		catch(Throwable t){
+			return defaultValue;
+		}
 	}
 }
