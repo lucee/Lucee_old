@@ -102,7 +102,7 @@
 								#tc.codeprinthtml#<br>
 							</blockquote>
 						<cfelse>
-							<span class="-no-icon">#idx == 1 ? "<b>#tc.template#: line #tc.line#</b>" : "<b>called from</b> #tc.template#: line #tc.line#"#</span>
+							<span class="-no-icon">#idx == 1 ? "<b>#HTMLEditFormat(tc.template)#: line #tc.line#</b>" : "<b>called from</b> #HTMLEditFormat(tc.template)#: line #tc.line#"#</span>
 							<br>
 						</cfif>
 					</cfloop>

@@ -1,20 +1,4 @@
-<!--- 
- * Copyright (c) 2014, the Railo Company Ltd. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either 
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public 
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- * 
- ---><cfcomponent extends="Debug" output="no"><cfscript>
+<cfcomponent extends="Debug" output="no"><cfscript>
 
     fields=array(
 		
@@ -33,6 +17,9 @@
 		
 		
 		,group("Custom Debugging Output","Define what is outputted",3)
+
+		
+
 
 		,field("General Debug Information ","general",true,false,
 				"Select this option to show general information about this request. General items are Lucee Version, Template, Time Stamp, User Locale, User Agent, User IP, and Host Name. ","checkbox")
@@ -159,7 +146,7 @@ millisecond:"ms"
 		</tr>
 		<tr>
 			<td class="cfdebug" nowrap> Template </td>
-			<td class="cfdebug">#_cgi.SCRIPT_NAME# (#_cgi.cf_template_path#)</td>
+			<td class="cfdebug">#HTMLEditFormat(_cgi.SCRIPT_NAME)# (#HTMLEditFormat(expandPath(_cgi.SCRIPT_NAME))#)</td>
 		</tr>
 		<tr>
 			<td class="cfdebug" nowrap> Time Stamp </td>
@@ -370,7 +357,7 @@ millisecond:"ms"
 
 <cfif doPrint and structCount(scp)>
 <pre class="cfdebug"><b>#name# Variables:</b><cftry><cfloop index="key" list="#ListSort(StructKeyList(scp),"textnocase")#">
-#(key)#=<cftry><cfif IsSimpleValue(scp[key])>#scp[key]#<!--- 
+#(key)#=<cftry><cfif IsSimpleValue(scp[key])>#HTMLEditFormat(scp[key])#<!--- 
 ---><cfelseif isArray(scp[key])>Array (#arrayLen(scp[key])#)<!--- 
 ---><cfelseif isValid('component',scp[key])>Component (#GetMetaData(scp[key]).name#)<!--- 
 ---><cfelseif isStruct(scp[key])>Struct (#StructCount(scp[key])#)<!--- 
