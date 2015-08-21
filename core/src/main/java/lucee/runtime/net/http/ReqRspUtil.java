@@ -231,7 +231,7 @@ public final class ReqRspUtil {
 
 	private static String dec(String str, String charset, boolean force) {
 		str=str.trim();
-		if(StringUtil.startsWith(str, '"') && StringUtil.endsWith(str, '"'))
+		if(StringUtil.startsWith(str, '"') && StringUtil.endsWith(str, '"') && str.length()>1)
 			str=str.substring(1,str.length()-1);
 			
 		return decode(str,charset,force);//java.net.URLDecoder.decode(str.trim(), charset);
