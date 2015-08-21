@@ -595,12 +595,14 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 		if (id == null && singelton != null)
 			id = singelton.getIdentification();
 
-		System.out.println("download:" + symbolicName + ":" + symbolicVersion); // MUST remove
 		final URL updateUrl = new URL(updateProvider,
 				"/rest/update/provider/download/" + symbolicName + "/"
 						+ symbolicVersion + "/"
-						+ (id != null ? id.toQueryString() : ""));
-
+						+ (id != null ? id.toQueryString() : "")
+						+ (id == null ? "?" : "&")+"allowRedirect=true"
+						
+				);
+		System.out.println("download:" + symbolicName + ":" + symbolicVersion +" from "+updateUrl); // MUST remove
 		log(Logger.LOG_DEBUG, "download bundle [" + symbolicName + ":"
 				+ symbolicVersion + "] from " + updateUrl);
 
@@ -615,7 +617,7 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 			log(e);
 			throw e;
 		}
-		
+		//System.out.println("SC:" + code+"->"+conn.getFollowRedirects());
 		// the update provider is not providing a download for this
 		if (code != 200) {
 			
@@ -625,6 +627,8 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 				// just in case we check invalid names
 				if(location==null)location = conn.getHeaderField("location");
 				if(location==null)location = conn.getHeaderField("LOCATION");
+				System.out.println("download redirected:" + location); // MUST remove
+				
 				conn.disconnect();
 				URL url = new URL(location);
 				try {
@@ -633,6 +637,7 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 					conn.connect();
 					code = conn.getResponseCode();
 				} catch (final UnknownHostException e) {
+					
 					log(e);
 					throw e;
 				}
