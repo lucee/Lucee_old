@@ -123,7 +123,7 @@ class DCStack {
 		if(current==null) return;
 		
 		// timeout or closed
-		if(current.dc.isTimeout() || isClosedEL(current.dc.getConnection()) || !isValidEL(current.dc.getConnection())) { 
+		if(current.dc.isTimeout() || isClosedEL(current.dc.getConnection())) { 
 			
 			// when timeout was reached but it is still open, close it
 			if(!isClosedEL(current.dc.getConnection())){
