@@ -56,6 +56,7 @@ public class DatasourceConnectionPool {
 		
 		// max connection
 		int max=datasource.getConnectionLimit();
+		Config config;
 		synchronized (stack) {
 			while(max!=-1 && max<=_size(datasource)) {
 				try {
@@ -68,7 +69,7 @@ public class DatasourceConnectionPool {
 				}
 				
 			}
-			Config config;
+			
 			if(pc!=null){
 				config=pc.getConfig();
 				while(!stack.isEmpty()) {
@@ -84,9 +85,9 @@ public class DatasourceConnectionPool {
 				config=ThreadLocalPageContext.getConfig();
 			}
 			_inc(datasource);
-			
-			return loadDatasourceConnection(config,datasource, user, pass).using();
-		}
+
+		}			
+		return loadDatasourceConnection(config,datasource, user, pass).using();
 	}
 
 	private DatasourceConnectionImpl loadDatasourceConnection(Config config,DataSource ds, String user, String pass) throws PageException {
