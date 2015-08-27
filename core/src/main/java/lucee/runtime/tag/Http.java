@@ -31,6 +31,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
@@ -81,6 +82,7 @@ import lucee.runtime.type.StructImpl;
 import lucee.runtime.type.dt.DateTime;
 import lucee.runtime.type.dt.TimeSpan;
 import lucee.runtime.type.dt.TimeSpanImpl;
+import lucee.runtime.type.util.ArrayUtil;
 import lucee.runtime.type.util.KeyConstants;
 import lucee.runtime.type.util.ListUtil;
 import lucee.runtime.util.PageContextUtil;
@@ -1020,7 +1022,8 @@ public final class Http extends BodyTagImpl {
 		client = builder.build();
 		Executor4 e = new Executor4(this,client,httpContext,req,redirect);
 		HTTPResponse4Impl rsp=null;
-		//if(timeout==null){
+		
+		if(timeout==null || timeout.getMillis()<=0){
 			try{
 				rsp = e.execute(httpContext);
 			}
@@ -1031,10 +1034,10 @@ public final class Http extends BodyTagImpl {
 					else setUnknownHost(cfhttp, t);
 					return;
 				}
-				throw toPageException(t);
+				throw toPageException(t,rsp);
 				
 			}
-		/*} else {
+		} else {
 			e.start();
 			try {
 				synchronized(this){//print.err(timeout);
@@ -1048,7 +1051,7 @@ public final class Http extends BodyTagImpl {
 					setUnknownHost(cfhttp,e.t);
 					return;
 				}
-				throw toPageException(e.t);	
+				throw toPageException(e.t,rsp);	
 			}
 			
 			rsp=e.response;
@@ -1062,7 +1065,7 @@ public final class Http extends BodyTagImpl {
 				return;
 				//throw new ApplicationException("timeout");	
 			}
-		}*/
+		}
 		
 /////////////////////////////////////////// EXECUTE /////////////////////////////////////////////////
 		Charset responseCharset=CharsetUtil.toCharset(rsp.getCharset());
@@ -1361,13 +1364,31 @@ public final class Http extends BodyTagImpl {
 		return statusCode>=200 && statusCode<=299;
 	}
 
-	private PageException toPageException(Throwable t) {
+	private PageException toPageException(Throwable t, HTTPResponse4Impl rsp) {
+		if(t instanceof SocketTimeoutException) {
+			HTTPException he = new HTTPException("408 Request Time-out","a timeout occurred in tag http",408,"Time-out",rsp==null?null:rsp.getURL());
+			List<StackTraceElement> merged = ArrayUtil.merge(t.getStackTrace(), he.getStackTrace());
+			StackTraceElement[] traces=new StackTraceElement[merged.size()];
+			Iterator<StackTraceElement> it = merged.iterator();
+			int index=0;
+			while(it.hasNext()){
+				traces[index++]=it.next();
+			}
+			he.setStackTrace(traces);
+			return he;
+		}
 		PageException pe = Caster.toPageException(t);
 		if(pe instanceof NativeException) {
 			((NativeException) pe).setAdditional(KeyConstants._url, url);
 		}
 		return pe;
 	}
+
+	
+	
+	
+	
+	
 
 	private void setUnknownHost(Struct cfhttp,Throwable t) {
 		cfhttp.setEL(CHARSET,"");
