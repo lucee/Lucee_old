@@ -91,6 +91,11 @@ public class ORMDatasourceConnection implements DatasourceConnection {
 	public boolean isTimeout() {
 		return false;
 	}
+
+	@Override
+	public boolean isLifecycleTimeout() {
+		return false;
+	}
 	
 
 

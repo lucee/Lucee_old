@@ -127,12 +127,12 @@ public class DBUtilImpl implements DBUtil {
 
 	@Override
 	public DatasourceConnection getDatasourceConnection(PageContext pc,DataSource datasource, String user, String pass) throws PageException {
-		return ((ConfigWebImpl)pc.getConfig()).getDatasourceConnectionPool().getDatasourceConnection(pc, datasource, user, pass);
+		return ((ConfigWebImpl)pc.getConfig()).getDatasourceConnectionPool().getDatasourceConnection(ThreadLocalPageContext.getConfig(pc), datasource, user, pass);
 	}
 
 	@Override
 	public DatasourceConnection getDatasourceConnection(PageContext pc,String datasourceName, String user, String pass) throws PageException {
-		return ((ConfigWebImpl)pc.getConfig()).getDatasourceConnectionPool().getDatasourceConnection(pc, pc.getDataSource(datasourceName), user, pass);
+		return ((ConfigWebImpl)pc.getConfig()).getDatasourceConnectionPool().getDatasourceConnection(ThreadLocalPageContext.getConfig(pc), pc.getDataSource(datasourceName), user, pass);
 	}
 
 	@Override

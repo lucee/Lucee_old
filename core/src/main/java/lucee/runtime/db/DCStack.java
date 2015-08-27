@@ -49,7 +49,7 @@ class DCStack {
 		item=new Item(item,dc);
 	}
 
-	public DatasourceConnection get(PageContext pc){
+	public DatasourceConnection get(){
 		if(item==null) return null;
 		DatasourceConnection rtn = item.dc;
 		item=item.prev;
@@ -58,7 +58,7 @@ class DCStack {
 			if(!rtn.getConnection().isClosed()){
 				return rtn;
 			}
-			return get(pc);
+			return get();
 		} 
 		catch (SQLException e) {}
 		return null;
@@ -123,8 +123,12 @@ class DCStack {
 		if(current==null) return;
 		
 		// timeout or closed
-		if(current.dc.isTimeout() || isClosedEL(current.dc.getConnection())) { 
-			
+		if(
+				current.dc.isTimeout() || 
+				current.dc.isLifecycleTimeout() || 
+				isClosedEL(current.dc.getConnection()) || 
+				isValidEL(current.dc.getConnection())) { 
+					
 			// when timeout was reached but it is still open, close it
 			if(!isClosedEL(current.dc.getConnection())){
 				try {
