@@ -66,6 +66,7 @@
     <property name="srcCFML" location="${rootDir}/core/src/main/cfml"/>
     <property name="srcInst" location="${rootDir}/instrumentation/src/main/java"/> 
     <property name="ant" location="${rootDir}/ant"/>
+    <property name="test" location="${rootDir}/test"/>
     <property name="temp" location="${rootDir}/temp"/>
     <property name="loader" location="${temp}/loader"/>
     <property name="core" location="${temp}/core"/>
@@ -276,6 +277,27 @@
 
     </java>
     <echo>${exc}</echo>
+
+
+
+    <!-- execute CFML testcases
+    <java classname="org.apache.tools.ant.launch.Launcher" dir="${ant}" fork="true" failonerror="true" errorproperty="exc2">
+      <classpath path="${java.class.path}">
+          <pathelement location="${temp}/lucee.jar"/>
+          <pathelement path="${runtime_classpath}"/>
+      </classpath>
+
+      <arg value="-f"/>
+      <arg value="${ant}/run-testcases.xml"/>
+
+      <jvmarg value="-Dtest=${test}"/>
+      <jvmarg value="-Dtemp=${temp}"/>
+      <jvmarg value="-Dlucee.base.dir=${temp}/archive/base"/>
+      <jvmarg value="-Dlucee.web.dir=${temp}/archive/webroot"/>
+    </java>
+    <echo>${exc2}</echo> -->
+
+
 
 <!-- now we have to build the lucee.jar again, this time with the lar files -->
     <!-- copy the lucee lar -->
