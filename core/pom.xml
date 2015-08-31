@@ -524,7 +524,7 @@
 
 <!-- concurrent - 1.3.3 -->
       <dependency>
-         <groupId>concurrent</groupId>
+         <groupId>edu.oswego.cs.gee</groupId>
          <artifactId>concurrent</artifactId>
          <type>jar</type>
          <version>1.3.3</version>
@@ -692,7 +692,7 @@
       </dependency>
 <!-- jmimemagic - 0.1.2 -->
       <dependency>
-         <groupId>jmimemagic</groupId>
+         <groupId>net.sourceforge</groupId>
          <artifactId>jmimemagic</artifactId>
          <type>jar</type>
          <version>0.1.2</version>
