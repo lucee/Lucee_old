@@ -9,8 +9,20 @@ before_install:
  - "git clone -b travis `git config --get remote.origin.url` target/travis"
 
 script: 
-- version=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | egrep -v '^\[|Downloading:' | tr -d ' \n')
-- curl "http://stable.lucee.org/rest/update/provider/build/${version}"
+ - mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml
+ - mvn --batch-mode -f loader/pom.xml release:update-versions
+ - echo "abc:${GIT_EMAIL}"
+ - git config --global user.email "${GIT_EMAIL}"
+ - git config --global user.name "${GIT_USERNAME}"
+ - git config --global user.password "${GIT_PASSWORD}"
+ - git add -f loader/pom.xml # add the updated pom
+ - git commit -m "update maven version"
+ - git remote -v
+ - git remote set-url origin https://github.com/lucee/Lucee.git
+ ## - git push origin master
+
+#script: "mvn --batch-mode -f loader/pom.xml release:update-versions clean deploy --settings target/travis/settings.xml"
+### script: "mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml"
 
 #echo: $TRAVIS_JOB_ID
 #script: git config --get remote.origin.url 
@@ -46,9 +58,9 @@ notifications:
   email:
     - michael@lucee.org
 
-#after_success:
-# - mvn -f loader/pom.xml org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version
-# - curl http://stable.lucee.org/rest/update/provider/build/${project.version}
+after_success:
+# - version=$(mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | egrep -v '^\[|Downloading:' | tr -d ' \n')
+- curl "http://stable.lucee.org/rest/update/provider/buildLatest"
 #  - git commit -a -m "Committed by Travis-CI build number: $TRAVIS_JOB_ID"
 
 
