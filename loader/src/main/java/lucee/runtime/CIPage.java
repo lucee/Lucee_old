@@ -35,6 +35,6 @@ public abstract class CIPage extends Page {
 	
 	public abstract void afterStaticConstructor(PageContext pc, Variables var); */
 
-	public abstract String getComponentName();
+	//public abstract String getComponentName();
 
 }

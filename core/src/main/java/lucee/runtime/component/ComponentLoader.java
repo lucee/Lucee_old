@@ -390,14 +390,14 @@ public class ComponentLoader {
 		}
 		if(cip instanceof ComponentPageImpl) {
 			if(returnType!=RETURN_TYPE_COMPONENT)
-				throw new ApplicationException("the component ["+cip.getComponentName()+"] cannot be used as an interface.");
+				throw new ApplicationException("the component ["+cip.getPageSource().getComponentName()+"] cannot be used as an interface.");
 			
 			return _loadComponent(pc,cip, callPath, isRealPath,isExtendedComponent,executeConstr);
 		}
 		
 
 		if(returnType!=RETURN_TYPE_INTERFACE)
-			throw new ApplicationException("the interface ["+cip.getComponentName()+"] cannot be used as a component.");
+			throw new ApplicationException("the interface ["+cip.getPageSource().getComponentName()+"] cannot be used as a component.");
 		
 		return loadInterface(pc,cip, cip.getPageSource(), callPath, isRealPath);
 	}
