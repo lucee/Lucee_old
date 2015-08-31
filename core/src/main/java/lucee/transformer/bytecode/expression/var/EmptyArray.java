@@ -1,5 +1,6 @@
 /**
- * Copyright (c) 2015, Lucee Assosication Switzerland. All rights reserved.
+ *
+ * Copyright (c) 2014, the Railo Company Ltd. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,27 +15,26 @@
  * You should have received a copy of the GNU Lesser General Public 
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  * 
- */
-package lucee.runtime;
+ **/
+package lucee.transformer.bytecode.expression.var;
 
-public abstract class CIPage extends Page {
+import lucee.transformer.Factory;
+import lucee.transformer.bytecode.BytecodeContext;
+import lucee.transformer.bytecode.expression.ExpressionBase;
+import lucee.transformer.bytecode.util.ASMUtil;
+import lucee.transformer.bytecode.util.Types;
 
-	private static final long serialVersionUID = -398015716783522906L;
+import org.objectweb.asm.Type;
 
-	/*
-	 * executed before the static constructor is executed to set the enviroment right
-	 * @param pc
-	 * @return
-	
-	public abstract Variables beforeStaticConstructor(PageContext pc); */
+public class EmptyArray extends ExpressionBase {
 
-	/*
-	 * executed after the static constructor is executed to reset the enviroment to previous state
-	 * @param pc
-	 * @return
-	
-	public abstract void afterStaticConstructor(PageContext pc, Variables var); */
+	public EmptyArray(Factory factory) {
+		super(factory,null,null);
+	}
 
-	//public abstract String getComponentName();
+	public Type _writeOut(BytecodeContext bc, int mode) {
+		ASMUtil.createEmptyArray(bc.getAdapter());
+		return Types.ARRAY;
+	}
 
 }

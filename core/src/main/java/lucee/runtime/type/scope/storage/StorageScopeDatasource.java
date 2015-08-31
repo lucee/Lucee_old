@@ -99,7 +99,7 @@ public abstract class StorageScopeDatasource extends StorageScopeImpl {
 	protected static Struct _loadData(PageContext pc, String datasourceName,String strType,int type, Log log, boolean mxStyle) throws PageException	{
 		ConfigImpl config = (ConfigImpl)pc.getConfig();
 		DatasourceConnectionPool pool = config.getDatasourceConnectionPool();
-		DatasourceConnection dc=pool.getDatasourceConnection(pc,pc.getDataSource(datasourceName),null,null);
+		DatasourceConnection dc=pool.getDatasourceConnection(config,pc.getDataSource(datasourceName),null,null);
 		SQLExecutor executor=SQLExecutionFactory.getInstance(dc);
 		
 		

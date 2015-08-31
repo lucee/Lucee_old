@@ -137,6 +137,7 @@ import lucee.runtime.rest.RestRequestListener;
 import lucee.runtime.rest.RestUtil;
 import lucee.runtime.security.Credential;
 import lucee.runtime.security.CredentialImpl;
+import lucee.runtime.security.ScriptProtect;
 import lucee.runtime.tag.Login;
 import lucee.runtime.tag.TagHandlerPool;
 import lucee.runtime.tag.TagUtil;
@@ -2049,7 +2050,7 @@ public final class PageContextImpl extends PageContext {
 					for(int i=0;i<mappings.length;i++){
 						_mapping=mappings[i];
 						Resource p = _mapping.getPhysical();
-						path=_req.getContextPath()+ReqRspUtil.getScriptName(_req)+_mapping.getVirtual();
+						path=_req.getContextPath()+ReqRspUtil.getScriptName(this,_req)+_mapping.getVirtual();
 						write("<li "+(p==null || !p.isDirectory()?" style=\"color:red\"":"")+">"+path+"</li>");
 						
 						
@@ -2217,6 +2218,10 @@ public final class PageContextImpl extends PageContext {
 	
 	
 	private final void _execute(String realPath, boolean throwExcpetion, boolean onlyTopLevel) throws PageException  {
+		if((config.getScriptProtect()&ApplicationContext.SCRIPT_PROTECT_URL)>0) {
+			realPath=ScriptProtect.translate(realPath);
+    	}
+    	
 		// convert realpath to a PageSource
 		if(realPath.startsWith("/mapping-")){
 			base=null;
@@ -3044,7 +3049,7 @@ public final class PageContextImpl extends PageContext {
 		if(dc!=null && DatasourceConnectionPool.isValid(dc,null)){
 			return dc;
 		}
-		dc=config.getDatasourceConnectionPool().getDatasourceConnection(this,ds, user, pass);
+		dc=config.getDatasourceConnectionPool().getDatasourceConnection(getConfig(),ds, user, pass);
 		transConns.put(id, dc);
 		return dc;
 	}

@@ -41,8 +41,9 @@ public class DatasourceConnectionPool {
 	private ConcurrentHashMap<String,DCStack> dcs=new ConcurrentHashMap<String,DCStack>();
 	private Map<String,RefInteger> counter=new HashMap<String,RefInteger>();
 	
-	public DatasourceConnection getDatasourceConnection(PageContext pc,DataSource datasource, String user, String pass) throws PageException {
-		pc=ThreadLocalPageContext.get(pc);
+	public DatasourceConnection getDatasourceConnection(Config config,DataSource datasource, String user, String pass) throws PageException {
+		config=ThreadLocalPageContext.getConfig(config);
+		
 		if(StringUtil.isEmpty(user)) {
             user=datasource.getUsername();
             pass=datasource.getPassword();
@@ -59,34 +60,26 @@ public class DatasourceConnectionPool {
 		synchronized (stack) {
 			while(max!=-1 && max<=_size(datasource)) {
 				try {
-					//stack.inc();
 					stack.wait(10000L);
-					
 				} 
 				catch (InterruptedException e) {
 					throw Caster.toPageException(e);
 				}
-				
 			}
-			Config config;
-			if(pc!=null){
-				config=pc.getConfig();
-				while(!stack.isEmpty()) {
-					DatasourceConnectionImpl dc=(DatasourceConnectionImpl) stack.get(pc);
-						if(dc!=null && isValid(dc,Boolean.TRUE)){
-							_inc(datasource);
-							return dc.using();
-						}
-					
-				}
+
+			while(!stack.isEmpty()) {
+				DatasourceConnectionImpl dc=(DatasourceConnectionImpl) stack.get();
+				if(dc!=null && isValid(dc,Boolean.TRUE)){
+					_inc(datasource);
+					return dc.using();
+				}	
 			}
-			else {
-				config=ThreadLocalPageContext.getConfig();
-			}
-			_inc(datasource);
+			//config=ThreadLocalPageContext.getConfig();
 			
-			return loadDatasourceConnection(config,datasource, user, pass).using();
-		}
+			_inc(datasource);
+
+		}			
+		return loadDatasourceConnection(config,datasource, user, pass).using();
 	}
 
 	private DatasourceConnectionImpl loadDatasourceConnection(Config config,DataSource ds, String user, String pass) throws PageException {

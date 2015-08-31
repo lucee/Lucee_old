@@ -56,7 +56,9 @@ import lucee.runtime.exp.PageException;
 import lucee.runtime.functions.decision.IsLocalHost;
 import lucee.runtime.interpreter.CFMLExpressionInterpreter;
 import lucee.runtime.interpreter.JSONExpressionInterpreter;
+import lucee.runtime.listener.ApplicationContext;
 import lucee.runtime.op.Caster;
+import lucee.runtime.security.ScriptProtect;
 import lucee.runtime.text.xml.XMLCaster;
 import lucee.runtime.text.xml.XMLUtil;
 import lucee.runtime.type.UDF;
@@ -220,9 +222,18 @@ public final class ReqRspUtil {
 		return rtn;
 	}
 
-	public static String getScriptName(HttpServletRequest req) {
-		return StringUtil.emptyIfNull(req.getContextPath())+StringUtil.emptyIfNull(req.getServletPath());
+	public static String getScriptName(PageContext pc,HttpServletRequest req) {
+		String sn = StringUtil.emptyIfNull(req.getContextPath())+StringUtil.emptyIfNull(req.getServletPath());
+		if(pc==null)pc=ThreadLocalPageContext.get();
+		if(pc!=null & (
+				(pc.getApplicationContext().getScriptProtect()&ApplicationContext.SCRIPT_PROTECT_URL)>0 || 
+				(pc.getApplicationContext().getScriptProtect()&ApplicationContext.SCRIPT_PROTECT_CGI)>0
+				)) {
+    		sn=ScriptProtect.translate(sn);
+    	}
+		return sn;
 	}
+
 
 	private static boolean isHex(char c) {
 		return (c>='0' && c<='9') || (c>='a' && c<='f') || (c>='A' && c<='F');
@@ -231,7 +242,7 @@ public final class ReqRspUtil {
 
 	private static String dec(String str, String charset, boolean force) {
 		str=str.trim();
-		if(StringUtil.startsWith(str, '"') && StringUtil.endsWith(str, '"'))
+		if(StringUtil.startsWith(str, '"') && StringUtil.endsWith(str, '"') && str.length()>1)
 			str=str.substring(1,str.length()-1);
 			
 		return decode(str,charset,force);//java.net.URLDecoder.decode(str.trim(), charset);

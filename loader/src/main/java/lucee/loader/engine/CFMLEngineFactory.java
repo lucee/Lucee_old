@@ -595,12 +595,14 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 		if (id == null && singelton != null)
 			id = singelton.getIdentification();
 
-		System.out.println("download:" + symbolicName + ":" + symbolicVersion); // MUST remove
 		final URL updateUrl = new URL(updateProvider,
 				"/rest/update/provider/download/" + symbolicName + "/"
 						+ symbolicVersion + "/"
-						+ (id != null ? id.toQueryString() : ""));
-
+						+ (id != null ? id.toQueryString() : "")
+						+ (id == null ? "?" : "&")+"allowRedirect=true"
+						
+				);
+		System.out.println("download:" + symbolicName + ":" + symbolicVersion +" from "+updateUrl); // MUST remove
 		log(Logger.LOG_DEBUG, "download bundle [" + symbolicName + ":"
 				+ symbolicVersion + "] from " + updateUrl);
 
@@ -615,18 +617,49 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 			log(e);
 			throw e;
 		}
-
+		//System.out.println("SC:" + code+"->"+conn.getFollowRedirects());
+		// the update provider is not providing a download for this
 		if (code != 200) {
-			final String msg = "Lucee is not able do download the bundle for ["
+			
+			// the update provider can also provide a different (final) location for this
+			if(code==302) {
+				String location = conn.getHeaderField("Location");
+				// just in case we check invalid names
+				if(location==null)location = conn.getHeaderField("location");
+				if(location==null)location = conn.getHeaderField("LOCATION");
+				System.out.println("download redirected:" + location); // MUST remove
+				
+				conn.disconnect();
+				URL url = new URL(location);
+				try {
+					conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");
+					conn.connect();
+					code = conn.getResponseCode();
+				} catch (final UnknownHostException e) {
+					
+					log(e);
+					throw e;
+				}
+				
+			}
+			
+			// no download available!
+			if(code != 200){
+				final String msg = "Lucee is not able do download the bundle for ["
 					+ symbolicName + "] in version [" + symbolicVersion
 					+ "] from " + updateUrl
 					+ ", please donwload manually and copy to [" + jarDir + "]";
-			log(Logger.LOG_ERROR, msg);
-			throw new IOException(msg);
+				log(Logger.LOG_ERROR, msg);
+				conn.disconnect();
+				throw new IOException(msg);
+			}
+			
 		}
 
 		//if(jar.createNewFile()) {	
 		copy((InputStream) conn.getContent(), new FileOutputStream(jar));
+		conn.disconnect();
 		return jar;
 		/*}
 		else {
