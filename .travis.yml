@@ -9,8 +9,7 @@ before_install:
  - "git clone -b travis `git config --get remote.origin.url` target/travis"
 
 script: 
-
-- "echo `mvn -f loader/pom.xml org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version`"
+- mvn -f loader/pom.xml org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version
 
 #echo: $TRAVIS_JOB_ID
 #script: git config --get remote.origin.url 
