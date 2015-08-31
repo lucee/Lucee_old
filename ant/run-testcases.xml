@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="run" basedir="." name="Lucee">
+
+
+<target name="run">
+
+<echo>
+-------------------------------------------------------
+              C F M L  -  T E S T S
+-------------------------------------------------------
+test: ${test}
+</echo>
+	
+<script language="CFML">
+<![CDATA[
+
+NL="
+";
+
+// set a password for the admin
+try {
+    admin 
+		action="updatePassword"
+		type="web"
+		oldPassword=""
+		newPassword="webweb";
+}
+catch(e){}// may exist from previous execution
+
+// create "/test" mapping
+	admin 
+		action="updateMapping"
+		type="web"
+		password="webweb"
+		virtual="/test"
+		physical="#test#"
+		toplevel="true"
+		archive=""
+		primary="physical"
+		trusted="no";
+
+
+	// make sure testbox exists 
+	echo("testbox:"& expandPath("/test/testbox-2.1.0.lar"));
+	try{
+		getComponentMetaData("testbox.system.TestBox");
+	}
+	catch(e){ 
+		// only add mapping when necessary
+		mapping 
+			action="update" 
+			componentpaths = "#[{archive:"/test/testbox-2.1.0.lar"}]#";
+	}
+ 	try{
+	//echo(serialize(getComponentMetaData("testbox.system.TestBox")));
+	//throw "end";
+	}
+	catch(e){
+		echo("-------------------------------------------------------"&NL);
+		echo("Testcase failed"&NL);
+		echo(e.message&NL);
+		echo(serialize(e)&NL);
+		echo("-------------------------------------------------------"&NL);
+
+
+
+		rethrow;
+	}
+ ]]>
+  </script>
+
+</target>
+</project>

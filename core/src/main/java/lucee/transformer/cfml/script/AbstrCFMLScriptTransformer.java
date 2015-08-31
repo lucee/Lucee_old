@@ -751,8 +751,11 @@ public abstract class AbstrCFMLScriptTransformer extends AbstrCFMLExprTransforme
 				break;
 			}
 		}
-		if(functionName==null || functionName.indexOf(',')!=-1 || functionName.indexOf('[')!=-1)
-			throw new TemplateException(data.srcCode, "invalid syntax");
+		if(functionName==null || functionName.indexOf(',')!=-1 || functionName.indexOf('[')!=-1) {
+			data.srcCode.setPos(pos);
+			return null;
+		}
+		//throw new TemplateException(data.srcCode, "invalid syntax");
 		
 		
 		
@@ -760,8 +763,6 @@ public abstract class AbstrCFMLScriptTransformer extends AbstrCFMLExprTransforme
 		
 		// search for "function" 
 		boolean hasOthers=false, first=true;
-		//print.e("--------");
-		//print.e(tokens);
 		for(int i=tokens.length-1;i>=0;i--){
 			if("function".equalsIgnoreCase(tokens[i])) {
 				// if it is the first "function" (from right) and we had already something else, the syntax is broken!

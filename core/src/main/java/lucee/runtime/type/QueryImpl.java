@@ -364,7 +364,7 @@ public class QueryImpl implements Query,Objects {
 		if(maxrow>-1) stat.setMaxRows(maxrow);
         if(fetchsize>0)stat.setFetchSize(fetchsize);       
         if(timeout!=null && timeout.getSeconds()>0)
-        	stat.setQueryTimeout((int)timeout.getSeconds());
+        	DataSourceUtil.setQueryTimeoutSilent(stat,(int)timeout.getSeconds());
 	}
 
     private boolean fillResult(DatasourceConnection dc, ResultSet result, int maxrow, boolean closeResult,boolean createGeneratedKeys, TimeZone tz) throws SQLException, IOException, PageException {

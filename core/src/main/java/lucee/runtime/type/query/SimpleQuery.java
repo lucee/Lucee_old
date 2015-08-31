@@ -54,6 +54,7 @@ import lucee.commons.lang.StringUtil;
 import lucee.loader.engine.CFMLEngineFactory;
 import lucee.runtime.PageContext;
 import lucee.runtime.PageContextImpl;
+import lucee.runtime.db.DataSourceUtil;
 import lucee.runtime.db.DatasourceConnection;
 import lucee.runtime.db.SQL;
 import lucee.runtime.db.SQLCaster;
@@ -165,7 +166,7 @@ public class SimpleQuery implements Query, ResultSet, Objects {
 		if(maxrow>-1) stat.setMaxRows(maxrow);
         if(fetchsize>0)stat.setFetchSize(fetchsize);
         if(timeout!=null && timeout.getSeconds()>0)
-        	stat.setQueryTimeout((int)timeout.getSeconds());
+        	DataSourceUtil.setQueryTimeoutSilent(stat,(int)timeout.getSeconds());
 	}
 	private void setItems(PageContext pc,TimeZone tz,PreparedStatement preStat, SQLItem[] items) throws DatabaseException, PageException, SQLException {
 		for(int i=0;i<items.length;i++) {

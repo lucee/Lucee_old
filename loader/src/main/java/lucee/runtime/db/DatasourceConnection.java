@@ -38,11 +38,6 @@ public interface DatasourceConnection extends Connection {
 	public abstract DataSource getDatasource();
 
 	/**
-	 * @return is timeout or not
-	 */
-	public abstract boolean isTimeout();
-
-	/**
 	 * @return the password
 	 */
 	public String getPassword();
@@ -63,5 +58,17 @@ public interface DatasourceConnection extends Connection {
 
 	@Override
 	public void close() throws SQLException;
+
+
+	/**
+	 * @return is timeout or not
+	 */
+	public abstract boolean isTimeout();
+	
+	/**
+	 * is life cycle timeout
+	 * @return
+	 */
+	public abstract boolean isLifecycleTimeout();
 
 }

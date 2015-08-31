@@ -1,3 +1,21 @@
+/**
+ *
+ * Copyright (c) 2014, the Railo Company Ltd. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either 
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ **/
 component output="false" extends="Base" accessors="true"{
 
 	property name="name" type="String";
@@ -90,16 +108,23 @@ component output="false" extends="Base" accessors="true"{
 			// If colon found outside a string, check if named param.
 			elseif (NextChar EQ ':')
 			{
-				var Match = refind( ':\w+' , Sql , Pos , true ) ;
-				if (ArrayLen(Match.Pos) and Match.Pos[1] EQ Pos)
-				{
-					result.add( findNamedParam(namedParams, Mid(Sql,Match.Pos[1]+1,Match.Len[1]-1) ) ) ;
-					Pos += Match.Len[1] ;
-				}
-				else
-				{
+				var Match = refind( '::' , Sql , Pos , true )
+				if (Match.Len[1] eq 2){
 					result.add({type='String',value=':'})
-					Pos += 1;
+						Pos += 2;
+				}
+				else{
+					var Match = refind( ':\w+' , Sql , Pos , true ) ;
+					if (ArrayLen(Match.Pos) and Match.Pos[1] EQ Pos)
+					{
+						result.add( findNamedParam(namedParams, Mid(Sql,Match.Pos[1]+1,Match.Len[1]-1) ) ) ;
+						Pos += Match.Len[1] ;
+					}
+					else
+					{
+						result.add({type='String',value=':'})
+						Pos += 1;
+					}
 				}
 			}
 			// If question mark found outside a string, assume unnamed param.

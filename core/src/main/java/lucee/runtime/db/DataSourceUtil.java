@@ -20,6 +20,7 @@ package lucee.runtime.db;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import lucee.commons.lang.StringUtil;
 
@@ -115,4 +116,11 @@ public class DataSourceUtil {
 		return dbName;
 	}
 
+
+	public static void setQueryTimeoutSilent(Statement stat, int seconds) {
+    	try {
+			stat.setQueryTimeout(seconds);
+		}
+		catch (SQLException e) {}
+	}
 }
