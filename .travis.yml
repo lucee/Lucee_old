@@ -11,7 +11,7 @@ before_install:
 script: 
  - echo "prepare abcd"
  - mvn -f loader/pom.xml org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version
- - echo "version:${mvnVersion}"
+ - echo "project.version:${project.version}"
  - mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml
  - mvn --batch-mode -f loader/pom.xml release:update-versions
  - git config --global user.email "${GIT_EMAIL}"
