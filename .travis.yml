@@ -9,7 +9,7 @@ before_install:
  - "git clone -b travis `git config --get remote.origin.url` target/travis"
 
 script: 
- - mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -DmvnVersion=project.version
+ - mvn -f loader/pom.xml org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -DmvnVersion=project.version
  - echo "version:${mvnVersion}"
  - mvn -f loader/pom.xml clean deploy --settings target/travis/settings.xml
  - mvn --batch-mode -f loader/pom.xml release:update-versions
