@@ -11,7 +11,7 @@
 
   <groupId>org.lucee</groupId>
   <artifactId>lucee</artifactId>
-  <version>5.0.0.68-SNAPSHOT</version>
+  <version>5.0.0.69-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Lucee Loader Build</name>
@@ -613,7 +613,7 @@
          <groupId>apache.http.components</groupId>
          <artifactId>client</artifactId>
          <type>jar</type>
-         <version>4.5.0</version>
+         <version>4.5.0.0001L</version>
       </dependency>
 <!-- apache.http.components.core  -->
       <dependency>
