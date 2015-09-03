@@ -75,6 +75,7 @@ public final class PageSourceImpl implements PageSource {
     private Page page;
 	private long lastAccess;	
 	private int accessCount=0;
+	private boolean flush=false;
     //private boolean recompileAlways;
     //private boolean recompileAfterStartUp;
     
@@ -271,9 +272,10 @@ public final class PageSourceImpl implements PageSource {
                     Resource classFile=classRootDir.getRealResource(_getJavaName()+".class");
                     boolean isNew=false;
                     // new class
-                    if(!classFile.exists()) {
+                    if(flush || !classFile.exists()) {
                     //if(!classFile.exists() || recompileAfterStartUp) {
                     	this.page=page= compile(config,classRootDir,null,false,false);
+                    	flush=false;
                         isNew=true;
                     }
                     // load page
@@ -308,6 +310,11 @@ public final class PageSourceImpl implements PageSource {
 			return page;
     }
 
+    public void flush() {
+		page=null;
+		flush=true;
+	}
+
     private boolean isLoad(byte load) {
 		return page!=null && load==page.getLoadType();
 	}
@@ -340,6 +347,13 @@ public final class PageSourceImpl implements PageSource {
 	private Page _compile(ConfigWeb config,Resource classRootDir, Page existing,boolean returnValue, boolean ignoreScopes) throws IOException, SecurityException, IllegalArgumentException, PageException {
         ConfigWebImpl cwi=(ConfigWebImpl) config;
         int dialect=getDialect();
+        
+        long now;
+        if((getPhyscalFile().lastModified()+10000)>(now=System.currentTimeMillis()))
+        	cwi.getCompiler().watch(this,now);//SystemUtil.get
+        
+
+        
         Result result = cwi.getCompiler().
         	compile(cwi,this,cwi.getTLDs(dialect),cwi.getFLDs(dialect),classRootDir,returnValue,ignoreScopes);
         //Class<?> clazz = mapping.getPhysicalClass(getClazz(),barr);

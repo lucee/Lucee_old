@@ -44,13 +44,13 @@ import lucee.runtime.PageSourcePool;
 import lucee.runtime.config.ConfigImpl;
 import lucee.runtime.config.ConfigServer;
 import lucee.runtime.config.ConfigWeb;
+import lucee.runtime.config.ConfigWebImpl;
 import lucee.runtime.config.DeployHandler;
 import lucee.runtime.lock.LockManagerImpl;
 import lucee.runtime.net.smtp.SMTPConnectionPool;
 import lucee.runtime.op.Caster;
 import lucee.runtime.type.scope.ScopeContext;
 import lucee.runtime.type.util.ArrayUtil;
-
 import lucee.runtime.type.scope.storage.StorageScopeFile;
 import lucee.runtime.config.XMLConfigAdmin;
 /**
@@ -250,6 +250,9 @@ public final class Controler extends Thread {
 						config = cfmlFactory.getConfig();
 					}
 					ThreadLocalConfig.register(config);
+					
+					// double check templates
+					try{((ConfigWebImpl)config).getCompiler().checkWatched();}catch(Throwable t){t.printStackTrace();}
 					
 					// deploy extensions, archives ...
 					try{DeployHandler.deploy(config);}catch(Throwable t){t.printStackTrace();}
