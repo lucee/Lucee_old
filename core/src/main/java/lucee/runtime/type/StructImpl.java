@@ -21,6 +21,8 @@ package lucee.runtime.type;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.commons.collection.HashMapPro;
 import lucee.commons.collection.LinkedHashMapPro;
 import lucee.commons.collection.MapFactory;
@@ -38,8 +40,8 @@ import lucee.runtime.type.it.StringIterator;
 import lucee.runtime.type.util.StructSupport;
 import lucee.runtime.type.util.StructUtil;
 
-import org.apache.commons.collections.map.AbstractReferenceMap;
-import org.apache.commons.collections.map.ReferenceMap;
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.SOFT;
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.HARD;
 
 /**
  * CFML data type struct
@@ -79,7 +81,7 @@ public class StructImpl extends StructSupport {
      */
     public StructImpl(int type, int initialCapacity) {
     	if(type==TYPE_WEAKED)	map=new SyncMap<Collection.Key, Object>(new WeakHashMapPro<Collection.Key,Object>(initialCapacity));
-    	else if(type==TYPE_SOFT)	map=new SyncMap<Collection.Key, Object>(new MapProWrapper<Collection.Key, Object>(new ReferenceMap(AbstractReferenceMap.HARD,AbstractReferenceMap.SOFT,initialCapacity,0.75f),new SerializableObject()));
+    	else if(type==TYPE_SOFT)	map=new SyncMap<Collection.Key, Object>(new MapProWrapper<Collection.Key, Object>(new ReferenceMap<Collection.Key, Object>(HARD,SOFT,initialCapacity,0.75f),new SerializableObject()));
     	else if(type==TYPE_LINKED)		map=new SyncMap<Collection.Key, Object>(new LinkedHashMapPro<Collection.Key,Object>(initialCapacity));
     	else 						map=MapFactory.getConcurrentMap(initialCapacity);
     }

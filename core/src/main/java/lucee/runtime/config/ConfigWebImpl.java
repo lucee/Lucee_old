@@ -77,9 +77,11 @@ import lucee.runtime.writer.CFMLWriterImpl;
 import lucee.runtime.writer.CFMLWriterWS;
 import lucee.runtime.writer.CFMLWriterWSPref;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.osgi.framework.BundleException;
 import org.xml.sax.SAXException;
+
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.SOFT;
 
 /**
  * Web Context
@@ -297,7 +299,7 @@ public final class ConfigWebImpl extends ConfigImpl implements ServletConfig, Co
 	    	}
 			return serverFunctionMapping;
 		}
-	    private Map<String,Mapping> applicationMappings=new ReferenceMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	    private Map<String,Mapping> applicationMappings=new ReferenceMap<String,Mapping>(SOFT,SOFT);
 
 	    
 	    

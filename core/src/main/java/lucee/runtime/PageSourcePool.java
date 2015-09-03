@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.commons.collection.LongKeyList;
 import lucee.commons.lang.SystemOut;
 import lucee.runtime.config.ConfigImpl;
@@ -35,14 +37,15 @@ import lucee.runtime.dump.SimpleDumpData;
 import lucee.runtime.type.dt.DateTimeImpl;
 import lucee.runtime.type.util.ArrayUtil;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.SOFT;
+
 
 /**
  * pool to handle pages
  */
 public final class PageSourcePool implements Dumpable {
 	
-	private Map<Object,PageSource> pageSources=Collections.synchronizedMap(new ReferenceMap(ReferenceMap.SOFT, ReferenceMap.SOFT));
+	private Map<Object,PageSource> pageSources=Collections.synchronizedMap(new ReferenceMap<Object,PageSource>(SOFT, SOFT));
 	//timeout timeout for files
 	private long timeout;
 	//max size of the pool cache

@@ -40,9 +40,11 @@ import lucee.runtime.listener.ApplicationListener;
 import lucee.runtime.osgi.OSGiUtil;
 import lucee.runtime.type.util.ArrayUtil;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.SOFT;
 
 /**  
  * Mapping class
@@ -72,7 +74,7 @@ public final class MappingImpl implements Mapping {
 	private Resource physical;
 	
 	private String lcVirtualWithSlash;
-	private Map<String,Object> customTagPath=new ReferenceMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	private Map<String,Object> customTagPath=new ReferenceMap<String,Object>(SOFT,SOFT);
 	
 	
 

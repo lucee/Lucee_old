@@ -22,19 +22,20 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.runtime.type.Array;
 import lucee.runtime.type.ArrayImpl;
 import lucee.runtime.type.Collection;
 import lucee.runtime.type.Collection.Key;
 import lucee.runtime.type.KeyImpl;
 
-import org.apache.commons.collections.map.ReferenceMap;
-
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.SOFT;
 /**
  * Method Storage Class
  */
 public final class SoftMethodStorage {
-	private Map<Class,Map<Key,Array>> map=new ReferenceMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	private Map<Class,Map<Key,Array>> map=new ReferenceMap<Class,Map<Key,Array>>(SOFT,SOFT);
 	
 	/**
 	 * returns a methods matching given criteria or null if method doesn't exist

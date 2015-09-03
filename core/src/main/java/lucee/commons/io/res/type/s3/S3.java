@@ -51,7 +51,7 @@ import lucee.runtime.exp.PageException;
 import lucee.runtime.op.Caster;
 import lucee.runtime.type.dt.DateTime;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.xml.sax.SAXException;
 
 public final class S3 implements S3Constants {
@@ -64,8 +64,8 @@ public final class S3 implements S3Constants {
 	private String host;
 
 
-	private static final Map<String,S3Info> infos=new ReferenceMap();
-	private static final Map<String,AccessControlPolicy> acps=new ReferenceMap();
+	private static final Map<String,S3Info> infos=new ReferenceMap<String,S3Info>();
+	private static final Map<String,AccessControlPolicy> acps=new ReferenceMap<String,AccessControlPolicy>();
 
 	public static final int MAX_REDIRECT = 15;
 

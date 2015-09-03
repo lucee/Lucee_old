@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.commons.color.ColorCaster;
 import lucee.commons.io.res.Resource;
 import lucee.commons.io.res.type.file.FileResource;
@@ -46,8 +48,6 @@ import lucee.runtime.type.Struct;
 import lucee.runtime.video.VideoInput;
 import lucee.runtime.video.VideoInputImpl;
 import lucee.runtime.video.VideoUtilImpl;
-
-import org.apache.commons.collections.map.ReferenceMap;
 
 /**
  * implementation of the tag Compiler
@@ -85,7 +85,7 @@ public class VideoPlayerJW extends BodyTagSupport {
 	private boolean allowfullscreen;
 	private String strWidth;
 	private String strHeight;
-	private static Map sizes=new ReferenceMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	//private static Map sizes=new ReferenceMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
 	
 	// JW
 	private Struct passthrough=null;

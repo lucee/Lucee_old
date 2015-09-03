@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.commons.io.res.Resource;
 import lucee.commons.io.res.ResourceProvider;
 import lucee.commons.io.res.ResourceProviderPro;
@@ -50,8 +52,6 @@ import lucee.runtime.exp.DatabaseException;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.exp.PageRuntimeException;
 import lucee.runtime.op.Caster;
-
-import org.apache.commons.collections.map.ReferenceMap;
 
 
 /**
@@ -78,8 +78,8 @@ public final class DatasourceResourceProvider implements ResourceProviderPro {
 	//private DataSourceManager manager;
 	//private Core core;
 	private Map cores=new WeakHashMap();
-	private Map attrCache=new ReferenceMap();
-	private Map attrsCache=new ReferenceMap();
+	private Map<String,Attr> attrCache=new ReferenceMap<String,Attr>();
+	private Map<String,Attr> attrsCache=new ReferenceMap<String,Attr>();
 	private Map arguments;
 
 	/**

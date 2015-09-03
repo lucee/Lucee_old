@@ -27,6 +27,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.commons.date.TimeZoneConstants;
 import lucee.commons.io.IOUtil;
 import lucee.commons.io.res.Resource;
@@ -34,7 +36,7 @@ import lucee.commons.lang.StringUtil;
 import lucee.runtime.config.Config;
 import lucee.runtime.engine.ThreadLocalPageContext;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.SOFT;
 
 public class FormatUtil {
 
@@ -43,7 +45,7 @@ public class FormatUtil {
 	public static final short FORMAT_TYPE_DATE_TIME=3;
 	public static final short FORMAT_TYPE_DATE_ALL=4;
  
-	private final static Map<String,DateFormat[]> formats=new ReferenceMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	private final static Map<String,DateFormat[]> formats=new ReferenceMap<String,DateFormat[]>(SOFT,SOFT);
 	
 	public static DateFormat[] getDateTimeFormats(Locale locale,TimeZone tz,boolean lenient) {
 

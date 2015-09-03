@@ -41,7 +41,7 @@ import lucee.transformer.bytecode.util.ASMConstants;
 import lucee.transformer.bytecode.util.ASMUtil;
 import lucee.transformer.bytecode.util.Types;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -127,7 +127,7 @@ public class ASMProxyFactory {
     		);
 	
 	
-	private static final Map<String,ASMMethod>methods=new ReferenceMap();
+	private static final Map<String,ASMMethod>methods=new ReferenceMap<String,ASMMethod>();
 
 	
 	public static ASMClass getClass(ExtendableClassLoader pcl,Resource classRoot,Class clazz) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException, UnmodifiableClassException{

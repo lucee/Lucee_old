@@ -24,13 +24,12 @@ import java.util.WeakHashMap;
 import lucee.runtime.type.Struct;
 import lucee.runtime.type.StructImpl;
 
-import org.apache.commons.collections.map.ReferenceMap;
 
 /**
  * Method Storage Class
  */
 public final class WeakFieldStorage {
-	private WeakHashMap map=new WeakHashMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	private WeakHashMap map=new WeakHashMap();
 	
 	/**
 	 * returns all fields matching given criteria or null if field does exist

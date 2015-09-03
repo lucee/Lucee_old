@@ -24,13 +24,11 @@ import java.util.WeakHashMap;
 import lucee.runtime.type.Array;
 import lucee.runtime.type.ArrayImpl;
 
-import org.apache.commons.collections.map.ReferenceMap;
-
 /**
  * Constructor Storage Class
  */
 public final class WeakConstructorStorage {
-	private WeakHashMap map=new WeakHashMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	private WeakHashMap<Class,Array> map=new WeakHashMap<Class,Array>();
 	
 	/**
 	 * returns a constructor matching given criteria or null if Constructor doesn't exist

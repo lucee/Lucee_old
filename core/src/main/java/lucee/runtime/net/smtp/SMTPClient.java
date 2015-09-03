@@ -48,6 +48,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.commons.activation.ResourceDataSource;
 import lucee.commons.digest.MD5;
 import lucee.commons.io.CharsetUtil;
@@ -81,8 +83,7 @@ import lucee.runtime.spooler.mail.MailSpoolerTask;
 import lucee.runtime.type.util.ArrayUtil;
 import lucee.runtime.type.util.ListUtil;
 
-import org.apache.commons.collections.ReferenceMap;
-
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.SOFT;
 import com.sun.mail.smtp.SMTPMessage;
 
 public final class SMTPClient implements Serializable  {
@@ -105,7 +106,7 @@ public final class SMTPClient implements Serializable  {
 	private static final String TEXT_PLAIN = "text/plain";
 	//private static final SerializableObject LOCK = new SerializableObject();
 
-	private static Map<TimeZone, SimpleDateFormat> formatters=new ReferenceMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	private static Map<TimeZone, SimpleDateFormat> formatters=new ReferenceMap<TimeZone, SimpleDateFormat>(SOFT,SOFT);
 	//private static final int PORT = 25; 
 	
 	private int spool=SPOOL_UNDEFINED;

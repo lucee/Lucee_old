@@ -325,7 +325,7 @@ Export-Package: coldfusion,
  lucee.transformer.util
 Require-Bundle: org.apache.sanselan.sanselan;bundle-version=0.97.0.incubator,
  org.apache.commons.codec;bundle-version=1.6.0,
- org.apache.commons.collections;bundle-version=3.2.1,
+ org.apache.commons.collections4;bundle-version=4.0.0,
  org.apache.commons.compress;bundle-version=1.9.0,
  org.apache.commons.discovery;bundle-version=0.5,
  org.apache.commons.email;bundle-version=1.2,

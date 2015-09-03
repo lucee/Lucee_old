@@ -27,6 +27,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.commons.digest.HashUtil;
 import lucee.commons.io.IOUtil;
 import lucee.commons.io.SystemUtil;
@@ -37,7 +39,6 @@ import lucee.runtime.config.Config;
 import lucee.runtime.instrumentation.InstrumentationFactory;
 import lucee.runtime.type.util.ArrayUtil;
 
-import org.apache.commons.collections.map.ReferenceMap;
 
 /**
  * Directory ClassLoader
@@ -229,7 +230,7 @@ public final class PhysicalClassLoader extends ExtendableClassLoader {
 		PhysicalClassLoader pcl=customCLs==null?null:customCLs.get(key);
 		if(pcl!=null) return pcl; 
 		pcl=new PhysicalClassLoader(config,getDirectory(),new ResourceClassLoader(resources,getParent()));
-		if(customCLs==null)customCLs=new ReferenceMap();
+		if(customCLs==null)customCLs=new ReferenceMap<String,PhysicalClassLoader>();
 		customCLs.put(key, pcl);
 		return pcl;
 	}

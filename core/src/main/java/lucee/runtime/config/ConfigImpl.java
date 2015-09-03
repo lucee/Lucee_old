@@ -142,7 +142,8 @@ import lucee.transformer.library.tag.TagLibFactory;
 import lucee.transformer.library.tag.TagLibTag;
 import lucee.transformer.library.tag.TagLibTagAttr;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import static org.apache.commons.collections4.map.AbstractReferenceMap.ReferenceStrength.SOFT;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -3023,7 +3024,7 @@ public abstract class ConfigImpl implements Config {
 
 	private Map<String,PageSource> componentPathCache=null;//new ArrayList<Page>();
 	private Map<String,InitFile> ctPatchCache=null;//new ArrayList<Page>();
-	private Map<String,UDF> udfCache=new ReferenceMap();
+	private Map<String,UDF> udfCache=new ReferenceMap<String,UDF>();
 
 	
 	public CIPage getCachedPage(PageContext pc,String pathWithCFC) throws TemplateException {
@@ -3148,8 +3149,10 @@ public abstract class ConfigImpl implements Config {
 	protected void setComponentRootSearch(boolean componentRootSearch) {
 		this.componentRootSearch = componentRootSearch;
 	}
+	
+	
 
-	private final Map compressResources= new ReferenceMap(ReferenceMap.SOFT,ReferenceMap.SOFT);
+	private final Map<String,Compress> compressResources= new ReferenceMap<String,Compress>(SOFT,SOFT);
 
 
 	public Compress getCompressInstance(Resource zipFile, int format, boolean caseSensitive) throws IOException {

@@ -27,13 +27,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.ReferenceMap;
+
 import lucee.commons.digest.MD5;
 import lucee.commons.io.res.Resource;
 import lucee.commons.io.res.type.file.FileResource;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.type.util.ArrayUtil;
-
-import org.apache.commons.collections.map.ReferenceMap;
 
 /**
  * Classloader that load classes from resources
@@ -112,7 +112,7 @@ public final class ResourceClassLoader extends URLClassLoader implements Closeab
 		
 		resources=ResourceUtil.merge(this.getResources(), resources);
 		rcl=new ResourceClassLoader(resources,getParent());
-		if(customCLs==null)customCLs=new ReferenceMap();
+		if(customCLs==null)customCLs=new ReferenceMap<String,ResourceClassLoader>();
 		customCLs.put(key, rcl);
 		return rcl;
 	}
@@ -124,7 +124,7 @@ public final class ResourceClassLoader extends URLClassLoader implements Closeab
 		if(rcl!=null) return rcl; 
 		
 		rcl=new ResourceClassLoader(resources,this);
-		if(customCLs==null)customCLs=new ReferenceMap();
+		if(customCLs==null)customCLs=new ReferenceMap<String,ResourceClassLoader>();
 		customCLs.put(key, rcl);
 		return rcl;
 	}

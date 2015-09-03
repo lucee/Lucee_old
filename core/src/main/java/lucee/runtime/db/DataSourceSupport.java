@@ -29,7 +29,7 @@ import lucee.commons.lang.ClassException;
 import lucee.runtime.config.Config;
 import lucee.runtime.config.ConfigImpl;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.osgi.framework.BundleException;
 
 public abstract class DataSourceSupport implements DataSource, Cloneable {
@@ -156,7 +156,7 @@ public abstract class DataSourceSupport implements DataSource, Cloneable {
 
 	public Map<String,ProcMetaCollection> getProcedureColumnCache() {
 		if(procedureColumnCache==null)
-			procedureColumnCache=new ReferenceMap();
+			procedureColumnCache=new ReferenceMap<String,ProcMetaCollection>();
 		return procedureColumnCache;
 	}
 	
