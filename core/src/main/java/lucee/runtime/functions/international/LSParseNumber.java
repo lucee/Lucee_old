@@ -63,10 +63,10 @@ public final class LSParseNumber implements Function {
         Number result = nf.parse(str, pp);
 		
         if (pp.getIndex() < str.length()) {
-            throw new ExpressionException("can't parse String [" + str + "] against locale ["+LocaleFactory.toString(locale)+"] to a number");
+            throw new ExpressionException("can't parse String [" + str + "] against locale ["+LocaleFactory.getDisplayName(locale)+"] to a number");
         }
         if(result==null)
-        	throw new ExpressionException("can't parse String [" + str + "] against locale ["+LocaleFactory.toString(locale)+"] to a number");
+        	throw new ExpressionException("can't parse String [" + str + "] against locale ["+LocaleFactory.getDisplayName(locale)+"] to a number");
         return result.doubleValue();
 		
 	}

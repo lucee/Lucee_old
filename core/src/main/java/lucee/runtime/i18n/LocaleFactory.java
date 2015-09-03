@@ -249,7 +249,7 @@ public final class LocaleFactory {
 	 * @param locale
 	 * @return cast a Locale to a String 
 	 */
-	public static String toString(Locale locale) {
+	public static String getDisplayName(Locale locale) {
 		String lang=locale.getLanguage();
 		String country=locale.getCountry();
 		
@@ -266,6 +266,10 @@ public final class LocaleFactory {
 			}
 		}
 		return locale.getDisplayName(Locale.ENGLISH);
+	}
+	
+	public static String toString(Locale locale) {
+		return locale.toString();
 	}
 	
     /**

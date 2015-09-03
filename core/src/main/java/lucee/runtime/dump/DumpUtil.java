@@ -163,7 +163,7 @@ public class DumpUtil {
 			Locale l=(Locale) o;
 			Locale env = ThreadLocalPageContext.getLocale(null);
 			DumpTable table = new DumpTable("locale","#ff6600","#ffcc99","#000000");
-			table.setTitle("Locale "+LocaleFactory.toString(l));
+			table.setTitle("Locale "+LocaleFactory.getDisplayName(l));
 			table.appendRow(1,new SimpleDumpData("Code (ISO-3166)"),new SimpleDumpData(l.toString()));
 			table.appendRow(1,new SimpleDumpData("Country"),new SimpleDumpData(l.getDisplayCountry(env)));
 			table.appendRow(1,new SimpleDumpData("Language"),new SimpleDumpData(l.getDisplayLanguage(env)));
