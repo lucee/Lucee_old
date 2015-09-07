@@ -26,7 +26,6 @@ import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -149,7 +148,7 @@ public final class ComponentImpl extends StructSupport implements Externalizable
 	private boolean useShadow;
 	private boolean entity;
 	boolean afterConstructor;
-	private Map<Key,UDF> constructorUDFs;
+	//private Map<Key,UDF> constructorUDFs;
 	private boolean loaded;
 	private boolean hasInjectedFunctions;
 	private boolean isExtended; // is this component extended by a other component?
@@ -254,10 +253,10 @@ public final class ComponentImpl extends StructSupport implements Externalizable
 	    	}
 
 	    	// at the moment this makes no sense, becuae this map is no more used after constructor has runned and for a clone the constructo is not executed, but perhaps this is used in future
-	    	if(constructorUDFs!=null){
+	    	/*if(constructorUDFs!=null){
 	    		trg.constructorUDFs=new HashMap<Collection.Key, UDF>();
 	    		addUDFS(trg, constructorUDFs, trg.constructorUDFs);
-	    	}
+	    	}*/
 	    	
 	    	if(isTop) {
 	    		setTop(trg,trg);
@@ -736,18 +735,21 @@ public final class ComponentImpl extends StructSupport implements Externalizable
     	pc.setVariablesScope(parent);
     	this.afterConstructor=true;
     	
-    	if(constructorUDFs!=null){
+    	/*if(constructorUDFs!=null){
     		Iterator<Entry<Key, UDF>> it = constructorUDFs.entrySet().iterator();
     		Map.Entry<Key, UDF> entry;
     		Key key;
     		UDFPlus udf;
+    		PageSource ps;
     		while(it.hasNext()){
     			entry=it.next();
     			key=entry.getKey();
     			udf=(UDFPlus) entry.getValue();
+    			ps=udf.getPageSource();
+    			//if(ps!=null && ps.equals(getPageSource()))continue; // TODO can we avoid that udfs from the compinent itself are here?
     			registerUDF(key, udf,false,true);
     		}
-    	}
+    	}*/
 	}
     
     /**
@@ -1659,7 +1661,6 @@ public final class ComponentImpl extends StructSupport implements Externalizable
      */
     public void registerUDF(Collection.Key key, UDFPlus udf,boolean useShadow,boolean injected) throws ApplicationException {
     	udf.setOwnerComponent(this);
-    	
     	if(insideStaticConstr) {
     		_static.put(key, udf);
     		return;
@@ -2094,10 +2095,11 @@ public final class ComponentImpl extends StructSupport implements Externalizable
 		return Operator.compare(castToString(), str);
 	}
 
-	public void addConstructorUDF(Key key, UDF value) {
-		if(constructorUDFs==null)
+	public void addConstructorUDF(Key key, UDF udf) throws ApplicationException {
+		registerUDF(key, (UDFPlus)udf, false, true);
+		/*if(constructorUDFs==null)
 			constructorUDFs=new HashMap<Key,UDF>();
-		constructorUDFs.put(key, value);
+		constructorUDFs.put(key, value);*/
 	}
 
 // MUST more native impl
@@ -2156,7 +2158,7 @@ public final class ComponentImpl extends StructSupport implements Externalizable
 		this.base=other.base;
 		//this.componentPage=other.componentPage;
 		this.pageSource=other.pageSource;
-		this.constructorUDFs=other.constructorUDFs;
+		//this.constructorUDFs=other.constructorUDFs;
 		this.dataMemberDefaultAccess=other.dataMemberDefaultAccess;
 		this.absFin=other.absFin;
 		this.isInit=other.isInit;

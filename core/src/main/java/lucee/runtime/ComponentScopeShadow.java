@@ -29,6 +29,7 @@ import lucee.runtime.dump.DumpData;
 import lucee.runtime.dump.DumpProperties;
 import lucee.runtime.dump.DumpTable;
 import lucee.runtime.engine.ThreadLocalPageContext;
+import lucee.runtime.exp.ApplicationException;
 import lucee.runtime.exp.ExpressionException;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.op.Duplicator;
@@ -200,7 +201,7 @@ public class ComponentScopeShadow extends StructSupport implements ComponentScop
 	}
 
 	@Override
-	public Object set(Collection.Key key, Object value) {
+	public Object set(Collection.Key key, Object value) throws ApplicationException {
 		if(
 			key.equalsIgnoreCase(KeyConstants._this) 
 			|| key.equalsIgnoreCase(KeyConstants._super) 
@@ -215,7 +216,11 @@ public class ComponentScopeShadow extends StructSupport implements ComponentScop
 
 	@Override
 	public Object setEL(Collection.Key key, Object value) {
-		return set(key, value);
+		try {
+			return set(key, value);
+		} catch (ApplicationException e) {
+			return value;
+		}
 	}
 
 	@Override
@@ -364,7 +369,7 @@ public class ComponentScopeShadow extends StructSupport implements ComponentScop
 
 	@Override
 	public Object setEL(PageContext pc, Collection.Key propertyName, Object value) {
-		return set(propertyName, value);
+		return setEL(propertyName, value);
 	}
 
 	/*public Object get(PageContext pc, String key) throws PageException {
