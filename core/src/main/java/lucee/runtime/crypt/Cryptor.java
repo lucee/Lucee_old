@@ -18,6 +18,7 @@
  **/
 package lucee.runtime.crypt;
 
+import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
@@ -29,6 +30,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import lucee.print;
 import lucee.commons.lang.StringUtil;
 import lucee.runtime.coder.Coder;
 import lucee.runtime.exp.PageException;
@@ -57,6 +59,28 @@ public class Cryptor {
      * @throws PageException
      */
     static byte[] crypt( byte[] input, String key, String algorithm, byte[] ivOrSalt, int iterations, boolean doDecrypt ) throws PageException {
+    	
+	    try {
+	    	return _crypt( input, key, algorithm, ivOrSalt, iterations, doDecrypt );
+		}
+		// this is an ugly patch but it looks lime that ACF simply double to short keys
+		catch(PageException pe){
+			String msg=pe.getMessage();
+			if(msg!=null && key.length()==4 && msg.indexOf(" 40 ")!=-1 && msg.indexOf(" 1024 ")!=-1) {
+				return _crypt( input, key+key, algorithm, ivOrSalt, iterations, doDecrypt );
+			}
+			if(msg!=null  && key.length()>4 && key.length()%4==0  && msg.indexOf("Illegal key size")!=-1) {
+				return crypt( input, key.substring(0,key.length()-4), algorithm, ivOrSalt, iterations, doDecrypt );
+			}
+			throw pe;
+		}
+    }
+    
+    public static void main(String[] args) throws PageException {
+		print.e(encrypt("dsadsd", "abcdabcdabcdabcdabcdabcdabcdabcdabcd", "RC4", null, 1, null,"UTF-8"));
+	}
+    
+    private static byte[] _crypt( byte[] input, String key, String algorithm, byte[] ivOrSalt, int iterations, boolean doDecrypt ) throws PageException {
 
         byte[] result = null;
         Key secretKey = null;
@@ -75,7 +99,8 @@ public class Cryptor {
         try {
 
             Cipher cipher = Cipher.getInstance( algorithm );
-
+            
+            
             if ( ivOrSalt == null ) {
 
                 if ( isPBE || isFBM ) {
@@ -96,8 +121,7 @@ public class Cryptor {
                 params     = new PBEParameterSpec( ivOrSalt, iterations > 0 ? iterations : DEFAULT_ITERATIONS );        // set Salt and Iterations for PasswordBasedEncryption
             }
             else {
-
-                secretKey  = new SecretKeySpec( Coder.decode( Coder.ENCODING_BASE64, key ), algo );
+            	secretKey  = new SecretKeySpec( Coder.decode( Coder.ENCODING_BASE64, key ), algo );
                 if ( isFBM )
                     params = new IvParameterSpec( ivOrSalt );                                                           // set Initialization Vector for non-ECB Feedback Mode
             }
@@ -133,8 +157,7 @@ public class Cryptor {
      * an encrypt method that takes a byte-array for input and returns an encrypted byte-array
      */
     public static byte[] encrypt(byte[] input, String key, String algorithm, byte[] ivOrSalt, int iterations) throws PageException {
-
-        return crypt( input, key, algorithm, ivOrSalt, iterations, false );
+    	return crypt( input, key, algorithm, ivOrSalt, iterations, false );
     }
 
 
@@ -164,8 +187,7 @@ public class Cryptor {
      * a decrypt method that takes an encrypted byte-array for input and returns an unencrypted byte-array
      */
     public static byte[] decrypt(byte[] input, String key, String algorithm, byte[] ivOrSalt, int iterations) throws PageException {
-
-        return crypt( input, key, algorithm, ivOrSalt, iterations, true );
+    	return crypt( input, key, algorithm, ivOrSalt, iterations, true );
     }
 
 
