@@ -323,5 +323,11 @@ public abstract class UDFGSProperty extends MemberSupport implements UDFPlus {
     	if(Decision.isSimpleValue(value)) return "the value ["+Caster.toString(value,null)+"] is not in  ["+format+"] format";
     	return "cannot convert object from type ["+Caster.toTypeName(value)+"] to a ["+format+"] format";
     }   
+
+
+	@Override
+	public PageSource getPageSource() {
+		return this.properties._pageSource;
+	}
 	
 }

@@ -21,6 +21,7 @@ package lucee.runtime.type.trace;
 import lucee.runtime.Component;
 import lucee.runtime.ComponentImpl;
 import lucee.runtime.PageContext;
+import lucee.runtime.PageSource;
 import lucee.runtime.debug.Debugger;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.type.Collection;
@@ -246,5 +247,11 @@ public class TOUDF extends TOObjects implements UDF {
 	public void setOwnerComponent(ComponentImpl cfc) {
 		log(null);
 		((UDFPlus)udf).setOwnerComponent(cfc);
+	}
+
+
+	@Override
+	public PageSource getPageSource() {
+		return udf.getPageSource();
 	}	
 }

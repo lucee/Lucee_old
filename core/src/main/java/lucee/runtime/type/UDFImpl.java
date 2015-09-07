@@ -597,5 +597,10 @@ public class UDFImpl extends MemberSupport implements UDFPlus,Externalizable {
 	public String id(){
 		return properties.id();
 	}
+
+	@Override
+	public PageSource getPageSource() {
+		return this.properties._pageSource;
+	}
 	
 }

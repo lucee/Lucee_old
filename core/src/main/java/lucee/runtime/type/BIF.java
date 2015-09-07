@@ -29,6 +29,7 @@ import lucee.commons.lang.ExceptionUtil;
 import lucee.commons.lang.StringUtil;
 import lucee.runtime.Component;
 import lucee.runtime.PageContext;
+import lucee.runtime.PageSource;
 import lucee.runtime.component.MemberSupport;
 import lucee.runtime.config.Config;
 import lucee.runtime.config.ConfigImpl;
@@ -325,6 +326,12 @@ public class BIF extends MemberSupport implements UDFPlus {
 
 	@Override
 	public Object implementation(PageContext pageContext) throws Throwable {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PageSource getPageSource() {
 		// TODO Auto-generated method stub
 		return null;
 	}
