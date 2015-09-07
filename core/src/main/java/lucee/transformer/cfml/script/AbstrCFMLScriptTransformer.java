@@ -456,30 +456,35 @@ public abstract class AbstrCFMLScriptTransformer extends AbstrCFMLExprTransforme
 			data.srcCode.setPos(pos);
 			return null;
 		}
+		
 		int mod=ComponentUtil.toModifier(id, Component.MODIFIER_NONE, Component.MODIFIER_NONE);
 		if(mod==Component.MODIFIER_NONE) {
-			data.srcCode.setPos(pos);
-			return null;
+			data.srcCode.setPos(pos); 
 		}
-
+		
 		comments(data);
 
 		// do we have a starting component?
-		String compPath=data.srcCode.getDialect()==CFMLEngine.DIALECT_CFML?
-				Constants.CFML_COMPONENT_TAG_NAME:Constants.LUCEE_COMPONENT_TAG_NAME;
-		
-		if(!data.srcCode.isCurrent(compPath)) {
+		if(
+				!data.srcCode.isCurrent(getComponentName(data.srcCode.getDialect()))
+				&& 
+				(data.srcCode.getDialect()==CFMLEngine.DIALECT_CFML || !data.srcCode.isCurrent(Constants.CFML_COMPONENT_TAG_NAME))) {
 			data.srcCode.setPos(pos);
 			return null;
 		}
 		
 		// parse the component
-		TagLibTag tlt = CFMLTransformer.getTLT(data.srcCode,compPath,data.config.getIdentification());
+		TagLibTag tlt = CFMLTransformer.getTLT(data.srcCode,getComponentName(data.srcCode.getDialect()),
+						data.config.getIdentification());
 		TagComponent comp =(TagComponent) _multiAttrStatement(parent, data, tlt);
-		comp.addAttribute(new Attribute(false,"modifier",data.factory.createLitString(id),"string"));
+		if(mod!=Component.MODIFIER_NONE)comp.addAttribute(new Attribute(false,"modifier",data.factory.createLitString(id),"string"));
 		return comp;
 	}
 	
+	private String getComponentName(int dialect) {
+		return dialect==CFMLEngine.DIALECT_LUCEE?Constants.LUCEE_COMPONENT_TAG_NAME:Constants.CFML_COMPONENT_TAG_NAME;
+	}
+
 	/**
 	 * Liest ein Case Statement ein
 	 * @return case Statement
@@ -1155,7 +1160,10 @@ public abstract class AbstrCFMLScriptTransformer extends AbstrCFMLExprTransforme
 	private final Tag __multiAttrStatement(Body parent, ExprData data,TagLibTag tlt) throws TemplateException  {
 		if(data.ep==null) return null;
 		String type=tlt.getName();
-		if(data.srcCode.forwardIfCurrent(type)) {
+		if(	 data.srcCode.forwardIfCurrent(type) || 
+			// lucee dialect support component as alias for class
+			(data.srcCode.getDialect()==CFMLEngine.DIALECT_LUCEE && type.equalsIgnoreCase(Constants.LUCEE_COMPONENT_TAG_NAME) && data.srcCode.forwardIfCurrent(Constants.CFML_COMPONENT_TAG_NAME))) {
+			
 			boolean isValid=(data.srcCode.isCurrent(' ') || (tlt.getHasBody() && data.srcCode.isCurrent('{')));
 			if(!isValid){
 				data.srcCode.setPos(data.srcCode.getPos()-type.length());

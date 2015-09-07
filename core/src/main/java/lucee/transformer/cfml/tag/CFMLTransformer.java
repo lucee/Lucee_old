@@ -180,7 +180,11 @@ public final class CFMLTransformer {
 					if(stat instanceof PrintOut && (expr=((PrintOut)stat).getExpr()) instanceof LitString) {
 						ls=(LitString) expr;
 						str=ls.getString();
-						if(str.indexOf(Constants.LUCEE_COMPONENT_TAG_NAME)!=-1 || str.indexOf(Constants.LUCEE_INTERFACE_TAG_NAME)!=-1) {
+						if(
+								str.indexOf(Constants.LUCEE_COMPONENT_TAG_NAME)!=-1 || 
+								str.indexOf(Constants.LUCEE_INTERFACE_TAG_NAME)!=-1 || 
+								str.indexOf(Constants.CFML_COMPONENT_TAG_NAME)!=-1 // cfml name is supported as alias
+						) {
 							possibleUndetectedComponent=true;
 							break;
 						}
