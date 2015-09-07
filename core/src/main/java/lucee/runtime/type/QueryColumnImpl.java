@@ -849,7 +849,7 @@ public class QueryColumnImpl implements QueryColumnPro,Objects {
 	}
 
 	@Override
-	public void sort(Comparator comp) {
+	public void sortIt(Comparator comp) {
 		throwNotAllowedToAlter();
 	}
 

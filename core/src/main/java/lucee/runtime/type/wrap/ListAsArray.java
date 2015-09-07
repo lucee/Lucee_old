@@ -216,7 +216,7 @@ public class ListAsArray implements Array,List {
 	}
 
 	@Override
-	public synchronized void sort(Comparator comp) {
+	public synchronized void sortIt(Comparator comp) {
 		if(getDimension()>1)
 			throw new PageRuntimeException("only 1 dimensional arrays can be sorted");
 		Collections.sort(list,comp);

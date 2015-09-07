@@ -343,7 +343,7 @@ public final class ArgumentImpl extends ScopeSupport implements Argument {
 	}
 
 	@Override
-	public void sort(Comparator com) {
+	public void sortIt(Comparator com) {
 		// TODO Impl.
 		throw new PageRuntimeException("can't sort Argument Scope","not Implemnted Yet");
 	}

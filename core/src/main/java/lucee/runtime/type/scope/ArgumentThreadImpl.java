@@ -416,7 +416,7 @@ public final class ArgumentThreadImpl implements Argument {
 	}
 
 	@Override
-	public void sort(Comparator com) {
+	public void sortIt(Comparator com) {
 		throw new PageRuntimeException(new CasterException(sct,"Array"));
 	}
 

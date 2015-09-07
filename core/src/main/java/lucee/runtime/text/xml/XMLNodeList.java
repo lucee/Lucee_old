@@ -383,7 +383,7 @@ public final class XMLNodeList extends ArraySupport implements NodeList, XMLObje
 	}
 	
 	@Override
-	public void sort(Comparator comp) {
+	public void sortIt(Comparator comp) {
 		throw new PageRuntimeException("can't sort a XML Node List Array");
 	}
 

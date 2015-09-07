@@ -160,10 +160,10 @@ public class XMLMultiElementArray extends ArraySupport {
 	}
 
 	@Override
-	public void sort(Comparator comp) {
+	public void sortIt(Comparator comp) {
 		if(size()<=1) return;
 		
-		struct.getInnerArray().sort(comp);
+		struct.getInnerArray().sortIt(comp);
 		
 		Object[] nodes = struct.getInnerArray().toArray();
 		Node last=(Node) nodes[nodes.length-1],current;

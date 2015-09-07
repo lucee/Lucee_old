@@ -127,7 +127,7 @@ public interface Array extends Collection, Cloneable, Objects {
 	@Deprecated
 	public void sort(String sortType, String sortOrder) throws PageException;
 
-	public void sort(@SuppressWarnings("rawtypes") Comparator comp);
+	public void sortIt(@SuppressWarnings("rawtypes") Comparator comp);// this name was choosen to avoid conflict with java.util.List
 
 	/**
 	 * @return return arra as native (Java) Object Array
