@@ -479,7 +479,7 @@ public final class ArrayImplNS extends ArraySupport implements Array {
 	
 	@Override
 	public void sort(String sortType, String sortOrder) throws PageException {
-		sort(ArrayUtil.toComparator(null, sortType, sortOrder, false));
+		sortIt(ArrayUtil.toComparator(null, sortType, sortOrder, false));
 	}
 
 	@Override
