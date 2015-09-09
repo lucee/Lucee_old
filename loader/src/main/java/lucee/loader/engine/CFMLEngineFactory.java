@@ -602,9 +602,8 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 						+ (id == null ? "?" : "&")+"allowRedirect=true"
 						
 				);
-		System.out.println("download:" + symbolicName + ":" + symbolicVersion +" from "+updateUrl); // MUST remove
-		log(Logger.LOG_DEBUG, "download bundle [" + symbolicName + ":"
-				+ symbolicVersion + "] from " + updateUrl);
+		System.out.println("download " + symbolicName + ":" + symbolicVersion +" from "+updateUrl+" and copy to "+jar); // MUST remove
+		log(Logger.LOG_DEBUG, "download bundle [" + symbolicName + ":"+ symbolicVersion + "] from " + updateUrl+" and copy to "+jar);
 
 		int code;
 		HttpURLConnection conn;
@@ -928,8 +927,8 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 		if (luceeServerRoot != null)
 			return luceeServerRoot;
 
-		File root = getDirectoryByProp("lucee.base.dir"); // directory defined by the caller
-
+		File lbd = getDirectoryByProp("lucee.base.dir"); // directory defined by the caller
+		File root=lbd;
 		// get the root directory
 		if (root == null)
 			root = getDirectoryByProp("jboss.server.home.dir"); // Jboss/Jetty|Tomcat 
@@ -949,19 +948,33 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 			root = getClassLoaderRoot(mainClassLoader).getParentFile()
 					.getParentFile();
 
-		System.out.println("root dir:" + root);
+		System.out.println("root-directory:" + root);
+		
+		
+		final File classicRoot = getClassLoaderRoot(mainClassLoader);
+		
+		// in case of a war file the server root need to be with the context
+		if(lbd==null) {
+			File webInf=getWebInfFolder(classicRoot);
+			if(webInf!=null) {
+				root=new File(webInf,"lucee-server");
+				if(!root.exists())root.mkdir();
 
+				System.out.println("war-root-directory:" + root);
+			}
+		}
+		
 		if (root == null)
 			throw new IOException(
-					"can't locate the root of the servlet container, please define a location (physical path) for the server configuration"
-							+ " with help of the servlet init param [lucee-server-directory] in the web.xml where the Lucee Servlet is defined");
+				 "can't locate the root of the servlet container, please define a location (physical path) for the server configuration"
+				+" with help of the servlet init param [lucee-server-directory] in the web.xml where the Lucee Servlet is defined"
+				+" or the system property [lucee.base.dir].");
 
 		final File modernDir = new File(root, "lucee-server");
 		if (true) {
 			// there is a server context in the old lucee location, move that one
-			final File classicRoot = getClassLoaderRoot(mainClassLoader);
 			File classicDir;
-			System.out.println("classicRoot:" + classicRoot);
+			System.out.println("classic-root-directory:" + classicRoot);
 			boolean had = false;
 			if (classicRoot.isDirectory()
 					&& (classicDir = new File(classicRoot, "lucee-server"))
@@ -993,6 +1006,16 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 		return root;
 	}
 
+	private static File getWebInfFolder(File file) {
+		File parent;
+		while(file!=null && !file.getName().equals("WEB-INF")) {
+			parent=file.getParentFile();
+			if(file.equals(parent)) return null; // this should not happen, simply to be sure
+			file=parent;
+		}
+		return file;
+	}
+	
 	private static void copyRecursiveAndRename(final File src, File trg)
 			throws IOException {
 		if (!src.exists())
