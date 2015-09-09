@@ -948,8 +948,6 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 			root = getClassLoaderRoot(mainClassLoader).getParentFile()
 					.getParentFile();
 
-		System.out.println("root-directory:" + root);
-		
 		
 		final File classicRoot = getClassLoaderRoot(mainClassLoader);
 		
@@ -957,12 +955,13 @@ public class CFMLEngineFactory extends CFMLEngineFactorySupport {
 		if(lbd==null) {
 			File webInf=getWebInfFolder(classicRoot);
 			if(webInf!=null) {
-				root=new File(webInf,"lucee-server");
+				root=webInf;
 				if(!root.exists())root.mkdir();
-
 				System.out.println("war-root-directory:" + root);
 			}
 		}
+		
+		System.out.println("root-directory:" + root);
 		
 		if (root == null)
 			throw new IOException(
