@@ -4,6 +4,7 @@
   <property name="srcCFML" location="${temp}/context"/>
   <property name="srcAdmin" location="${src}/admin"/>
   <property name="srcDoc" location="${src}/doc"/>
+  <property name="srcTB" location="${testbox}"/>
 
 <target name="all">
 
@@ -27,6 +28,9 @@
 		newPassword="webweb";
 
 
+/************************************
+               LUCEE
+************************************/
 // create "/lucee" mapping
 	// set a mapping
 	admin 
@@ -54,9 +58,11 @@
 
 
 
-// create "/lucee/admin" mapping
+/************************************
+               LUCEE/ADMIN
+************************************/
 
-	// set a mapping
+	// create "/lucee/admin" mapping
 	admin 
 		action="updateMapping"
 		type="web"
@@ -82,9 +88,11 @@
 
 
 
-// create "/lucee/doc" mapping
+/************************************
+               LUCEE/DOC
+************************************/
 
-	// set a mapping
+	// create "/lucee/doc" mapping
 	admin 
 		action="updateMapping"
 		type="web"
@@ -105,6 +113,35 @@
 		
 		file="#temp#/lucee-doc.lar"
 		virtual="/doc"
+		addCFMLFiles="true"
+		addNonCFMLFiles="true";
+
+
+/************************************
+               TESTBOX
+************************************/
+
+	// create "/testbox" mapping
+	admin 
+		action="updateMapping"
+		type="web"
+		password="webweb"
+		virtual="/testbox"
+		physical="#srcTB#"
+		toplevel="true"
+		archive=""
+		primary="physical"
+		trusted="no";
+	
+
+	// create an archive from the mapping
+	admin 
+		action="createArchive"
+		type="web"
+		password="webweb"
+		
+		file="#temp#/testbox.lar"
+		virtual="/testbox"
 		addCFMLFiles="true"
 		addNonCFMLFiles="true";
 	
