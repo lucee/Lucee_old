@@ -40,6 +40,7 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
+import lucee.print;
 import lucee.commons.io.IOUtil;
 import lucee.commons.lang.ClassException;
 import lucee.commons.lang.ClassUtil;
@@ -69,6 +70,7 @@ import org.apache.axis.server.AxisServer;
 import org.apache.axis.transport.http.AxisHttpSession;
 import org.apache.axis.transport.http.FilterPrintWriter;
 import org.apache.axis.transport.http.HTTPConstants;
+import org.apache.axis.transport.http.QSWSDLHandler;
 import org.apache.axis.transport.http.ServletEndpointContextImpl;
 import org.apache.axis.utils.Messages;
 import org.apache.commons.logging.Log;
@@ -102,8 +104,8 @@ public final class RPCServer{
 	private String homeDir;
 	private AxisServer axisServer;
 	
-	private Log log;
-	private Log exceptionLog;
+	private Logger log;
+	private Logger exceptionLog;
 	
 	
 	private static boolean isDevelopment=false;
@@ -118,8 +120,13 @@ public final class RPCServer{
     private RPCServer(Config config,ServletContext context) throws AxisFault {
         this.context=context;
         ConfigImpl ci=(ConfigImpl) config;
-        this.log=new Log4JLogger(ci.getLogger("application",true));
-        this.exceptionLog=new Log4JLogger(ci.getLogger("exception",true));
+        
+        
+        this.log=ci.getLogger("application",true);
+        this.exceptionLog=ci.getLogger("exception",true);
+        
+        
+        
         
         
         initQueryStringHandlers();
@@ -133,7 +140,15 @@ public final class RPCServer{
 
 
 
-    /**
+    private Log toLog(Logger logger) {
+		// make sure we have the class from the same classloader ...
+    	return new Log4JLogger(logger);
+	}
+
+
+
+
+	/**
      * Process GET requests. This includes handoff of pseudo-SOAP requests
      *
      * @param request request in
@@ -193,7 +208,7 @@ public final class RPCServer{
      * @param e what went wrong
      */
     private void logException(Throwable e) {
-        exceptionLog.info(Messages.getMessage("exception00"), e);
+    	exceptionLog.info(Messages.getMessage("exception00"), e);
     }
 
     /**
@@ -720,9 +735,6 @@ public final class RPCServer{
                         // and its "invoke" method.
 
                         MessageContext msgContext = createMessageContext(engine,request, response,component);
-                        Class plugin=ClassUtil.loadClass((String)this.transport.getOption(queryHandler));
-                        Method pluginMethod = plugin.getDeclaredMethod("invoke", new Class[] {msgContext.getClass()});
-
                         msgContext.setProperty(MessageContext.TRANS_URL, HttpUtils.getRequestURL(request).toString().toLowerCase());
                         //msgContext.setProperty(MessageContext.TRANS_URL, "http://DefaultNamespace");
                         msgContext.setProperty(HTTPConstants.PLUGIN_SERVICE_NAME, serviceName);
@@ -731,11 +743,24 @@ public final class RPCServer{
                         msgContext.setProperty(HTTPConstants.PLUGIN_ENABLE_LIST,Boolean.FALSE);
                         msgContext.setProperty(HTTPConstants.PLUGIN_ENGINE,engine);
                         msgContext.setProperty(HTTPConstants.PLUGIN_WRITER,writer);
-                        msgContext.setProperty(HTTPConstants.PLUGIN_LOG, log);
-                        msgContext.setProperty(HTTPConstants.PLUGIN_EXCEPTION_LOG,exceptionLog);
+                        msgContext.setProperty(HTTPConstants.PLUGIN_LOG, toLog(log));
+                        msgContext.setProperty(HTTPConstants.PLUGIN_EXCEPTION_LOG,toLog(exceptionLog));
                         
-                        // Invoke the plugin.
-                        pluginMethod.invoke(ClassUtil.loadInstance(plugin),new Object[] {msgContext});
+                        
+                        String handlerClassName = (String) this.transport.getOption(queryHandler);
+                        if("org.apache.axis.transport.http.QSWSDLHandler".equals(handlerClassName)){
+                        	print.e("direct:"+handlerClassName);
+                        	QSWSDLHandler handler=new QSWSDLHandler();
+                        	handler.invoke(msgContext);
+                        }
+                        else {
+                        	print.e("reflection:"+handlerClassName);
+                        	// Invoke the plugin.
+                        	Class plugin=ClassUtil.loadClass((String)this.transport.getOption(queryHandler));
+                        	Method pluginMethod = plugin.getDeclaredMethod("invoke", new Class[] {msgContext.getClass()});
+                        	pluginMethod.invoke(ClassUtil.loadInstance(plugin),new Object[] {msgContext});
+                        }
+                        
                         writer.close();
 
                         return true;
