@@ -44,6 +44,7 @@ import lucee.commons.io.IOUtil;
 import lucee.commons.lang.ClassException;
 import lucee.commons.lang.ClassUtil;
 import lucee.runtime.Component;
+import lucee.runtime.config.Config;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.exp.PageServletException;
 import lucee.runtime.net.http.ReqRspUtil;
@@ -69,7 +70,7 @@ import org.apache.axis.transport.http.FilterPrintWriter;
 import org.apache.axis.transport.http.HTTPConstants;
 import org.apache.axis.transport.http.ServletEndpointContextImpl;
 import org.apache.axis.utils.Messages;
-import org.apache.commons.logging.Log;
+import lucee.commons.io.log.Log;
 import org.w3c.dom.Element;
 
 /**
@@ -80,9 +81,9 @@ import org.w3c.dom.Element;
  */
 public final class RPCServer{
 
-	protected static Log log =LogFactory.getLog(RPCServer.class.getName());
-    private static Log tlog =LogFactory.getLog(Constants.TIME_LOG_CATEGORY);
-    private static Log exceptionLog =LogFactory.getLog(Constants.EXCEPTION_LOG_CATEGORY);
+	//protected static Log log =LogFactory.getLog(RPCServer.class.getName());
+    //private static Log tlog =LogFactory.getLog(Constants.TIME_LOG_CATEGORY);
+    //private static Log exceptionLog =LogFactory.getLog(Constants.EXCEPTION_LOG_CATEGORY);
 
     public static final String INIT_PROPERTY_TRANSPORT_NAME ="transport.name";
     public static final String INIT_PROPERTY_USE_SECURITY ="use-servlet-security";
@@ -97,7 +98,9 @@ public final class RPCServer{
 	private String webInfPath;
 	private String homeDir;
 	private AxisServer axisServer;
+	private Log log;
 	//private org.apache.axis.encoding.TypeMapping typeMapping;
+	private Log exceptionLog;
 	
 	private static boolean isDevelopment=false;
 	private static boolean isDebug = false;
@@ -108,8 +111,12 @@ public final class RPCServer{
      * Initialization method.
      * @throws AxisFault 
      */
-    private RPCServer(ServletContext context) throws AxisFault {
+    private RPCServer(Config config,ServletContext context) throws AxisFault {
         this.context=context;
+
+        this.log=config.getLog("application");
+        this.exceptionLog=config.getLog("exception");
+        
         
         initQueryStringHandlers();
         ServiceAdmin.setEngine(this.getEngine(), context.getServerInfo());
@@ -161,12 +168,14 @@ public final class RPCServer{
         Element runtimeException = fault.lookupFaultDetail(
                 Constants.QNAME_FAULTDETAIL_RUNTIMEEXCEPTION);
         if (runtimeException != null) {
-            exceptionLog.info(Messages.getMessage("axisFault00"), fault);
+        	
+            exceptionLog.log(Log.LEVEL_INFO, "axis-server",Messages.getMessage("axisFault00"), fault);
+            
             //strip runtime details
             fault.removeFaultDetail(Constants.
                                     QNAME_FAULTDETAIL_RUNTIMEEXCEPTION);
-        } else if (exceptionLog.isDebugEnabled()) {
-            exceptionLog.debug(Messages.getMessage("axisFault00"), fault);
+        } else if(exceptionLog.getLogLevel()>=Log.LEVEL_DEBUG){
+            exceptionLog.log(Log.LEVEL_DEBUG,"axis-server",Messages.getMessage("axisFault00"), fault);
         }
         //dev systems only give fault dumps
         //if (!isDevelopment()) {
@@ -180,7 +189,7 @@ public final class RPCServer{
      * @param e what went wrong
      */
     private void logException(Throwable e) {
-        exceptionLog.info(Messages.getMessage("exception00"), e);
+        exceptionLog.log(Log.LEVEL_INFO,"axis-server",Messages.getMessage("exception00"), e);
     }
 
     /**
@@ -207,7 +216,7 @@ public final class RPCServer{
                 // !!! should return a SOAP fault...
                 ServletException se =
                         new ServletException(Messages.getMessage("noEngine00"));
-                log.debug("No Engine!", se);
+                log.log(Log.LEVEL_DEBUG,"axis-server","No Engine!", se);
                 throw se;
             }
 
@@ -222,7 +231,7 @@ public final class RPCServer{
             // ? where it would also be picked up for 'doGet()' ?
             if (securityProvider != null) {
                 if (isDebug) {
-                    log.debug("securityProvider:" + securityProvider);
+                    log.debug("axis-server","securityProvider:" + securityProvider);
                 }
                 msgContext.setProperty(MessageContext.SECURITY_PROVIDER,
                                        securityProvider);
@@ -247,7 +256,7 @@ public final class RPCServer{
             }
 
             if (isDebug) {
-                log.debug("Request Message:" + requestMsg);
+                log.debug("axis-server","Request Message:" + requestMsg);
 
                 /* Set the request(incoming) message field in the context */
                 /**********************************************************/
@@ -291,23 +300,23 @@ public final class RPCServer{
                 // (Sam is Watching! :-)
                 msgContext.setSession(new AxisHttpSession(req));
 
-                if (tlog.isDebugEnabled()) {
+                if (log.getLogLevel()>=Log.LEVEL_DEBUG) {
                     t1 = System.currentTimeMillis();
                 }
                 /* Invoke the Axis engine... */
                 /*****************************/
                 if (isDebug) {
-                    log.debug("Invoking Axis Engine.");
+                    log.debug("axis-server","Invoking Axis Engine.");
                     //here we run the message by the engine
                 }
                 
                 engine.invoke(msgContext);
                 if (isDebug) {
-                    log.debug("Return from Axis Engine.");
+                    log.debug("axis-server","Return from Axis Engine.");
                 }
-                if (tlog.isDebugEnabled()) {
-                    t2 = System.currentTimeMillis();
-                }
+                if(log.getLogLevel()>=Log.LEVEL_DEBUG)
+                	t2 = System.currentTimeMillis();
+                
                 responseMsg = msgContext.getResponseMessage();
 
                 // We used to throw exceptions on null response messages.
@@ -366,7 +375,7 @@ public final class RPCServer{
         	IOUtil.closeEL(is);
         }
 
-        if (tlog.isDebugEnabled()) {
+        if (log.getLogLevel()>=Log.LEVEL_DEBUG) {
             t3 = System.currentTimeMillis();
         }
 
@@ -400,12 +409,12 @@ public final class RPCServer{
         }
         
         if (isDebug) {
-            log.debug("Response sent.");
-            log.debug("Exit: doPost()");
+            log.debug("axis-server","Response sent.");
+            log.debug("axis-server","Exit: doPost()");
         }
-        if (tlog.isDebugEnabled()) {
+        if (log.getLogLevel()>=Log.LEVEL_DEBUG) {
             t4 = System.currentTimeMillis();
-            tlog.debug("axisServlet.doPost: " + soapAction +
+            log.debug("axis-server","axisServlet.doPost: " + soapAction +
                        " pre=" + (t1 - t0) +
                        " invoke=" + (t2 - t1) +
                        " post=" + (t3 - t2) +
@@ -486,11 +495,11 @@ public final class RPCServer{
         if (responseMsg == null) {
             res.setStatus(HttpServletResponse.SC_NO_CONTENT);
             if (isDebug) {
-                log.debug("NO AXIS MESSAGE TO RETURN!");
+                log.debug("axis-server","NO AXIS MESSAGE TO RETURN!");
             }
         } else {
             if (isDebug) {
-                log.debug("Returned Content-Type:" + contentType);
+                log.debug("axis-server","Returned Content-Type:" + contentType);
             }
 
             try {
@@ -521,18 +530,18 @@ public final class RPCServer{
         String requestPath = getRequestPath(req);
 
         if (isDebug) {
-            log.debug("MessageContext:" + msgContext);
-            log.debug("HEADER_CONTENT_TYPE:" +
+            log.debug("axis-server","MessageContext:" + msgContext);
+            log.debug("axis-server","HEADER_CONTENT_TYPE:" +
                       req.getHeader(HTTPConstants.HEADER_CONTENT_TYPE));
-            log.debug("HEADER_CONTENT_LOCATION:" +
+            log.debug("axis-server","HEADER_CONTENT_LOCATION:" +
                       req.getHeader(HTTPConstants.HEADER_CONTENT_LOCATION));
-            log.debug("Constants.MC_HOME_DIR:" + String.valueOf(homeDir));
-            log.debug("Constants.MC_RELATIVE_PATH:" + requestPath);
-            log.debug("HTTPConstants.MC_HTTP_SERVLETLOCATION:" +String.valueOf(webInfPath));
-            log.debug("HTTPConstants.MC_HTTP_SERVLETPATHINFO:" +req.getPathInfo());
-            log.debug("HTTPConstants.HEADER_AUTHORIZATION:" +req.getHeader(HTTPConstants.HEADER_AUTHORIZATION));
-            log.debug("Constants.MC_REMOTE_ADDR:" + req.getRemoteAddr());
-            log.debug("configPath:" + String.valueOf(webInfPath));
+            log.debug("axis-server","Constants.MC_HOME_DIR:" + String.valueOf(homeDir));
+            log.debug("axis-server","Constants.MC_RELATIVE_PATH:" + requestPath);
+            log.debug("axis-server","HTTPConstants.MC_HTTP_SERVLETLOCATION:" +String.valueOf(webInfPath));
+            log.debug("axis-server","HTTPConstants.MC_HTTP_SERVLETPATHINFO:" +req.getPathInfo());
+            log.debug("axis-server","HTTPConstants.HEADER_AUTHORIZATION:" +req.getHeader(HTTPConstants.HEADER_AUTHORIZATION));
+            log.debug("axis-server","Constants.MC_REMOTE_ADDR:" + req.getRemoteAddr());
+            log.debug("axis-server","configPath:" + String.valueOf(webInfPath));
         }
 
         /* Set the Transport */
@@ -591,7 +600,7 @@ public final class RPCServer{
         }
 
         if (isDebug) {
-            log.debug("HEADER_SOAP_ACTION:" + soapAction);
+            log.debug("axis-server","HEADER_SOAP_ACTION:" + soapAction);
 
             /**
              * Technically, if we don't find this header, we should probably fault.
@@ -778,10 +787,10 @@ public final class RPCServer{
         return axisServer;
     }
     
-	public static RPCServer getInstance(int id, ServletContext servletContext) throws AxisFault {
+	public static RPCServer getInstance(int id, Config config,ServletContext servletContext) throws AxisFault {
 		RPCServer server=(RPCServer) servers.get(Caster.toString(id));
 		if(server==null){
-			servers.put(Caster.toString(id), server=new RPCServer(servletContext));
+			servers.put(Caster.toString(id), server=new RPCServer(config,servletContext));
 		}
 		return server;
 	}

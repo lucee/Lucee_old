@@ -23,28 +23,28 @@ package lucee.commons.io.log;
  */
 public interface Log {
 
+	public static final int LEVEL_TRACE = 0;
 	/**
 	 * Field <code>LEVEL_INFO</code>
 	 */
-	public static final int LEVEL_INFO = 0;
+	public static final int LEVEL_INFO = 1;
 	/**
 	 * Field <code>LEVEL_DEBUG</code>
 	 */
-	public static final int LEVEL_DEBUG = 1;
+	public static final int LEVEL_DEBUG = 2;
 	/**
 	 * Field <code>LEVEL_WARN</code>
 	 */
-	public static final int LEVEL_WARN = 2;
+	public static final int LEVEL_WARN = 3;
 	/**
 	 * Field <code>LEVEL_ERROR</code>
 	 */
-	public static final int LEVEL_ERROR = 3;
+	public static final int LEVEL_ERROR = 4;
 	/**
 	 * Field <code>LEVEL_FATAL</code>
 	 */
-	public static final int LEVEL_FATAL = 4;
+	public static final int LEVEL_FATAL = 5;
 
-	public static final int LEVEL_TRACE = 5;
 
 	/**
 	 * log one line
