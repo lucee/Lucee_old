@@ -20,6 +20,7 @@ package lucee.runtime.functions.file;
 
 import java.io.IOException;
 
+import lucee.print;
 import lucee.commons.io.res.Resource;
 import lucee.commons.lang.StringUtil;
 import lucee.runtime.PageContext;
@@ -46,6 +47,7 @@ public class FileWrite {
 				else {
 					close=true;
 					Resource res = Caster.toResource(pc,obj,false);
+					print.e("FileWrite:"+res);
 					pc.getConfig().getSecurityManager().checkFileLocation(res);
 					fsw=new FileStreamWrapperWrite(res,charset,false,false);
 				}
