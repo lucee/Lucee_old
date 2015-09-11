@@ -51,11 +51,13 @@ try {
 			componentpaths = "#[{archive:"/test/testbox-2.1.0.lar"}]#";
 	
  		// load testbox
- 		tb=new testbox.system.TestBox(directory={ mapping="/test", recurse=true},reporter:"console");
- 		// execute
- 		report=tb.run();
- 		// get the result
- 		result=tb.getResult();
+ 		silent {
+	 		tb=new testbox.system.TestBox(directory={ mapping="/test", recurse=true},reporter:"console");
+	 		// execute
+	 		report=tb.run();
+	 		// get the result
+	 		result=tb.getResult();
+ 		}
  		
 
  		// throw an exception in case not all testcases have passed
