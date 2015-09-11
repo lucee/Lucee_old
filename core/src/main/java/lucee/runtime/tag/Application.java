@@ -27,6 +27,7 @@ import lucee.commons.io.res.Resource;
 import lucee.commons.io.res.util.ResourceUtil;
 import lucee.commons.lang.StringUtil;
 import lucee.runtime.Mapping;
+import lucee.runtime.PageSource;
 import lucee.runtime.config.Config;
 import lucee.runtime.config.ConfigWebUtil;
 import lucee.runtime.exp.ApplicationException;
@@ -507,7 +508,9 @@ public final class Application extends TagImpl {
 	}
 
 	private Resource getSource() throws PageException {
-		return ResourceUtil.getResource(pageContext,pageContext.getCurrentPageSource());
+		PageSource curr = pageContext.getCurrentPageSource();
+		if(curr==null) return null;
+		return ResourceUtil.getResource(pageContext,curr);
 	}
 
 	private boolean set(ApplicationContext ac, boolean update) throws PageException {
