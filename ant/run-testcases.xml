@@ -4,56 +4,79 @@
 
 <target name="run">
 
-<echo>
--------------------------------------------------------
-              C F M L  -  T E S T S
--------------------------------------------------------
-test: ${test}
-</echo>
+<echo><![CDATA[
+  _____         _   ____            
+ |_   _|__  ___| |_| __ )  _____  __
+   | |/ _ \/ __| __|  _ \ / _ \ \/ /
+   | |  __/\__ \ |_| |_) | (_) >  < 
+   |_|\___||___/\__|____/ \___/_/\_\
+]]></echo>
+
+
 	
 <script language="CFML">
 <![CDATA[
 
 NL="
 ";
-
-// set a password for the admin
 try {
-    admin 
-		action="updatePassword"
-		type="web"
-		oldPassword=""
-		newPassword="webweb";
-}
-catch(e){}// may exist from previous execution
+	
+	// set a password for the admin
+		try {
+		    admin 
+				action="updatePassword"
+				type="web"
+				oldPassword=""
+				newPassword="webweb";
+		}
+		catch(e){}// may exist from previous execution
 
-// create "/test" mapping
-	admin 
-		action="updateMapping"
-		type="web"
-		password="webweb"
-		virtual="/test"
-		physical="#test#"
-		toplevel="true"
-		archive=""
-		primary="physical"
-		trusted="no";
+	// create "/test" mapping
+		admin 
+			action="updateMapping"
+			type="web"
+			password="webweb"
+			virtual="/test"
+			physical="#test#"
+			toplevel="true"
+			archive=""
+			primary="physical"
+			trusted="no";
 
 
-	// make sure testbox exists 
-	echo("testbox:"& expandPath("/test/testbox-2.1.0.lar"));
-	try{
-		getComponentMetaData("testbox.system.TestBox");
-	}
-	catch(e){ 
-		// only add mapping when necessary
+	// set the testbox mapping
+ 	
 		mapping 
 			action="update" 
 			componentpaths = "#[{archive:"/test/testbox-2.1.0.lar"}]#";
-	}
- 	try{
-	//echo(serialize(getComponentMetaData("testbox.system.TestBox")));
-	//throw "end";
+	
+ 		// load testbox
+ 		tb=new testbox.system.TestBox(directory={ mapping="/test", recurse=true},reporter:"console");
+ 		// execute
+ 		report=tb.run();
+ 		// get the result
+ 		result=tb.getResult();
+ 		
+
+ 		// throw an exception in case not all testcases have passed
+ 		if(result.getTotalFail()+result.getTotalError()>0) {
+ 			// output the report
+ 			echo(trim(report));
+
+ 			throw "testbox could not sucessfull execute all testcases: failed #result.getTotalFail()#;error #result.getTotalError()#";
+ 		}
+ 		else {
+ 			echo("============================================================="&NL);
+ 			echo("TestBox Version: #tb.getVersion()#"&NL);
+ 			echo("Global Stats (#result.getTotalDuration()# ms)"&NL);
+ 			echo("============================================================="&NL);
+ 			echo("->[Bundles/Suites/Specs: #result.getTotalBundles()#/#result.getTotalSuites()#/#result.getTotalSpecs()#]"&NL);
+ 			echo("->[Pass: #result.getTotalPass()#]"&NL);
+ 			echo("->[Failures: #result.getTotalFail()#]"&NL);
+ 			echo("->[Errors: #result.getTotalError()#]"&NL);
+ 			echo("->[Skipped: #result.getTotalSkipped()#]"&NL);
+ 		}
+ 		
 	}
 	catch(e){
 		echo("-------------------------------------------------------"&NL);
@@ -61,9 +84,6 @@ catch(e){}// may exist from previous execution
 		echo(e.message&NL);
 		echo(serialize(e)&NL);
 		echo("-------------------------------------------------------"&NL);
-
-
-
 		rethrow;
 	}
  ]]>
