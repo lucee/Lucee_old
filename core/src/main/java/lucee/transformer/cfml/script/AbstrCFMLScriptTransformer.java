@@ -1787,7 +1787,7 @@ public abstract class AbstrCFMLScriptTransformer extends AbstrCFMLExprTransforme
 		if(attr!=null){
 			attrType = attr.getScriptSupport();
 			char c = data.srcCode.getCurrent();
-			if(ATTR_TYPE_REQUIRED==attrType || (!data.srcCode.isCurrent(';') && ATTR_TYPE_OPTIONAL==attrType)) {
+			if(ATTR_TYPE_REQUIRED==attrType || ((!data.srcCode.isCurrent(';') && !data.srcCode.isCurrent('{')) && ATTR_TYPE_OPTIONAL==attrType)) {
 				attrValue =attributeValue(data, tlt.getScript().getRtexpr());
 				if(attrValue!=null && isOperator(c)) {
 					data.srcCode.setPos(pos);
@@ -1805,8 +1805,15 @@ public abstract class AbstrCFMLScriptTransformer extends AbstrCFMLExprTransforme
 			data.srcCode.setPos(pos);
 			return null;
 		}
+		// body
+		if(tlt.getHasBody()){
+			Body body=new BodyBase(data.factory);
+			boolean wasSemiColon=statement(data,body,tlt.getScript().getContext());
+			if(!wasSemiColon || !tlt.isBodyFree() || body.hasStatements())
+				tag.setBody(body);
+		}
+		else checkSemiColonLineFeed(data,true,true,true);
 		
-		checkSemiColonLineFeed(data,true,true,true);
 		if(tlt.hasTTEClassDefinition()) 
 			data.ep.add(tlt, tag, data.flibs, data.srcCode);
 		
