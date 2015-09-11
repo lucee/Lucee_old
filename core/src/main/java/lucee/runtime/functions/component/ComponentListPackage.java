@@ -91,8 +91,6 @@ public class ComponentListPackage implements Function {
 	    	
 		// search local 
 		if(searchLocal) {
-			//Resource dir=pc.getCurrentTemplatePageSource().getResourceTranslated(pc).getParentResource();
-			//dir=dir.getRealResource(path);
 			PageSource ps= pci.getRelativePageSourceExisting(path);
 			if(ps!=null){
 				Mapping mapping = ps.getMapping();
