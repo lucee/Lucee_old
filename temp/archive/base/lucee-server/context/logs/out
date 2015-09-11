@@ -1,0 +1,17 @@
+===================================================================
+SERVER CONTEXT
+-------------------------------------------------------------------
+- config:/Users/mic/Projects/Lucee/Lucee5/temp/archive/base/lucee-server/context
+- loader-version:5.0
+===================================================================
+
+Fri Sep 11 14:44:27 CEST 2015-981 Start CFML Controller
+===================================================================
+WEB CONTEXT (a5fd29f95852cc6a468deefe7a8dc008)
+-------------------------------------------------------------------
+- config:/Users/mic/Projects/Lucee/Lucee5/temp/archive/webroot (custom setting)
+- webroot:/Users/mic/Projects/Lucee/Lucee5/ant/./
+- hash:a5fd29f95852cc6a468deefe7a8dc008
+- label:a5fd29f95852cc6a468deefe7a8dc008
+===================================================================
+
