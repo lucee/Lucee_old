@@ -2599,6 +2599,7 @@ dWord: creates a value of 0 (zero)</description>
 		<attribute>
 			<type>boolean</type>
 			<name>bufferoutput</name>
+			<script-support>optional</script-support>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<script-support>optional</script-support>
