@@ -362,7 +362,7 @@ public final class Admin extends TagImpl implements DynamicAttributes {
 	private void doAddDump() throws ApplicationException {
 		DebuggerPro debugger=(DebuggerPro) pageContext.getDebugger();
 		PageSource ps = pageContext.getCurrentTemplatePageSource();
-		debugger.addDump(ps, getString("admin",action,"dump",true));
+		if(ps!=null)debugger.addDump(ps, getString("admin",action,"dump",true));
 	}
 
 	private short toType(String strType, boolean throwError) throws ApplicationException {

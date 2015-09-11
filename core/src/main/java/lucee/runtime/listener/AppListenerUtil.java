@@ -456,8 +456,9 @@ public final class AppListenerUtil {
 
 	public static void setORMConfiguration(PageContext pc, ApplicationContext ac,Struct sct) throws PageException {
 		if(sct==null)sct=new StructImpl();
-		Resource res=pc.getCurrentTemplatePageSource().getResourceTranslated(pc).getParentResource();
 		ConfigImpl config=(ConfigImpl) pc.getConfig();
+		PageSource curr = pc.getCurrentTemplatePageSource();
+		Resource res=curr==null?null:curr.getResourceTranslated(pc).getParentResource();
 		ac.setORMConfiguration(ORMConfigurationImpl.load(config,ac,sct,res,config.getORMConfig()));
 		
 		// datasource

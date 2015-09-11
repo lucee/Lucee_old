@@ -22,6 +22,8 @@
 package lucee.runtime.functions.system;
 
 import lucee.runtime.PageContext;
+import lucee.runtime.PageSource;
+import lucee.runtime.exp.ApplicationException;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.ext.function.Function;
 
@@ -30,6 +32,8 @@ public final class GetCurrentTemplatePath implements Function {
 	private static final long serialVersionUID = 1862733968548626803L;
 
 	public static String call(PageContext pc ) throws PageException {
-		return pc.getCurrentTemplatePageSource().getResourceTranslated(pc).getAbsolutePath();
+		PageSource curr = pc.getCurrentTemplatePageSource();
+		if(curr==null) throw new ApplicationException("current context does not have a template it is based on");
+		return curr.getResourceTranslated(pc).getAbsolutePath();
 	}
 }

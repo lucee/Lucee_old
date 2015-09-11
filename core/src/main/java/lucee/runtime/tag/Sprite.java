@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import lucee.commons.digest.MD5;
 import lucee.commons.io.IOUtil;
+import lucee.commons.io.SystemUtil;
 import lucee.commons.io.res.Resource;
 import lucee.commons.io.res.util.ResourceUtil;
 import lucee.commons.lang.StringUtil;
@@ -106,8 +107,14 @@ public final class Sprite extends TagImpl {
 			
 			// TODO use the same resource as for cfimage
 			PageSource ps = pageContext.getCurrentTemplatePageSource();
-			Resource curr = ps.getResource();
-			Resource dir = curr.getParentResource();
+			 Resource dir;
+			if(ps!=null) {
+				Resource curr = ps.getResource();
+				dir = curr.getParentResource();
+			}
+			else dir=SystemUtil.getTempDirectory();
+			
+			 
 			Resource cssDir = dir.getRealResource("css");
 			Resource pathdir = cssDir;
 			cssDir.mkdirs();

@@ -703,7 +703,7 @@ public final class DebuggerImpl implements Debugger {
 	
 
 	@Override
-	public DebugTrace addTrace(int type, String category, String text, PageSource page,String varName,String varValue) {
+	public DebugTrace addTrace(int type, String category, String text, PageSource ps,String varName,String varValue) {
 		
 		long _lastTrace =(traces.isEmpty())?lastEntry: lastTrace;
 		lastTrace = System.currentTimeMillis();
@@ -723,7 +723,7 @@ public final class DebuggerImpl implements Debugger {
 			}
 		}*/
 		
-		DebugTraceImpl t=new DebugTraceImpl(type,category,text,page.getDisplayPath(),SystemUtil.getCurrentContext().line,"",varName,varValue,lastTrace-_lastTrace);
+		DebugTraceImpl t=new DebugTraceImpl(type,category,text,ps==null?"unknown template":ps.getDisplayPath(),SystemUtil.getCurrentContext().line,"",varName,varValue,lastTrace-_lastTrace);
 		traces.add(t);
 		return t;
 	}

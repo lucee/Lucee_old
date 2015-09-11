@@ -28,6 +28,7 @@ import lucee.runtime.converter.ConverterException;
 import lucee.runtime.converter.ScriptConverter;
 import lucee.runtime.debug.DebugTrace;
 import lucee.runtime.debug.DebugTraceImpl;
+import lucee.runtime.debug.DebuggerImpl;
 import lucee.runtime.exp.Abort;
 import lucee.runtime.exp.ApplicationException;
 import lucee.runtime.exp.PageException;
@@ -158,7 +159,7 @@ public final class Trace extends BodyTagImpl {
 	
 	public void _doEndTag() throws IOException, PageException {
 		
-		PageSource page = pageContext.getCurrentTemplatePageSource();
+		PageSource ps = pageContext.getCurrentTemplatePageSource();
 		
 		// var
 		String varValue=null;
@@ -194,7 +195,7 @@ public final class Trace extends BodyTagImpl {
 			
 			
 		}
-		DebugTrace trace = pageContext.getDebugger().addTrace(type,category,text,page,var,varValue);
+		DebugTrace trace = ((DebuggerImpl)pageContext.getDebugger()).addTrace(type,category,text,ps,var,varValue);
 		DebugTrace[] traces = pageContext.getDebugger().getTraces(pageContext);
 		
 		String total="(1st trace)";

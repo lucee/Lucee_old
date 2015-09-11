@@ -94,16 +94,16 @@ public class ComponentLoader {
     private static Object _search(PageContext pc,PageSource loadingLocation,String rawPath, Boolean searchLocal, 
     		Boolean searchRoot, boolean executeConstr, short returnType, boolean isExtendedComponent) throws PageException  {
     	PageSource currPS = pc.getCurrentPageSource();
-    	Page currP=currPS.loadPage(pc,false);
-    	
+    	Page currP=currPS==null?null:currPS.loadPage(pc,false);
+    	int dialect = currPS==null?pc.getCurrentTemplateDialect():currPS.getDialect();
     	// first try for the current dialect
-    	Object obj= _search(pc, loadingLocation, rawPath, searchLocal, searchRoot, executeConstr, returnType,currP, currPS.getDialect(), isExtendedComponent);
+    	Object obj= _search(pc, loadingLocation, rawPath, searchLocal, searchRoot, executeConstr, returnType,currP, dialect, isExtendedComponent);
     	// then we try the opposite dialect
     	if(obj==null) {
-    		obj= _search(pc, loadingLocation, rawPath, searchLocal, searchRoot, executeConstr, returnType,currP, currPS.getDialect()==CFMLEngine.DIALECT_CFML?CFMLEngine.DIALECT_LUCEE:CFMLEngine.DIALECT_CFML, isExtendedComponent);
+    		obj= _search(pc, loadingLocation, rawPath, searchLocal, searchRoot, executeConstr, returnType,currP, dialect==CFMLEngine.DIALECT_CFML?CFMLEngine.DIALECT_LUCEE:CFMLEngine.DIALECT_CFML, isExtendedComponent);
     	}
 
-    	if(obj==null)throw new ExpressionException("invalid "+toStringType(returnType,currPS.getDialect())+" definition, can't find "+toStringType(returnType,currPS.getDialect())+" ["+rawPath+"]");
+    	if(obj==null)throw new ExpressionException("invalid "+toStringType(returnType,dialect)+" definition, can't find "+toStringType(returnType,dialect)+" ["+rawPath+"]");
     	return obj;
     }
     
@@ -162,7 +162,7 @@ public class ComponentLoader {
     // CACHE
     	// check local in cache
 	    String localCacheName=null;
-	    if(searchLocal && isRealPath){
+	    if(searchLocal && isRealPath && currP!=null){
 		    localCacheName=currP.getPageSource().getDisplayPath().replace('\\', '/');
 	    	localCacheName=localCacheName.substring(0,localCacheName.lastIndexOf('/')+1).concat(pathWithCFC);
 	    	if(doCache){

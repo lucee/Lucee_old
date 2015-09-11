@@ -113,6 +113,7 @@ import lucee.runtime.exp.MissingIncludeException;
 import lucee.runtime.exp.NoLongerSupported;
 import lucee.runtime.exp.PageException;
 import lucee.runtime.exp.PageExceptionBox;
+import lucee.runtime.exp.PageRuntimeException;
 import lucee.runtime.functions.dynamicEvaluation.Serialize;
 import lucee.runtime.interpreter.CFMLExpressionInterpreter;
 import lucee.runtime.interpreter.VariableInterpreter;
@@ -1043,6 +1044,7 @@ public final class PageContextImpl extends PageContext {
 	 * @return the current template PageSource
 	 */
 	public PageSource getCurrentTemplatePageSource() {
+		if(includePathList.isEmpty()) return null;
 		return includePathList.getLast();
 	}
 	
