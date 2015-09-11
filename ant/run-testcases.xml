@@ -45,18 +45,18 @@ try {
 
 
 	// set the testbox mapping
-		application 
+ 	
+		mapping 
 			action="update" 
 			componentpaths = "#[{archive:"/test/testbox-2.1.0.lar"}]#";
-
-		silent {
-	 		// load testbox
-	 		tb=new testbox.system.TestBox(directory={ mapping="/test", recurse=true},reporter:"console");
-	 		// execute
-	 		report=tb.run();
-	 		// get the result
-	 		result=tb.getResult();
- 		}
+	
+ 		// load testbox
+ 		tb=new testbox.system.TestBox(directory={ mapping="/test", recurse=true},reporter:"console");
+ 		// execute
+ 		report=tb.run();
+ 		// get the result
+ 		result=tb.getResult();
+ 		
 
  		// throw an exception in case not all testcases have passed
  		if(result.getTotalFail()+result.getTotalError()>0) {
